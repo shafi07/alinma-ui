@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // material
 import { styled } from '@mui/material/styles';
-import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment } from '@mui/material';
+import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment, TextField } from '@mui/material';
 // component
 import Iconify from '../../../components/Iconify';
 import Filter from './Filter';
@@ -51,6 +51,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
           {numSelected} selected
         </Typography>
       ) : (
+        <>
         <SearchStyle
           value={filterName}
           onChange={onFilterName}
@@ -61,6 +62,8 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
             </InputAdornment>
           }
         />
+        </>
+        
       )}
 
       {numSelected > 0 ? (

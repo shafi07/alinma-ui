@@ -1,15 +1,13 @@
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import {
   Card,
   Table,
   Stack,
-  Avatar,
   Button,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
@@ -26,16 +24,25 @@ import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
 // mock
-import USERLIST from '../_mock/user';
+// import USERLIST from '../_mock/user';
+import AddBill from '../components/addBill'
 
 // ----------------------------------------------------------------------
-
+// let USERLIST
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
+  { id: 'company', label: 'Sub category', alignRight: false },
   { id: 'role', label: 'Role', alignRight: false },
   { id: 'isVerified', label: 'Verified', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
+  { id: 'purpose', label: 'Purpose', alignRight: false },
+  { id: 'sponserName', label: 'Sponser Name', alignRight: false },
+  { id: 'paid', label: 'Paid Amount', alignRight: false },
+  { id: 'balance', label: 'Balance Amount ', alignRight: false },
+  { id: 'mol', label: 'Mol', alignRight: false },
+  { id: 'mobileNumber', label: 'Mobile', alignRight: false },
+  { id: 'other', label: 'other', alignRight: false },
+  { id: 'iqama', label: 'Iqama', alignRight: false },
   { id: '' },
 ];
 
@@ -83,6 +90,10 @@ export default function User() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const [open,setOpen] = useState(false)
+
+  const[USERLIST,setUSERLIST]=useState([])
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -96,6 +107,17 @@ export default function User() {
       return;
     }
     setSelected([]);
+  };
+
+  useEffect(() => {
+    fetchData();
+  },[]);
+
+  const fetchData = async () => {
+    const response = await fetch(`http://localhost:8000/javasath`);
+    const newData = await response.json()
+    console.log('<<<<',newData)
+    setUSERLIST(newData)
   };
 
   // const handleClick = (event, name) => {
@@ -128,28 +150,28 @@ export default function User() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = USERLIST?applySortFilter(USERLIST, getComparator(order, orderBy), filterName):'';
 
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
+    <>
     <Page title="User">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+            Javasath
           </Typography>
-          <Button variant="contained" component={RouterLink} to="#" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New User
+          <Button variant="contained" onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
+            New Javasath
           </Button>
         </Stack>
 
         <Card>
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
-
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
-              <Table>
+            <TableContainer>
+              <Table style={{width:"200%"}}>
                 <UserListHead
                   order={order}
                   orderBy={orderBy}
@@ -161,7 +183,7 @@ export default function User() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
+                    const { id, name, role='dss', status='banned', company='test', isVerified=true,purpose='test',sponser_name='test',paid_amount='test',balance_amount='test',iqama='test',mol='test',mobileNumber='989898989898',other='test' } = row;
                     const isItemSelected = selected.indexOf(name) !== -1;
 
                     return (
@@ -169,6 +191,7 @@ export default function User() {
                         hover
                         key={id}
                         tabIndex={-1}
+                        align = 'center'
                         sx = {{backgroundColor: status === 'banned'?'#FFCCCB':'#90EE90'}}
                       >
                         <TableCell component="th" scope="row" >
@@ -186,7 +209,14 @@ export default function User() {
                             {sentenceCase(status === 'banned'? 'Debit':'Paid')}
                           </Label>
                         </TableCell>
-
+                        <TableCell align="left">{purpose}</TableCell>
+                        <TableCell align="left">{sponser_name}</TableCell>
+                        <TableCell align="left">{other}</TableCell>
+                        <TableCell align="left">{paid_amount}</TableCell>
+                        <TableCell align="left">{balance_amount}</TableCell>
+                        <TableCell align="left">{mobileNumber}</TableCell>
+                        <TableCell align="left">{mol}</TableCell>
+                        <TableCell align="left">{iqama}</TableCell>
                         <TableCell align="right">
                           <UserMoreMenu />
                         </TableCell>
@@ -225,5 +255,10 @@ export default function User() {
         </Card>
       </Container>
     </Page>
+    <AddBill
+     open = {open} 
+     handleClose = {() => setOpen(false)}
+     />
+    </>
   );
 }

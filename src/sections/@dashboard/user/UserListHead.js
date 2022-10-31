@@ -40,7 +40,7 @@ export default function UserListHead({
   };
 
   return (
-    <TableHead>
+    <TableHead align='center'>
       <TableRow>
         {headLabel.map((headCell) => (
           <TableCell
@@ -53,6 +53,7 @@ export default function UserListHead({
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
+              color='red'
             >
               {headCell.label}
               {orderBy === headCell.id ? (
