@@ -32,17 +32,17 @@ import AddBill from '../components/addBill'
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'company', label: 'Sub category', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: 'purpose', label: 'Purpose', alignRight: false },
   { id: 'sponserName', label: 'Sponser Name', alignRight: false },
+  { id: 'mobileNumber', label: 'Mobile', alignRight: false },
+  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'mol', label: 'Mol', alignRight: false },
+  { id: 'iqama', label: 'Iqama', alignRight: false },
+  { id: 'insurance', label: 'Insurance', alignRight: false },
+  { id: 'service', label: 'Service', alignRight: false },
+  { id: 'other', label: 'other', alignRight: false },
+  { id: 'total', label: 'Total Amount', alignRight: false },
   { id: 'paid', label: 'Paid Amount', alignRight: false },
   { id: 'balance', label: 'Balance Amount ', alignRight: false },
-  { id: 'mol', label: 'Mol', alignRight: false },
-  { id: 'mobileNumber', label: 'Mobile', alignRight: false },
-  { id: 'other', label: 'other', alignRight: false },
-  { id: 'iqama', label: 'Iqama', alignRight: false },
   { id: '' },
 ];
 
@@ -72,7 +72,7 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => ((_user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1)|(_user.sponser_name.toLowerCase().indexOf(query.toLowerCase()) !== -1)));
   }
   return stabilizedThis.map((el) => el[0]);
 }
@@ -150,7 +150,7 @@ export default function User() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
-  const filteredUsers = USERLIST?applySortFilter(USERLIST, getComparator(order, orderBy), filterName):'';
+  const filteredUsers = USERLIST.length>=0?applySortFilter(USERLIST, getComparator(order, orderBy), filterName):[];
 
   const isUserNotFound = filteredUsers.length === 0;
 
@@ -183,8 +183,7 @@ export default function User() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role='dss', status='banned', company='test', isVerified=true,purpose='test',sponser_name='test',paid_amount='test',balance_amount='test',iqama='test',mol='test',mobileNumber='989898989898',other='test' } = row;
-                    const isItemSelected = selected.indexOf(name) !== -1;
+                    const { id, name, sub_category='dss', status='banned', insurance,service,sponser_name='test',paid_amount='test',balance_amount='test',iqama='test',mol='test',mobileNumber='989898989898',other='test',total_amount } = row;
 
                     return (
                       <TableRow
@@ -193,6 +192,7 @@ export default function User() {
                         tabIndex={-1}
                         align = 'center'
                         sx = {{backgroundColor: status === 'banned'?'#FFCCCB':'#90EE90'}}
+                        onClick={() => setOpen(true)} 
                       >
                         <TableCell component="th" scope="row" >
                           <Stack direction="row" alignItems="center" spacing={4}>
@@ -201,22 +201,22 @@ export default function User() {
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{company}</TableCell>
-                        <TableCell align="left">{role}</TableCell>
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
+                        <TableCell align="left">{sub_category}</TableCell>
+                        <TableCell align="left">{sponser_name}</TableCell>
+                        <TableCell align="left">{mobileNumber}</TableCell>
                         <TableCell align="left">
                           <Label variant="ghost" color={(status === 'banned' && 'error') || 'success'}>
                             {sentenceCase(status === 'banned'? 'Debit':'Paid')}
                           </Label>
                         </TableCell>
-                        <TableCell align="left">{purpose}</TableCell>
-                        <TableCell align="left">{sponser_name}</TableCell>
-                        <TableCell align="left">{other}</TableCell>
-                        <TableCell align="left">{paid_amount}</TableCell>
-                        <TableCell align="left">{balance_amount}</TableCell>
-                        <TableCell align="left">{mobileNumber}</TableCell>
                         <TableCell align="left">{mol}</TableCell>
                         <TableCell align="left">{iqama}</TableCell>
+                        <TableCell align="left">{insurance}</TableCell>
+                        <TableCell align="left">{service}</TableCell>
+                        <TableCell align="left">{other}</TableCell>
+                        <TableCell align="left">{total_amount}</TableCell>
+                        <TableCell align="left">{paid_amount}</TableCell>
+                        <TableCell align="left">{balance_amount}</TableCell>
                         <TableCell align="right">
                           <UserMoreMenu />
                         </TableCell>

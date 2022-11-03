@@ -31,14 +31,13 @@ const validationSchema = Yup.object({
   name: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
   sponserName: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
   idNumber: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
-  purpose: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
-  mol: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
-  iqama: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
-  insurance: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
+  mol: Yup.number().required("Enter Unit (eg: Kg, Litre, etc)"),
+  iqama: Yup.number().required("Enter Unit (eg: Kg, Litre, etc)"),
+  insurance: Yup.number().required("Enter Unit (eg: Kg, Litre, etc)"),
   other: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
   mobileNumber: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
   paid: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
-  total: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
+  total: Yup.number().required("Enter Unit (eg: Kg, Litre, etc)"),
   service: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
   balance:Yup.number()
 });
@@ -58,6 +57,10 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
   //   setOpen(false);
   // };
 
+  const handleTotalAmount=(mol,iqama,insurance,other)=>{
+    return (mol+iqama+insurance,other)
+  }
+
   return (
     <Formik
     validationSchema={validationSchema}
@@ -65,25 +68,19 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
         categoryName:"",
         name:"",
         sponserName: "",
-        purpose: "",
-        mol: "",
+        mol: '',
         service: "",
         other: "",
         iqama: "",
         idNumber: "",
-        insurance: "",
+        insurance: '',
         total: "",
         mobileNumber: "",
         paid: "",
-        balance: "",
+        balance: '',
       }}
       onSubmit={(values, actions) => {
         console.log('<<<<',values)
-        if (editData) {
-          // handleEditFormSubmit(values, actions);
-        } else {
-          // handleFormDataSubmit(values, actions);
-        }
       }}
     >
     {({
@@ -200,7 +197,7 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
                 marginBottom: 2,
                 marginLeft:2
               }}
-              label="ID Number"
+              label="Iqama Number"
               name="idNumber"
               type="text"
               fullWidth
@@ -215,37 +212,16 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
             </Grid>
             <Grid item xs={6} >
             <TextField
-              id="purpose"
-              label="Purpose"
-              name="purpose"
-              type="text"
-              fullWidth
-              autoFocus
-              required
-              variant="outlined"
-              helperText={touched.purpose ? errors.purpose : ""}
-              error={touched.purpose && Boolean(errors.purpose)}
-              value={values.purpose}
-              onChange={handleChange("purpose")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
-            /> 
-            </Grid>
-            <Grid item xs={6} >
-            <TextField
               id="mol"
               // className={classes.input}
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2
+                marginRight:2
               }}
               label="Mol"
               name="mol"
-              type="text"
+              type="number"
               fullWidth
               autoFocus
               required
@@ -259,9 +235,9 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
             <Grid item xs={6} >
             <TextField
               id="iqama"
-              label="Iqama Number"
+              label="Iqama Amount"
               name="iqama"
-              type="text"
+              type="number"
               fullWidth
               autoFocus
               required
@@ -273,7 +249,7 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2
               }}
             /> 
             </Grid>
@@ -284,11 +260,11 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2
+                marginRight:2
               }}
               label="Insurance"
               name="insurance"
-              type="text"
+              type="number"
               fullWidth
               autoFocus
               required
@@ -304,7 +280,7 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
               id="other"
               label="Other"
               name="other"
-              type="text"
+              type="number"
               fullWidth
               autoFocus
               required
@@ -316,7 +292,7 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2
               }}
             /> 
             </Grid>
@@ -327,7 +303,7 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2
+                marginRight:2
               }}
               label="Service"
               name="service"
@@ -359,7 +335,7 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2
               }}
             /> 
             </Grid>
@@ -370,18 +346,18 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2
+                marginRight:2
               }}
               label="Total Amount"
               name="total"
-              type="text"
+              type="number"
               fullWidth
               autoFocus
               required
-              variant="outlined"
+              variant="outlined" 
               helperText={touched.total ? errors.total : ""}
               error={touched.total && Boolean(errors.total)}
-              value={values.total}
+              value={values.total=(Number(values.mol)+ Number(values.iqama) + Number(values.insurance) + Number(values.other))}
               onChange={handleChange("total")}
             />
             </Grid>
@@ -402,7 +378,7 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2
               }}
             /> 
             </Grid>
@@ -413,7 +389,7 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2
+                marginRight:2
               }}
               label="Balance Amount"
               name="balance"
@@ -425,7 +401,7 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
               variant="outlined"
               helperText={touched.balance ? errors.balance : ""}
               error={touched.balance && Boolean(errors.balance)}
-              value={values.balance =(values.total-values.paid)}
+              value={values.balance =(Number(values.total)-Number(values.paid))}
               onChange={handleChange("balance")}
             />
             </Grid>
