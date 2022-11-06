@@ -1,7 +1,7 @@
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState,useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { useState,useEffect,useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
 // material
 import {
   Card,
@@ -16,6 +16,7 @@ import {
   TableContainer,
   TablePagination,
 } from '@mui/material';
+import PrintIcon from '@mui/icons-material/Print';
 // components
 import Page from '../components/Page';
 import Label from '../components/Label';
@@ -23,12 +24,10 @@ import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
-// mock
-// import USERLIST from '../_mock/user';
 import AddBill from '../components/addBill'
+import Print from './print'
 
 // ----------------------------------------------------------------------
-// let USERLIST
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'company', label: 'Sub category', alignRight: false },
@@ -88,11 +87,21 @@ export default function User() {
 
   const [filterName, setFilterName] = useState('');
 
+  const [query,setQuey]= useState(null);
+
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [open,setOpen] = useState(false)
 
   const[USERLIST,setUSERLIST]=useState([])
+
+  const [editData,setEditData]=useState(null)
+
+  // const componentRef = useRef();
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current,
+  // });
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -110,30 +119,8 @@ export default function User() {
   };
 
   useEffect(() => {
-    fetchData();
-  },[]);
-
-  const fetchData = async () => {
-    const response = await fetch(`http://localhost:8000/javasath`);
-    const newData = await response.json()
-    console.log('<<<<',newData)
-    setUSERLIST(newData)
-  };
-
-  // const handleClick = (event, name) => {
-  //   const selectedIndex = selected.indexOf(name);
-  //   let newSelected = [];
-  //   if (selectedIndex === -1) {
-  //     newSelected = newSelected.concat(selected, name);
-  //   } else if (selectedIndex === 0) {
-  //     newSelected = newSelected.concat(selected.slice(1));
-  //   } else if (selectedIndex === selected.length - 1) {
-  //     newSelected = newSelected.concat(selected.slice(0, -1));
-  //   } else if (selectedIndex > 0) {
-  //     newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-  //   }
-  //   setSelected(newSelected);
-  // };
+    fetchData(query);
+  },[query]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -145,8 +132,28 @@ export default function User() {
   };
 
   const handleFilterByName = (event) => {
-    setFilterName(event.target.value);
+    setQuey(event.target.value);
   };
+
+  const fetchData = async (query) => {
+    const url = query ? `http://localhost:8000/javasath?query=${query}` : `http://localhost:8000/javasath`
+    const response = await fetch(url);
+    const newData = await response.json()
+    console.log('<<<<',newData)
+    setUSERLIST(newData)
+  };
+
+  const openAddJavasath= async()=>{
+    setOpen(true)
+  }
+  
+  const closeAddJavasath= async()=>{
+    setOpen(false)
+  }
+
+  const editJavasath = async (data)=>{
+    setOpen(true)
+  }
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
@@ -165,10 +172,13 @@ export default function User() {
           <Button variant="contained" onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
             New Javasath
           </Button>
+          <Button variant="contained" onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
+            New Javasath
+          </Button>
         </Stack>
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <UserListToolbar numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
           <Scrollbar>
             <TableContainer>
               <Table style={{width:"200%"}}>
@@ -217,6 +227,9 @@ export default function User() {
                         <TableCell align="left">{total_amount}</TableCell>
                         <TableCell align="left">{paid_amount}</TableCell>
                         <TableCell align="left">{balance_amount}</TableCell>
+                        <TableCell align="left" onClick={(e) =>{e.stopPropagation()} }>
+                          < PrintIcon />
+                        </TableCell>
                         <TableCell align="right">
                           <UserMoreMenu />
                         </TableCell>
@@ -259,6 +272,7 @@ export default function User() {
      open = {open} 
      handleClose = {() => setOpen(false)}
      />
+     {/* <Print ref={componentRef} /> */}
     </>
   );
 }

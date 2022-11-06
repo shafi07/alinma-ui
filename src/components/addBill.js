@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 
 const subCategories = [
-  {value:1,label:'rty'},{value:2,label:'qwq'}
+  {value:'rty',label:'rty'},{value:'qwq',label:'qwq'}
 ]
 
 // const useStyles = makeStyles({
@@ -53,13 +53,7 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
   //   setOpen(true);
   // };
 
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
 
-  const handleTotalAmount=(mol,iqama,insurance,other)=>{
-    return (mol+iqama+insurance,other)
-  }
 
   return (
     <Formik
@@ -163,7 +157,7 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
               variant="outlined"
               helperText={touched.name ? errors.name : ""}
               error={touched.name && Boolean(errors.name)}
-              value={values.unit}
+              value={values.name}
               onChange={handleChange("name")}
             />
             </Grid>
