@@ -28,7 +28,7 @@ import AddBill from '../components/addBill'
 import Print from './print'
 
 // ----------------------------------------------------------------------
-const URL =`http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
+const URL =` https://cors-everywhere.herokuapp.com/http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'company', label: 'Sub category', alignRight: false },
