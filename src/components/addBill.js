@@ -351,7 +351,7 @@ export default function FullScreenDialog({open,handleClose,editData={}}) {
               variant="outlined" 
               helperText={touched.total ? errors.total : ""}
               error={touched.total && Boolean(errors.total)}
-              value={values.total=(Number(values.mol)+ Number(values.iqama) + Number(values.insurance) + Number(values.other))}
+              value={values.total=(Number(values.mol)+ Number(values.iqama) + Number(values.insurance) + Number(values.other) + Number(values.service))}
               onChange={handleChange("total")}
             />
             </Grid>

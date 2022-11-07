@@ -28,6 +28,7 @@ import AddBill from '../components/addBill'
 import Print from './print'
 
 // ----------------------------------------------------------------------
+const URL =`http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'company', label: 'Sub category', alignRight: false },
@@ -136,7 +137,7 @@ export default function User() {
   };
 
   const fetchData = async (query) => {
-    const url = query ? `http://localhost:8000/javasath?query=${query}` : `http://localhost:8000/javasath`
+    const url = query ? `${URL}/javasath?query=${query}` : `${URL}/javasath`
     const response = await fetch(url);
     const newData = await response.json()
     console.log('<<<<',newData)
@@ -173,7 +174,7 @@ export default function User() {
             New Javasath
           </Button>
           <Button variant="contained" onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Javasath
+            Export CSV
           </Button>
         </Stack>
 
