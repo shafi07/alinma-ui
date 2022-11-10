@@ -20,7 +20,10 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { path: 'app', element: <DashboardApp /> },
-        { path: 'user', element: <User /> },
+        { path: 'javasath', element: <User /> },
+        { path: 'insurance', element: <User /> },
+        { path: 'work', element: <User /> },
+        { path: 'other', element: <User /> },
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> },
       ],

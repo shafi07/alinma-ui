@@ -24,13 +24,18 @@ import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
-import AddBill from '../components/addBill'
+import AddBill from '../components/user/addBill'
+import EditBill from '../components/user/editBill'
 import Print from './print'
+import { CSVDownload, CSVLink } from 'react-csv';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
-const URL =` https://cors-everywhere.herokuapp.com/http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
+const URL =`http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
 const TABLE_HEAD = [
+  { id: 'file', label: 'File', alignRight: false },
   { id: 'name', label: 'Name', alignRight: false },
+  { id: 'id', label: 'ID', alignRight: false },
   { id: 'company', label: 'Sub category', alignRight: false },
   { id: 'sponserName', label: 'Sponser Name', alignRight: false },
   { id: 'mobileNumber', label: 'Mobile', alignRight: false },
@@ -90,7 +95,7 @@ export default function User() {
 
   const [query,setQuey]= useState(null);
 
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(30);
 
   const [open,setOpen] = useState(false)
 
@@ -98,11 +103,9 @@ export default function User() {
 
   const [editData,setEditData]=useState(null)
 
-  // const componentRef = useRef();
-  // const handlePrint = useReactToPrint({
-  //   content: () => componentRef.current,
-  // });
+  const [editModel,setEditModel]= useState(false)
 
+  const [reFetch,setReFetch]=useState(false)
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -121,7 +124,7 @@ export default function User() {
 
   useEffect(() => {
     fetchData(query);
-  },[query]);
+  },[query,reFetch]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -136,6 +139,11 @@ export default function User() {
     setQuey(event.target.value);
   };
 
+  const handleCloseEdit = ()=>{
+    setEditData(null)
+    setEditModel(!editModel)
+  }
+
   const fetchData = async (query) => {
     const url = query ? `${URL}/javasath?query=${query}` : `${URL}/javasath`
     const response = await fetch(url);
@@ -144,16 +152,26 @@ export default function User() {
     setUSERLIST(newData)
   };
 
-  const openAddJavasath= async()=>{
-    setOpen(true)
-  }
-  
-  const closeAddJavasath= async()=>{
-    setOpen(false)
-  }
+  const headers = [
+    { label: "File NO", key: "fileid" },
+    { label: "Name", key: "name" },
+    { label: "ID", key: "id_number" },
+    { label: "sub_category", key: "sub_category" },
+    { label: "sponser_name", key: "sponser_name" },
+    { label: "Mobile", key: "mobilenumber" },
+    { label: "insurance", key: "insurance" },
+    { label: "service", key: "service" },
+    { label: "mol", key: "mol" },
+    { label: "iqama", key: "iqama" },
+    { label: "other", key: "other" },
+    { label: "total_amount", key: "total_amount" },
+    { label: "paid_amount", key: "paid_amount" },
+    { label: "balance_amount", key: "balance_amount" },
+  ];
 
-  const editJavasath = async (data)=>{
-    setOpen(true)
+  const editOpen = async(data)=>{
+    setEditData(data)
+    setEditModel(true)
   }
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
@@ -162,27 +180,53 @@ export default function User() {
 
   const isUserNotFound = filteredUsers.length === 0;
 
+  const submitJavazath = async (data)=>{
+    // console.log('>>>>>>???',data)
+    const res = axios.post(`${URL}/javasath`,data)
+                .then((res)=>{
+                  console.log('----->',res)
+                  setOpen(false)
+                  setReFetch(!reFetch)
+                }).catch((err)=>{
+
+                })
+  }
+
+  const editJavazath = async (data)=>{
+    // console.log('>>>>>>???',data)
+    const res = axios.put(`${URL}/javasath`,data)
+                .then((res)=>{
+                  console.log('----->',res)
+                  setEditModel(!editModel)
+                  setReFetch(!reFetch)
+                }).catch((err)=>{
+
+                })
+  }
+
   return (
     <>
     <Page title="User">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Javasath
+            JAVASATH
           </Typography>
-          <Button variant="contained" onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
+          <Button variant="contained" sx={{backgroundColor:'#F51720'}} onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
             New Javasath
           </Button>
-          <Button variant="contained" onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
+          <CSVLink headers={headers} data={USERLIST?USERLIST:[]} filename={'test'}>
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             Export CSV
           </Button>
+          </CSVLink>
         </Stack>
 
         <Card>
           <UserListToolbar numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
           <Scrollbar>
             <TableContainer>
-              <Table style={{width:"200%"}}>
+              <Table style={{width:"200%"}} >
                 <UserListHead
                   order={order}
                   orderBy={orderBy}
@@ -193,8 +237,8 @@ export default function User() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, sub_category='dss', status='banned', insurance,service,sponser_name='test',paid_amount='test',balance_amount='test',iqama='test',mol='test',mobileNumber='989898989898',other='test',total_amount } = row;
+                  {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    const { id,id_number, fileid='JZ1', name, sub_category='dss', insurance,service,sponser_name='test',paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',other='test',total_amount } = row;
 
                     return (
                       <TableRow
@@ -202,9 +246,16 @@ export default function User() {
                         key={id}
                         tabIndex={-1}
                         align = 'center'
-                        sx = {{backgroundColor: status === 'banned'?'#FFCCCB':'#90EE90'}}
-                        onClick={() => setOpen(true)} 
+                        sx = {{backgroundColor: balance_amount != 0?'#F7837C':'#73D393'}}
+                        onClick={() => editOpen(row)} 
                       >
+                        <TableCell component="th" scope="row" >
+                          <Stack direction="row" alignItems="center" spacing={4}>
+                            <Typography variant="subtitle2" noWrap>
+                              {fileid}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
                         <TableCell component="th" scope="row" >
                           <Stack direction="row" alignItems="center" spacing={4}>
                             <Typography variant="subtitle2" noWrap>
@@ -212,12 +263,19 @@ export default function User() {
                             </Typography>
                           </Stack>
                         </TableCell>
+                        <TableCell component="th" scope="row" >
+                          <Stack direction="row" alignItems="center" spacing={4}>
+                            <Typography variant="subtitle2" noWrap>
+                              {id_number}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">{sub_category}</TableCell>
                         <TableCell align="left">{sponser_name}</TableCell>
-                        <TableCell align="left">{mobileNumber}</TableCell>
+                        <TableCell align="left">{mobilenumber}</TableCell>
                         <TableCell align="left">
-                          <Label variant="ghost" color={(status === 'banned' && 'error') || 'success'}>
-                            {sentenceCase(status === 'banned'? 'Debit':'Paid')}
+                          <Label variant="ghost" color={(balance_amount != 0 && 'error') || 'success'}>
+                            {sentenceCase(balance_amount == 0 ? 'Paid':'Credit')}
                           </Label>
                         </TableCell>
                         <TableCell align="left">{mol}</TableCell>
@@ -228,7 +286,8 @@ export default function User() {
                         <TableCell align="left">{total_amount}</TableCell>
                         <TableCell align="left">{paid_amount}</TableCell>
                         <TableCell align="left">{balance_amount}</TableCell>
-                        <TableCell align="left" onClick={(e) =>{e.stopPropagation()} }>
+                        <TableCell align="left" onClick={(e) =>{e.stopPropagation()
+                        editOpen(row)} }>
                           < PrintIcon />
                         </TableCell>
                         <TableCell align="right">
@@ -258,7 +317,7 @@ export default function User() {
           </Scrollbar>
 
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[30, 50, 100]}
             component="div"
             count={USERLIST.length}
             rowsPerPage={rowsPerPage}
@@ -272,7 +331,14 @@ export default function User() {
     <AddBill
      open = {open} 
      handleClose = {() => setOpen(false)}
+     submitHandler={submitJavazath}
      />
+    {editData ? <EditBill 
+     open={editModel}
+     editData={editData}
+     handleClose = {handleCloseEdit}
+     editHandler={editJavazath}
+     /> :''} 
      {/* <Print ref={componentRef} /> */}
     </>
   );
