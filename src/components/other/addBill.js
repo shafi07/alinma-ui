@@ -13,14 +13,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 
 const subCategories = [
-  {value:'New Sijil',label:'New Sijil'},
-  {value:'Renew Sijil',label:'Renew Sijil'},
-  {value:'Update Sijil',label:'Update Sijil'},
-  {value:'Cancel Sijil',label:'Cancel Sijil'},
-  {value:'New Ruksa',label:'New Ruksa'},
-  {value:'Renew Ruksa',label:'Renew Ruksa'},
-  {value:'Update Ruksa',label:'Update Ruksa'},
-  {value:'Cancel Ruksa',label:'Cancel Ruksa'}
+  {value:'Baladiya Card',label:'Baladiya Card'},
+  {value:'Renew Pasport',label:'Renew Pasport'},
 ]
 
 // const useStyles = makeStyles({
@@ -67,7 +61,6 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
       initialValues={{
         sub_category:"",
         name:"",
-        agent:"",
         sponser_name: "",
         id_number: "",
         total_amount: "",
@@ -105,7 +98,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              WORK
+              OTHER
             </Typography>
             <Button autoFocus color="inherit" onClick={handleClose}>
               save
@@ -208,27 +201,6 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             </Grid>
             <Grid item xs={6} >
             <TextField
-              id="agent"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
-              label="Agent"
-              name="agent"
-              type="text"
-              fullWidth
-              autoFocus
-              required
-              variant="outlined"
-              helperText={touched.agent ? errors.agent : ""}
-              error={touched.agent && Boolean(errors.agent)}
-              value={values.agent}
-              onChange={handleChange("agent")}
-            />
-            </Grid>
-            <Grid item xs={6} >
-            <TextField
               id="mobileNumber"
               label="Mobile Number"
               name="mobileNumber"
@@ -244,7 +216,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2,
+                marginRight:2
               }}
             /> 
             </Grid>
@@ -254,7 +226,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2,
               }}
               label="Total Amount"
               name="total_amount"
@@ -286,7 +258,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2,
+                marginRight:2
               }}
             /> 
             </Grid>
@@ -296,7 +268,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2,
               }}
               label="Balance Amount"
               name="balance"
@@ -318,7 +290,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2,
+                marginRight:2
               }}
               label="Remarks"
               name="remarks"

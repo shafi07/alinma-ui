@@ -10,6 +10,7 @@ import DashboardApp from './pages/DashboardApp';
 import Print from './pages/print'
 import Insurance from './pages/insurance';
 import Work from './pages/Work';
+import Other from './pages/Other'
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +24,7 @@ export default function Router() {
         { path: 'javasath', element: <User /> },
         { path: 'insurance', element: <Insurance /> },
         { path: 'work', element: <Work /> },
-        { path: 'other', element: <User /> },
+        { path: 'other', element: <Other /> },
       ],
     },
     {

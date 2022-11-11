@@ -26,7 +26,7 @@ import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
-import AddBill from '../components/insurance/addBill'
+import AddBill from '../components/other/addBill'
 import EditBill from '../components/user/editBill'
 import Print from './print'
 import { CSVLink } from 'react-csv';
@@ -38,9 +38,8 @@ const TABLE_HEAD = [
   { id: 'file', label: 'File', alignRight: false },
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'id', label: 'ID', alignRight: false },
-  { id: 'subCategory', label: 'Add/New', alignRight: false },
+  { id: 'subCategory', label: 'Sub Category', alignRight: false },
   { id: 'sponserName', label: 'Sponser Name', alignRight: false },
-  { id: 'dob', label: 'Dob', alignRight: false },
   { id: 'mobileNumber', label: 'Mobile', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: 'total', label: 'Total Amount', alignRight: false },
@@ -80,7 +79,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Insurance() {
+export default function Other() {
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -143,7 +142,7 @@ export default function Insurance() {
   }
 
   const fetchData = async (query) => {
-    const url = query ? `${URL}/insurance?query=${query}` : `${URL}/insurance`
+    const url = query ? `${URL}/other?query=${query}` : `${URL}/other`
     const response = await fetch(url);
     const newData = await response.json()
     console.log('<<<<',newData)
@@ -154,9 +153,8 @@ export default function Insurance() {
     { label: "File NO", key: "fileid" },
     { label: "Name", key: "name" },
     { label: "ID", key: "id_number" },
-    { label: "Add/New", key: "sub_category" },
+    { label: "Sub Category", key: "sub_category" },
     { label: "Mobile", key: "mobilenumber" },
-    { label: "dob", key: "dob" },
     { label: "total_amount", key: "total_amount" },
     { label: "paid_amount", key: "paid_amount" },
     { label: "balance_amount", key: "balance_amount" },
@@ -176,7 +174,7 @@ export default function Insurance() {
 
   const submitInsurance = async (data)=>{
     // console.log('>>>>>>???',data)
-    const res = axios.post(`${URL}/insurance`,data)
+    const res = axios.post(`${URL}/other`,data)
                 .then((res)=>{
                   console.log('----->',res)
                   setOpen(false)
@@ -188,7 +186,7 @@ export default function Insurance() {
 
   const editInsurance = async (data)=>{
     // console.log('>>>>>>???',data)
-    const res = axios.put(`${URL}/insurance`,data)
+    const res = axios.put(`${URL}/other`,data)
                 .then((res)=>{
                   console.log('----->',res)
                   setEditModel(!editModel)
@@ -207,10 +205,10 @@ export default function Insurance() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            INSURANCE
+            OTHER
           </Typography>
           <Button variant="contained" sx={{backgroundColor:'#F51720'}} onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Insurance
+            New Other
           </Button>
           <CSVLink headers={headers} data={USERLIST?USERLIST:[]} filename={'test'}>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
@@ -235,7 +233,7 @@ export default function Insurance() {
                 />
                 <TableBody>
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id,id_number,dob, fileid, name, sub_category='dss', insurance,service,sponser_name='test',paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',other='test',total_amount } = row;
+                    const { id,id_number,agent, fileid, name, sub_category='dss', insurance,service,sponser_name,paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',other='test',total_amount } = row;
 
                     return (
                       <TableRow
@@ -269,7 +267,6 @@ export default function Insurance() {
                         </TableCell>
                         <TableCell align="left">{sub_category}</TableCell>
                         <TableCell align="left">{sponser_name}</TableCell>
-                        <TableCell align="left">{dob}</TableCell>
                         <TableCell align="left">{mobilenumber}</TableCell>
                         <TableCell align="left">
                           <Label variant="ghost" color={(balance_amount != 0 && 'error') || 'success'}>

@@ -38,8 +38,9 @@ const TABLE_HEAD = [
   { id: 'file', label: 'File', alignRight: false },
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'id', label: 'ID', alignRight: false },
-  { id: 'subCategory', label: 'Add/New', alignRight: false },
+  { id: 'subCategory', label: 'Sub Category', alignRight: false },
   { id: 'sponserName', label: 'Sponser Name', alignRight: false },
+  { id: 'agent', label: 'Agent', alignRight: false },
   { id: 'mobileNumber', label: 'Mobile', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: 'total', label: 'Total Amount', alignRight: false },
@@ -142,7 +143,7 @@ export default function Work() {
   }
 
   const fetchData = async (query) => {
-    const url = query ? `${URL}/insurance?query=${query}` : `${URL}/insurance`
+    const url = query ? `${URL}/work?query=${query}` : `${URL}/work`
     const response = await fetch(url);
     const newData = await response.json()
     console.log('<<<<',newData)
@@ -153,12 +154,13 @@ export default function Work() {
     { label: "File NO", key: "fileid" },
     { label: "Name", key: "name" },
     { label: "ID", key: "id_number" },
-    { label: "Add/New", key: "sub_category" },
+    { label: "Sub Category", key: "sub_category" },
     { label: "Mobile", key: "mobilenumber" },
     { label: "Agent", key: "agent" },
     { label: "total_amount", key: "total_amount" },
     { label: "paid_amount", key: "paid_amount" },
     { label: "balance_amount", key: "balance_amount" },
+    { label: "sponser_name", key: "sponser_name" },
   ];
 
   const editOpen = async(data)=>{
@@ -174,7 +176,7 @@ export default function Work() {
 
   const submitInsurance = async (data)=>{
     // console.log('>>>>>>???',data)
-    const res = axios.post(`${URL}/insurance`,data)
+    const res = axios.post(`${URL}/work`,data)
                 .then((res)=>{
                   console.log('----->',res)
                   setOpen(false)
@@ -186,7 +188,7 @@ export default function Work() {
 
   const editInsurance = async (data)=>{
     // console.log('>>>>>>???',data)
-    const res = axios.put(`${URL}/insurance`,data)
+    const res = axios.put(`${URL}/work`,data)
                 .then((res)=>{
                   console.log('----->',res)
                   setEditModel(!editModel)
@@ -205,10 +207,10 @@ export default function Work() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            INSURANCE
+            WORK
           </Typography>
           <Button variant="contained" sx={{backgroundColor:'#F51720'}} onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Insurance
+            New Work
           </Button>
           <CSVLink headers={headers} data={USERLIST?USERLIST:[]} filename={'test'}>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
@@ -233,7 +235,7 @@ export default function Work() {
                 />
                 <TableBody>
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id,id_number,dob, fileid='JZ1', name, sub_category='dss', insurance,service,sponser_name,paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',other='test',total_amount } = row;
+                    const { id,id_number,agent, fileid, name, sub_category='dss', insurance,service,sponser_name,paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',other='test',total_amount } = row;
 
                     return (
                       <TableRow
@@ -267,6 +269,7 @@ export default function Work() {
                         </TableCell>
                         <TableCell align="left">{sub_category}</TableCell>
                         <TableCell align="left">{sponser_name}</TableCell>
+                        <TableCell align="left">{agent}</TableCell>
                         <TableCell align="left">{mobilenumber}</TableCell>
                         <TableCell align="left">
                           <Label variant="ghost" color={(balance_amount != 0 && 'error') || 'success'}>
