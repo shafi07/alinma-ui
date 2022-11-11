@@ -26,10 +26,10 @@ import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
-import AddBill from '../components/user/addBill'
+import AddBill from '../components/work/addBill'
 import EditBill from '../components/user/editBill'
 import Print from './print'
-import { CSVDownload, CSVLink } from 'react-csv';
+import { CSVLink } from 'react-csv';
 import axios from 'axios';
 
 // ----------------------------------------------------------------------
@@ -38,15 +38,10 @@ const TABLE_HEAD = [
   { id: 'file', label: 'File', alignRight: false },
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'id', label: 'ID', alignRight: false },
-  { id: 'company', label: 'Sub category', alignRight: false },
+  { id: 'subCategory', label: 'Add/New', alignRight: false },
   { id: 'sponserName', label: 'Sponser Name', alignRight: false },
   { id: 'mobileNumber', label: 'Mobile', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
-  { id: 'mol', label: 'Mol', alignRight: false },
-  { id: 'iqama', label: 'Iqama', alignRight: false },
-  { id: 'insurance', label: 'Insurance', alignRight: false },
-  { id: 'service', label: 'Service', alignRight: false },
-  { id: 'other', label: 'other', alignRight: false },
   { id: 'total', label: 'Total Amount', alignRight: false },
   { id: 'paid', label: 'Paid Amount', alignRight: false },
   { id: 'balance', label: 'Balance Amount ', alignRight: false },
@@ -84,7 +79,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function User() {
+export default function Work() {
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -147,7 +142,7 @@ export default function User() {
   }
 
   const fetchData = async (query) => {
-    const url = query ? `${URL}/javasath?query=${query}` : `${URL}/javasath`
+    const url = query ? `${URL}/insurance?query=${query}` : `${URL}/insurance`
     const response = await fetch(url);
     const newData = await response.json()
     console.log('<<<<',newData)
@@ -158,14 +153,9 @@ export default function User() {
     { label: "File NO", key: "fileid" },
     { label: "Name", key: "name" },
     { label: "ID", key: "id_number" },
-    { label: "sub_category", key: "sub_category" },
-    { label: "sponser_name", key: "sponser_name" },
+    { label: "Add/New", key: "sub_category" },
     { label: "Mobile", key: "mobilenumber" },
-    { label: "insurance", key: "insurance" },
-    { label: "service", key: "service" },
-    { label: "mol", key: "mol" },
-    { label: "iqama", key: "iqama" },
-    { label: "other", key: "other" },
+    { label: "Agent", key: "agent" },
     { label: "total_amount", key: "total_amount" },
     { label: "paid_amount", key: "paid_amount" },
     { label: "balance_amount", key: "balance_amount" },
@@ -182,9 +172,9 @@ export default function User() {
 
   const isUserNotFound = filteredUsers.length === 0;
 
-  const submitJavazath = async (data)=>{
+  const submitInsurance = async (data)=>{
     // console.log('>>>>>>???',data)
-    const res = axios.post(`${URL}/javasath`,data)
+    const res = axios.post(`${URL}/insurance`,data)
                 .then((res)=>{
                   console.log('----->',res)
                   setOpen(false)
@@ -194,9 +184,9 @@ export default function User() {
                 })
   }
 
-  const editJavazath = async (data)=>{
+  const editInsurance = async (data)=>{
     // console.log('>>>>>>???',data)
-    const res = axios.put(`${URL}/javasath`,data)
+    const res = axios.put(`${URL}/insurance`,data)
                 .then((res)=>{
                   console.log('----->',res)
                   setEditModel(!editModel)
@@ -215,10 +205,10 @@ export default function User() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            JAVASATH
+            INSURANCE
           </Typography>
           <Button variant="contained" sx={{backgroundColor:'#F51720'}} onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Javasath
+            New Insurance
           </Button>
           <CSVLink headers={headers} data={USERLIST?USERLIST:[]} filename={'test'}>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
@@ -243,7 +233,7 @@ export default function User() {
                 />
                 <TableBody>
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id,id_number, fileid='JZ1', name, sub_category='dss', insurance,service,sponser_name='test',paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',other='test',total_amount } = row;
+                    const { id,id_number,dob, fileid='JZ1', name, sub_category='dss', insurance,service,sponser_name,paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',other='test',total_amount } = row;
 
                     return (
                       <TableRow
@@ -283,11 +273,11 @@ export default function User() {
                             {sentenceCase(balance_amount == 0 ? 'Paid':'Credit')}
                           </Label>
                         </TableCell>
-                        <TableCell align="left">{mol}</TableCell>
+                        {/* <TableCell align="left">{mol}</TableCell>
                         <TableCell align="left">{iqama}</TableCell>
                         <TableCell align="left">{insurance}</TableCell>
                         <TableCell align="left">{service}</TableCell>
-                        <TableCell align="left">{other}</TableCell>
+                        <TableCell align="left">{other}</TableCell> */}
                         <TableCell align="left">{total_amount}</TableCell>
                         <TableCell align="left">{paid_amount}</TableCell>
                         <TableCell align="left">{balance_amount}</TableCell>
@@ -336,13 +326,13 @@ export default function User() {
     <AddBill
      open = {open} 
      handleClose = {() => setOpen(false)}
-     submitHandler={submitJavazath}
+     submitHandler={submitInsurance}
      />
     {editData ? <EditBill 
      open={editModel}
      editData={editData}
      handleClose = {handleCloseEdit}
-     editHandler={editJavazath}
+     editHandler={editInsurance}
      /> :''} 
      {/* <Print ref={componentRef} /> */}
     </>

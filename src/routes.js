@@ -3,13 +3,13 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
-import Blog from './pages/Blog';
 import User from './pages/User';
 import Login from './pages/Login';
 import NotFound from './pages/Page404';
-import Register from './pages/Register';
-import Products from './pages/Products';
 import DashboardApp from './pages/DashboardApp';
+import Print from './pages/print'
+import Insurance from './pages/insurance';
+import Work from './pages/Work';
 
 // ----------------------------------------------------------------------
 
@@ -21,20 +21,18 @@ export default function Router() {
       children: [
         { path: 'app', element: <DashboardApp /> },
         { path: 'javasath', element: <User /> },
-        { path: 'insurance', element: <User /> },
-        { path: 'work', element: <User /> },
+        { path: 'insurance', element: <Insurance /> },
+        { path: 'work', element: <Work /> },
         { path: 'other', element: <User /> },
-        { path: 'products', element: <Products /> },
-        { path: 'blog', element: <Blog /> },
       ],
+    },
+    {
+      path:'print',
+      element: <Print />,
     },
     {
       path: 'login',
       element: <Login />,
-    },
-    {
-      path: 'register',
-      element: <Register />,
     },
     {
       path: '/',
