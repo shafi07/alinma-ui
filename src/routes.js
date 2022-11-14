@@ -15,16 +15,19 @@ import Other from './pages/Other'
 // ----------------------------------------------------------------------
 
 export default function Router() {
+  let isLoggedIn = false
+      isLoggedIn = (localStorage.getItem("auth") === null) ? false : true
+      console.log('>>>>>>>>llklkkk',localStorage.getItem("auth") )
   return useRoutes([
     {
       path: '/dashboard',
-      element: <DashboardLayout />,
+      element: isLoggedIn? <DashboardLayout /> : <Navigate to="/login" /> ,
       children: [
         { path: 'app', element: <DashboardApp /> },
-        { path: 'javasath', element: <User /> },
-        { path: 'insurance', element: <Insurance /> },
-        { path: 'work', element: <Work /> },
-        { path: 'other', element: <Other /> },
+        { path: 'javasath', element:<User /> },
+        { path: 'insurance', element: <Insurance />},
+        { path: 'work', element:<Work />},
+        { path: 'other', element:<Other /> },
       ],
     },
     {

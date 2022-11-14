@@ -50,7 +50,7 @@ console.log('////',editData)
         touched,
         values,
       }) => (
-        <Dialog open={open} aria-labelledby="form-dialog-title">
+        <Dialog open={open} aria-labelledby="form-dialog-title" onClose={handleClose} >
           <DialogTitle id="form-dialog-title">Update Bill</DialogTitle>
           <DialogContent>
             {Boolean(errors.image) && (
@@ -135,6 +135,7 @@ console.log('////',editData)
             <Button
               onClick={() => handleSubmit()}
               color="primary"
+              variant="contained"
             //   disabled={loading}
             >Submit
               {/* {loading || editLoading ? "Saving ..." : "Submit"} */}

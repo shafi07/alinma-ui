@@ -1,4 +1,5 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Card, Link, Container, Typography } from '@mui/material';
@@ -12,7 +13,7 @@ import { LoginForm } from '../sections/auth/login';
 import AuthSocial from '../sections/auth/AuthSocial';
 
 // ----------------------------------------------------------------------
-
+const URL =`http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex',
@@ -61,6 +62,22 @@ export default function Login() {
 
   const mdUp = useResponsive('up', 'md');
 
+  const navigate = useNavigate();
+
+  const loginHandler = async(d)=>{
+    console.log(d)
+    const res = axios.post(`${URL}/user/auth`,d)
+                .then((res)=>{
+                  if(res.status === 200){
+                    localStorage.setItem('auth',res.data.id)
+                    navigate('/dashboard/app', { replace: true });
+                  }
+                  console.log(localStorage.getItem('auth'))
+                }).catch((err)=>{
+
+                })
+  }
+
   return (
     <Page title="Login">
       <RootStyle>     
@@ -70,7 +87,7 @@ export default function Login() {
               ALINMA TRAVELS
             </Typography>
 
-            <LoginForm />
+            <LoginForm loginHandler={loginHandler} />
 
             {!smUp && (
               <Typography variant="body2" align="center" sx={{ mt: 3 }}>

@@ -118,7 +118,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Javasath
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            <Button autoFocus color="inherit" onClick={() => handleSubmit()}>
               save
             </Button>
           </Toolbar>
@@ -447,6 +447,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               onClick={() => handleSubmit()}
               color="primary"
               disabled={loading}
+              variant='outlined'
             >
               {/* {loading || editLoading ? "Saving ..." : "Submit"} */} Submit
             </Button>

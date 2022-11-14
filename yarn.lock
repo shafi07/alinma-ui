@@ -1350,11 +1350,6 @@
     "minimatch" "^3.1.2"
     "strip-json-comments" "^3.1.1"
 
-"@faker-js/faker@^7.6.0":
-  "integrity" "sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw=="
-  "resolved" "https://registry.npmjs.org/@faker-js/faker/-/faker-7.6.0.tgz"
-  "version" "7.6.0"
-
 "@hookform/resolvers@^2.9.10":
   "integrity" "sha512-JIL1DgJIlH9yuxcNGtyhsWX/PgNltz+5Gr6+8SX9fhXc/hPbEIk6wPI82nhgvp3uUb6ZfAM5mqg/x7KR7NAb+A=="
   "resolved" "https://registry.npmjs.org/@hookform/resolvers/-/resolvers-2.9.10.tgz"

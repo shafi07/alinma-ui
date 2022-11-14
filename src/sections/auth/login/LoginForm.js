@@ -13,18 +13,18 @@ import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hoo
 
 // ----------------------------------------------------------------------
 
-export default function LoginForm() {
+export default function LoginForm({loginHandler}) {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    userName: Yup.string().email('Email must be a valid email address').required('Email is required'),
     password: Yup.string().required('Password is required'),
   });
 
   const defaultValues = {
-    email: '',
+    userName: '',
     password: '',
     remember: true,
   };
@@ -39,15 +39,15 @@ export default function LoginForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async (d) => {
-    navigate('/dashboard/app', { replace: true });
-    console.log(d)
-  };
+  // const onSubmit = async (d) => {
+  //   navigate('/dashboard/app', { replace: true });
+  //   console.log(d)
+  // };
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(loginHandler)}>
       <Stack spacing={3}>
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="userName" label="Email address" />
         <RHFTextField
           name="password"
           label="Password"

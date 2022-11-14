@@ -2,7 +2,7 @@ import { useState,useEffect,useRef } from 'react';
 import { useNavigate} from "react-router-dom";
 
 import { Col, Divider, Row, Table } from "antd";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 
 export default function Print (){
 
