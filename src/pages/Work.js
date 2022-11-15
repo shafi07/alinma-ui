@@ -1,7 +1,7 @@
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState,useEffect,useRef } from 'react';
-import { useReactToPrint } from 'react-to-print';
+import { useState,useEffect } from 'react';
+import { useNavigate} from "react-router-dom";
 // material
 import {
   Card,
@@ -28,7 +28,6 @@ import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
 import AddBill from '../components/work/addBill'
 import EditBill from '../components/user/editBill'
-import Print from './print'
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
 
@@ -104,6 +103,8 @@ export default function Work() {
   const [editModel,setEditModel]= useState(false)
 
   const [reFetch,setReFetch]=useState(false)
+
+  const navigate = useNavigate();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -198,12 +199,17 @@ export default function Work() {
                 })
   }
 
+  const handlePrint = async(data)=>{
+    // console.log('++++++',data)
+    navigate('/print',{state:{path:"work",...data}})
+  }
+
   return (
     <>
     {/* <Backdrop className={classes.backdrop} open={loading || deleteLoading}>
         <CircularProgress color="inherit" />
     </Backdrop> */}
-    <Page title="User">
+    <Page title="Work">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
@@ -286,9 +292,9 @@ export default function Work() {
                         <TableCell align="left">{balance_amount}</TableCell>
                         <TableCell align="left">
                           < PrintIcon onClick={(e) =>{e.stopPropagation()
-                        console.log(row)} } />
+                        handlePrint(row)} } />
                         </TableCell>
-                        <TableCell align="right">
+                        <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
                           <UserMoreMenu />
                         </TableCell>
                       </TableRow>

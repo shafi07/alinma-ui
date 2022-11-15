@@ -36,20 +36,20 @@ const subCategories = [
 // });
 
 const validationSchema = Yup.object({
-  sub_category: Yup.string().required("Enter Category Name"),
-  name: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
-  sponser_name: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
-  id_number: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
-  mol: Yup.number().required("Enter Unit (eg: Kg, Litre, etc)"),
-  iqama: Yup.number().required("Enter Unit (eg: Kg, Litre, etc)"),
-  insurance: Yup.number().required("Enter Unit (eg: Kg, Litre, etc)"),
-  other: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
-  mobileNumber: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
-  paid_amount: Yup.number().required("Enter Unit (eg: Kg, Litre, etc)"),
-  total_amount: Yup.number().required("Enter Unit (eg: Kg, Litre, etc)"),
-  service: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
+  sub_category: Yup.string().required("Select Category "),
+  name: Yup.string().required("Enter Name"),
+  sponser_name: Yup.string().required("Enter Sponser Name"),
+  id_number: Yup.string().required("Enter ID Number"),
+  mol: Yup.number().required("Enter Mol Amount"),
+  iqama: Yup.number().required("Enter Iqama Amount"),
+  insurance: Yup.number().required("Enter Insurance Amount"),
+  other: Yup.string().required("Enter Other Amounts"),
+  mobileNumber: Yup.string().required("Enter Mobile Number"),
+  paid_amount: Yup.number().required("Enter Amount"),
+  total_amount: Yup.number(),
+  service: Yup.string().required("Enter Service Amount"),
   balance:Yup.number(),
-  remarks: Yup.string().required("Enter Category Name"),
+  remarks: Yup.string(),
 });
 
 const Transition = React.forwardRef(function Transition(props, ref) {

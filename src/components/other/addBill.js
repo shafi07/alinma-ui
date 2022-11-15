@@ -29,12 +29,12 @@ const subCategories = [
 
 const validationSchema = Yup.object({
   sub_category: Yup.string().required("Enter Category Name"),
-  name: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
-  sponser_name: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
-  id_number: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
-  mobileNumber: Yup.string().required("Enter Unit (eg: Kg, Litre, etc)"),
-  paid_amount: Yup.number().required("Enter Unit (eg: Kg, Litre, etc)"),
-  total_amount: Yup.number().required("Enter Unit (eg: Kg, Litre, etc)"),
+  name: Yup.string().required("Enter Name"),
+  sponser_name: Yup.string().required("Enter Name"),
+  id_number: Yup.string().required("Enter ID Number"),
+  mobileNumber: Yup.string().required("Enter Mobile Number"),
+  paid_amount: Yup.number().required("Enter Amount"),
+  total_amount: Yup.number().required("Enter Amount"),
   balance:Yup.number(),
   remarks: Yup.string().optional(),
 });

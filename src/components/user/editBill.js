@@ -20,9 +20,9 @@ const style = {
   };
 
 const validationSchema = Yup.object({
-    total_amount: Yup.number().required("Enter Category Name"),
-    balance_amount: Yup.number().required("Enter Unit (eg: Kg, Litre, etc)"),
-    paid_amount: Yup.number().required("Enter Unit (eg: Kg, Litre, etc)"),
+    total_amount: Yup.number(),
+    balance_amount: Yup.number(),
+    paid_amount: Yup.number().required("Enter Amount"),
   });
 
 export default function BasicModal({open,handleClose,editData={},editHandler}) {

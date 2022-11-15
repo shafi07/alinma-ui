@@ -1,5 +1,5 @@
 import { useState,useEffect,useRef } from 'react';
-import { useNavigate} from "react-router-dom";
+import { useNavigate,useLocation} from "react-router-dom";
 
 import { Col, Divider, Row, Table } from "antd";
 import "antd/dist/antd.min.css";
@@ -7,38 +7,42 @@ import "antd/dist/antd.min.css";
 export default function Print (){
 
     const navigate = useNavigate()
+    const location = useLocation();
+    const data = location.state
+
+    console.log('print>>>>>>',data)
 
     useEffect(() => {
-        // window.print();
-        // navigate('/login')
+        window.print();
+        navigate(`/dashboard/${data.path}`)
       },[]);
 
   return (
     <div style={{ padding: 20 }}>
-      <Row>
-        <Col>
-          <Divider>Invoice</Divider>
+      <Row >
+        <Col  style={{width:'100%'}}>
+          <Divider>Alinma-Invoice</Divider>
           <Divider/>
         </Col>
       </Row>
 
       <Row gutter={24} style={{ marginTop: 32}}>
         <Col span={8}>
-          <h3>Eco Haya</h3>
+          <h1>Alinma Travles</h1>
           <div>#944/945, 4th Cross, 9th Main,</div>
-          <div>Vijaya Bank Layout,</div>
-          <div>Bannerghatta Road,</div>
-          <div>Bangalore - 560076</div>
+          <div>Al kharj road,</div>
+          <div>Riyadh second road Road,</div>
+          <div>Al-kharj - 560076</div>
         </Col>
         <Col span={8} offset={8}>
           <table>
             <tr>
-              <th>Invoice # :</th>
-              <td>1</td>
+              <th>File No :</th>
+              <td>{`${data.fileid}`}</td>
             </tr>
             <tr>
               <th>Invoice Date :</th>
-              <td>10-01-2018</td>
+              <td>{new Date().toLocaleString().split(',')[0].replaceAll('/','-')}</td>
             </tr>
             <tr>
               <th>Due Date :</th>
@@ -50,29 +54,23 @@ export default function Print (){
 
       <Row style={{ marginTop: 48 }}>
         <div>
-          Bill To: <strong>Strides Shasun Ltd</strong>
+          Bill To: <strong>Alinma-Travels Ltd</strong>
         </div>
-        <div>Bannerghatt Road,</div>
-        <div>Bangalore - 560076</div>
+        <div>Riyadh Road,</div>
+        <div>AL-Kharj - 560076</div>
       </Row>
       <Row style={{ marginTop: 10 }}>
         <Table
-          dataSource={[
-            {
-              id: 1,
-              name: "Accommodation (Single Occupancy)",
-              description: "Accommodation",
-              price: 1599,
-              quantity: 1
-            }
-          ]}
+          dataSource={[data]}
           pagination={false}
+          style={{width:'100%'}}
         >
-          <Table.Column title="Items" dataIndex="name" />
-          <Table.Column title="Description" dataIndex="description" />
-          <Table.Column title="Quantity" dataIndex="quantity" />
-          <Table.Column title="Price" dataIndex="price" />
-          <Table.Column title="Line Total" />
+          <Table.Column title="Name" dataIndex="name" />
+          <Table.Column title="Service" dataIndex="sub_category" />
+          <Table.Column title="ID number" dataIndex="id_number" />
+          <Table.Column title="Total" dataIndex="total_amount" />
+          <Table.Column title="Balance" dataIndex="balance_amount" />
+          {/* <Table.Column title="Line Total" /> */}
         </Table>
       </Row>
 
@@ -81,24 +79,19 @@ export default function Print (){
           <table>
             <tr>
               <th>Gross Total :</th>
-              <td>Rs. 1599</td>
+              <td>{` SR. ${data.total_amount}`}</td>
             </tr>
             <tr>
-              <th>IGST @6% :</th>
-              <td>Rs. 95.94</td>
+              <th>Paid Amount :</th>
+              <td>{` SR. ${data.paid_amount}`}</td>
             </tr>
             <tr>
-              <th>CGST @6% :</th>
-              <td>Rs. 95.94</td>
-            </tr>
-            <tr>
-              <th>Nett Total :</th>
-              <td>Rs. 1790.88</td>
+              <th>Balance:</th>
+              <td>{` SR. ${data.balance_amount}`}</td>
             </tr>
           </table>
         </Col>
       </Row>
-      <Row style={{ marginTop: 48, textAlign: "center" }}>notes</Row>
     </div>
   );
 };
