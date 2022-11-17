@@ -17,7 +17,7 @@ import Other from './pages/Other'
 export default function Router() {
   let isLoggedIn = false
       isLoggedIn = (localStorage.getItem("auth") === null) ? false : true
-      console.log('>>>>>>>>llklkkk',localStorage.getItem("auth") )
+      // console.log('>>>>>>>>llklkkk',localStorage.getItem("auth") )
   return useRoutes([
     {
       path: '/dashboard',

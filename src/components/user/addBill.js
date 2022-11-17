@@ -17,6 +17,7 @@ const subCategories = [
   {value:'Renew',label:'Renew'},
   {value:'Visa Change',label:'Visa Change'},
   {value:'Visit Visa',label:'Visit Visa'},
+  {value:'Re Entry',label:'Re Entry'},
   {value:'Print',label:'Print'},
   {value:'Driving Licence',label:'Driving Licence'},
   {value:'Vehicle Registration Renew',label:'Vehicle Registration Renew'},
@@ -38,35 +39,22 @@ const subCategories = [
 const validationSchema = Yup.object({
   sub_category: Yup.string().required("Select Category "),
   name: Yup.string().required("Enter Name"),
-  sponser_name: Yup.string().required("Enter Sponser Name"),
   id_number: Yup.string().required("Enter ID Number"),
   mol: Yup.number().required("Enter Mol Amount"),
   iqama: Yup.number().required("Enter Iqama Amount"),
   insurance: Yup.number().required("Enter Insurance Amount"),
-  other: Yup.string().required("Enter Other Amounts"),
   mobileNumber: Yup.string().required("Enter Mobile Number"),
   paid_amount: Yup.number().required("Enter Amount"),
   total_amount: Yup.number(),
   service: Yup.string().required("Enter Service Amount"),
   balance:Yup.number(),
-  remarks: Yup.string(),
 });
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({open,handleClose,editData={},submitHandler}) {
-  const [loading,setLoading]= React.useState(false)
-  // const classes = useStyles();
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const submitHandler = async (data)=>{
-  //   console.log('>>>>>>???',data)
-  // }
-
+export default function FullScreenDialog({open,handleClose,editData={},submitHandler,loading}) {
 
   return (
     <Formik
@@ -85,7 +73,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
         mobileNumber: "",
         paid_amount: "",
         balance: '',
-        remarks:''
+        remarks:'',
       }}
       onSubmit={(values, actions) => {
         submitHandler(values)
@@ -157,7 +145,6 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             <Grid item xs={6} >
             <TextField
               id="name"
-              // className={classes.input}
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
@@ -222,26 +209,25 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             </Grid>
             <Grid item xs={6} >
             <TextField
-              id="mol"
-              // className={classes.input}
+              id="mobileNumber"
+              label="Mobile Number"
+              name="mobileNumber"
+              type="text"
+              fullWidth
+              autoFocus
+              required
+              variant="outlined"
+              helperText={touched.mobileNumber ? errors.mobileNumber : ""}
+              error={touched.mobileNumber && Boolean(errors.mobileNumber)}
+              value={values.mobileNumber}
+              onChange={handleChange("mobileNumber")}
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
                 marginRight:2
               }}
-              label="Mol"
-              name="mol"
-              type="number"
-              fullWidth
-              autoFocus
-              required
-              variant="outlined"
-              helperText={touched.mol ? errors.mol : ""}
-              error={touched.mol && Boolean(errors.mol)}
-              value={values.mol}
-              onChange={handleChange("mol")}
-            />
-            </Grid>
+            /> 
+            </Grid> 
             <Grid item xs={6} >
             <TextField
               id="iqama"
@@ -266,7 +252,6 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             <Grid item xs={6} >
             <TextField
               id="insurance"
-              // className={classes.input}
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
@@ -309,13 +294,12 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             <Grid item xs={6} >
             <TextField
               id="service"
-              // className={classes.input}
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
                 marginRight:2
               }}
-              label="Service"
+              label="Service Charge"
               name="service"
               type="text"
               fullWidth
@@ -330,29 +314,28 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             </Grid>
             <Grid item xs={6} >
             <TextField
-              id="mobileNumber"
-              label="Mobile Number"
-              name="mobileNumber"
-              type="text"
-              fullWidth
-              autoFocus
-              required
-              variant="outlined"
-              helperText={touched.mobileNumber ? errors.mobileNumber : ""}
-              error={touched.mobileNumber && Boolean(errors.mobileNumber)}
-              value={values.mobileNumber}
-              onChange={handleChange("mobileNumber")}
+              id="mol"
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
                 marginLeft:2
               }}
-            /> 
+              label="Mol Amount"
+              name="mol"
+              type="number"
+              fullWidth
+              autoFocus
+              required
+              variant="outlined"
+              helperText={touched.mol ? errors.mol : ""}
+              error={touched.mol && Boolean(errors.mol)}
+              value={values.mol}
+              onChange={handleChange("mol")}
+            />
             </Grid>
             <Grid item xs={6} >
             <TextField
               id="total_amount"
-              // className={classes.input}
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,

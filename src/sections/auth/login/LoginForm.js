@@ -13,7 +13,7 @@ import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hoo
 
 // ----------------------------------------------------------------------
 
-export default function LoginForm({loginHandler}) {
+export default function LoginForm({loginHandler,loading}) {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -71,7 +71,7 @@ export default function LoginForm({loginHandler}) {
         </Link>
       </Stack>
 
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+      <LoadingButton fullWidth size="large" type="submit" variant="contained" disabled={loading} loading={isSubmitting}>
         Login
       </LoadingButton>
     </FormProvider>

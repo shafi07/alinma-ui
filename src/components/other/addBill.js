@@ -17,43 +17,21 @@ const subCategories = [
   {value:'Renew Pasport',label:'Renew Pasport'},
 ]
 
-// const useStyles = makeStyles({
-//   grid: {
-//     height: 140,
-//   },
-//   input: {
-//     marginTop: 15,
-//     marginBottom: 15,
-//   },
-// });
-
 const validationSchema = Yup.object({
   sub_category: Yup.string().required("Enter Category Name"),
   name: Yup.string().required("Enter Name"),
-  sponser_name: Yup.string().required("Enter Name"),
   id_number: Yup.string().required("Enter ID Number"),
   mobileNumber: Yup.string().required("Enter Mobile Number"),
   paid_amount: Yup.number().required("Enter Amount"),
   total_amount: Yup.number().required("Enter Amount"),
   balance:Yup.number(),
-  remarks: Yup.string().optional(),
 });
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({open,handleClose,editData={},submitHandler}) {
-  const [loading,setLoading]= React.useState(false)
-  // const classes = useStyles();
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const submitHandler = async (data)=>{
-  //   console.log('>>>>>>???',data)
-  // }
-
+export default function FullScreenDialog({open,handleClose,loading,submitHandler}) {
 
   return (
     <Formik
@@ -67,7 +45,10 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
         mobileNumber: "",
         paid_amount: "",
         balance: '',
-        remarks:''
+        remarks:'',
+        agent:'',
+        agent_amount:'',
+        service:''
       }}
       onSubmit={(values, actions) => {
         submitHandler(values)
@@ -165,7 +146,6 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               type="text"
               fullWidth
               autoFocus
-              required
               variant="outlined"
               helperText={touched.sponser_name ? errors.sponser_name : ""}
               error={touched.sponser_name && Boolean(errors.sponser_name)}
@@ -222,11 +202,73 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             </Grid>
             <Grid item xs={6} >
             <TextField
-              id="total_amount"
+              id="agent"
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
                 marginLeft:2,
+              }}
+              label="Agent Name"
+              name="agent"
+              type="text"
+              fullWidth
+              autoFocus
+              variant="outlined"
+              helperText={touched.agent ? errors.agent : ""}
+              error={touched.agent && Boolean(errors.agent)}
+              value={values.agent}
+              onChange={handleChange("agent")}
+            />
+            </Grid>
+            <Grid item xs={6} >
+            <TextField
+              id="service"
+              sx = {{
+                marginTop: 2,
+                marginBottom: 2,
+                marginRight:2
+              }}
+              label="Service Charge"
+              name="service"
+              type="number"
+              fullWidth
+              autoFocus
+              required
+              variant="outlined" 
+              helperText={touched.service ? errors.service : ""}
+              error={touched.service && Boolean(errors.service)}
+              value={values.service}
+              onChange={handleChange("service")}
+            />
+            </Grid>
+            <Grid item xs={6} >
+            <TextField
+              id="agent_amount"
+              label="Agent amount"
+              name="agent_amount"
+              type="number"
+              fullWidth
+              autoFocus
+              required
+              variant="outlined"
+              helperText={touched.agent_amount ? errors.agent_amount : ""}
+              error={touched.agent_amount && Boolean(errors.agent_amount)}
+              value={values.agent_amount}
+              onChange={handleChange("agent_amount")}
+              sx = {{
+                marginTop: 2,
+                marginBottom: 2,
+                marginLeft:2,
+              }}
+            /> 
+            </Grid>
+            <Grid item xs={6} >
+            <TextField
+              id="total_amount"
+              sx = {{
+                marginTop: 2,
+                marginBottom: 2,
+                marginRight:2
               }}
               label="Total Amount"
               name="total_amount"
@@ -258,7 +300,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2,
               }}
             /> 
             </Grid>
@@ -268,7 +310,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2,
+                marginRight:2
               }}
               label="Balance Amount"
               name="balance"
@@ -290,14 +332,13 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2,
               }}
               label="Remarks"
               name="remarks"
               type="text"
               fullWidth
               autoFocus
-              required
               variant="outlined"
               helperText={touched.remarks ? errors.remarks : ""}
               error={touched.remarks && Boolean(errors.remarks)}

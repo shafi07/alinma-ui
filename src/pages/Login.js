@@ -11,6 +11,7 @@ import Logo from '../components/Logo';
 // sections
 import { LoginForm } from '../sections/auth/login';
 import AuthSocial from '../sections/auth/AuthSocial';
+import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 const URL =`http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
@@ -62,20 +63,22 @@ export default function Login() {
 
   const mdUp = useResponsive('up', 'md');
 
+  const [loading,setLoading]=useState(false)
+
   const navigate = useNavigate();
 
   const loginHandler = async(d)=>{
-    console.log(d)
-    const res = axios.post(`${URL}/user/auth`,d)
-                .then((res)=>{
-                  if(res.status === 200){
-                    localStorage.setItem('auth',res.data.id)
-                    navigate('/dashboard/app', { replace: true });
-                  }
-                  console.log(localStorage.getItem('auth'))
-                }).catch((err)=>{
-
-                })
+    setLoading(true)
+    axios.post(`${URL}/user/auth`, d)
+      .then((res) => {
+        if (res.status === 200) {
+          localStorage.setItem('auth', res.data.id)
+          navigate('/dashboard/app', { replace: true });
+        }
+      }).catch((err) => {
+        setLoading(false)
+      })
+    setLoading(false)
   }
 
   return (
@@ -87,7 +90,7 @@ export default function Login() {
               ALINMA TRAVELS
             </Typography>
 
-            <LoginForm loginHandler={loginHandler} />
+            <LoginForm loginHandler={loginHandler} loading={loading} />
 
             {!smUp && (
               <Typography variant="body2" align="center" sx={{ mt: 3 }}>

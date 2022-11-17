@@ -1,6 +1,6 @@
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState,useEffect,useRef } from 'react';
+import { useState,useEffect } from 'react';
 import { useNavigate} from "react-router-dom";
 // material
 import {
@@ -15,8 +15,10 @@ import {
   Typography,
   TableContainer,
   TablePagination,
-  Backdrop,
   CircularProgress,
+  Box,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import PrintIcon from '@mui/icons-material/Print';
 // components
@@ -41,10 +43,15 @@ const TABLE_HEAD = [
   { id: 'sponserName', label: 'Sponser Name', alignRight: false },
   { id: 'dob', label: 'Dob', alignRight: false },
   { id: 'mobileNumber', label: 'Mobile', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'cash', label: 'Cash', alignRight: false },
+  { id: 'agentDate', label: 'Agent Date', alignRight: false },
+  { id: 'agen', label: 'Agent', alignRight: false },
+  { id: 'agentAmount', label: 'Agent amount', alignRight: false },
+  { id: 'service', label: 'Service', alignRight: false },
   { id: 'total', label: 'Total Amount', alignRight: false },
   { id: 'paid', label: 'Paid Amount', alignRight: false },
   { id: 'balance', label: 'Balance Amount ', alignRight: false },
+  { id: 'status', label: 'Status ', alignRight: false },
   { id: '' },
 ];
 
@@ -90,7 +97,7 @@ export default function Insurance() {
 
   const [filterName, setFilterName] = useState('');
 
-  const [query,setQuey]= useState(null);
+  const [query,setQuey]= useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(30);
 
@@ -103,6 +110,10 @@ export default function Insurance() {
   const [editModel,setEditModel]= useState(false)
 
   const [reFetch,setReFetch]=useState(false)
+
+  const [loading,setLoading]=useState(true)
+
+  const[status,setStatus] = useState('')
 
   const navigate = useNavigate();
 
@@ -122,8 +133,8 @@ export default function Insurance() {
   };
 
   useEffect(() => {
-    fetchData(query);
-  },[query,reFetch]);
+    fetchData(query,status);
+  },[query,reFetch,status]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -143,12 +154,13 @@ export default function Insurance() {
     setEditModel(!editModel)
   }
 
-  const fetchData = async (query) => {
-    const url = query ? `${URL}/insurance?query=${query}` : `${URL}/insurance`
+  const fetchData = async (query,status) => {
+    const url = query || status ? `${URL}/insurance?query=${query}&status=${status}` : `${URL}/insurance`
     const response = await fetch(url);
     const newData = await response.json()
     console.log('<<<<',newData)
     setUSERLIST(newData)
+    setLoading(false)
   };
 
   const headers = [
@@ -175,40 +187,55 @@ export default function Insurance() {
 
   const isUserNotFound = filteredUsers.length === 0;
 
-  const submitInsurance = async (data)=>{
-    // console.log('>>>>>>???',data)
-    const res = axios.post(`${URL}/insurance`,data)
-                .then((res)=>{
-                  console.log('----->',res)
-                  setOpen(false)
-                  setReFetch(!reFetch)
-                }).catch((err)=>{
-
-                })
+  const submitInsurance = async (data, actions) => {
+    setLoading(true)
+    axios.post(`${URL}/insurance`, data)
+      .then((res) => {
+        console.log('----->', res)
+        setOpen(false)
+        setReFetch(!reFetch)
+      }).catch((err) => {
+        setLoading(false)
+      })
+    actions.resetForm()
   }
 
-  const editInsurance = async (data)=>{
-    // console.log('>>>>>>???',data)
-    const res = axios.put(`${URL}/insurance`,data)
-                .then((res)=>{
-                  console.log('----->',res)
-                  setEditModel(!editModel)
-                  setReFetch(!reFetch)
-                }).catch((err)=>{
+  const editInsurance = async (data) => {
+    setLoading(true)
+    axios.put(`${URL}/insurance`, data)
+      .then((res) => {
+        console.log('----->', res)
+        setEditData(null)
+        setEditModel(!editModel)
+        setReFetch(!reFetch)
+      }).catch((err) => {
+        setLoading(false)
+      })
+  }
 
-                })
+  const handleStatusChange = async (value,id) => {
+    setLoading(true)
+    axios.put(`${URL}/javasath`, {status:value,id})
+      .then((res) => {
+        console.log('----->', res)
+        setEditModel(!editModel)
+        setReFetch(!reFetch)
+      }).catch((err) => {
+        setLoading(false)
+      })
+  }
+
+  const handleStatusFilter = async(data)=>{
+    setLoading(true)
+    setStatus(data)
   }
 
   const handlePrint = async(data)=>{
-    // console.log('++++++',data)
     navigate('/print',{state:{path:"insurance",...data}})
   }
 
   return (
     <>
-    {/* <Backdrop className={classes.backdrop} open={loading || deleteLoading}>
-        <CircularProgress color="inherit" />
-    </Backdrop> */}
     <Page title="insurance">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -226,8 +253,11 @@ export default function Insurance() {
         </Stack>
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
+          <UserListToolbar handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
           <Scrollbar>
+          {loading ? <Box sx={{ width:'100%',display:'flex',minHeight:'50vh',alignItems:'center',justifyContent:'center' }} >
+            <CircularProgress color="inherit" />
+          </Box>:
             <TableContainer>
               <Table style={{width:"200%"}} >
                 <UserListHead
@@ -240,8 +270,11 @@ export default function Insurance() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id,id_number,dob, fileid, name, sub_category='dss', insurance,service,sponser_name='test',paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',other='test',total_amount } = row;
+                      {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                        const { id, id_number, dob, agent_amount = 111, paid_date = '11-02-1993', fileid, name,
+                          sub_category = 'dss', insurance, service = 100, sponser_name = 'test', paid_amount = 'test',
+                          balance_amount = 'test', iqama = 'test', mol = 'test', mobilenumber = '989898989898',
+                          other = 'test', total_amount,agent = 'test_agent' } = row;
 
                     return (
                       <TableRow
@@ -282,14 +315,19 @@ export default function Insurance() {
                             {sentenceCase(balance_amount == 0 ? 'Paid':'Credit')}
                           </Label>
                         </TableCell>
-                        {/* <TableCell align="left">{mol}</TableCell>
-                        <TableCell align="left">{iqama}</TableCell>
-                        <TableCell align="left">{insurance}</TableCell>
+                        <TableCell align="left">{paid_date}</TableCell>
+                        <TableCell align="left">{agent}</TableCell>
+                        <TableCell align="left">{agent_amount}</TableCell>
                         <TableCell align="left">{service}</TableCell>
-                        <TableCell align="left">{other}</TableCell> */}
                         <TableCell align="left">{total_amount}</TableCell>
                         <TableCell align="left">{paid_amount}</TableCell>
                         <TableCell align="left">{balance_amount}</TableCell>
+                        <TableCell onClick={(e) =>{e.stopPropagation()} }  align="left">
+                          <Select onChange={(e)=>handleStatusChange(e.target.value,id)} defaultValue={"pending"} sx={{height: 30,width:'84%' }} >
+                            <MenuItem value={"pending"}>Pending</MenuItem>
+                            <MenuItem value={"completed"}>Completed</MenuItem>
+                          </Select>
+                        </TableCell>
                         <TableCell align="left">
                           < PrintIcon onClick={(e) =>{e.stopPropagation()
                         handlePrint(row)} } />
@@ -317,7 +355,7 @@ export default function Insurance() {
                   </TableBody>
                 )}
               </Table>
-            </TableContainer>
+            </TableContainer>}
           </Scrollbar>
 
           <TablePagination
@@ -336,14 +374,15 @@ export default function Insurance() {
      open = {open} 
      handleClose = {() => setOpen(false)}
      submitHandler={submitInsurance}
+     loading={loading}
      />
     {editData ? <EditBill 
      open={editModel}
      editData={editData}
      handleClose = {handleCloseEdit}
      editHandler={editInsurance}
+     loading={loading}
      /> :''} 
-     {/* <Print ref={componentRef} /> */}
     </>
   );
 }

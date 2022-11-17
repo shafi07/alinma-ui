@@ -17,8 +17,11 @@ import {
   TablePagination,
   Backdrop,
   CircularProgress,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import PrintIcon from '@mui/icons-material/Print';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 // components
 import Page from '../components/Page';
 import Label from '../components/Label';
@@ -31,6 +34,7 @@ import EditBill from '../components/user/editBill'
 import Print from './print'
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
+import { Box } from '@mui/system';
 
 // ----------------------------------------------------------------------
 const URL =`http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
@@ -41,7 +45,7 @@ const TABLE_HEAD = [
   { id: 'company', label: 'Sub category', alignRight: false },
   { id: 'sponserName', label: 'Sponser Name', alignRight: false },
   { id: 'mobileNumber', label: 'Mobile', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'cash', label: 'Cash', alignRight: false },
   { id: 'mol', label: 'Mol', alignRight: false },
   { id: 'iqama', label: 'Iqama', alignRight: false },
   { id: 'insurance', label: 'Insurance', alignRight: false },
@@ -50,6 +54,7 @@ const TABLE_HEAD = [
   { id: 'total', label: 'Total Amount', alignRight: false },
   { id: 'paid', label: 'Paid Amount', alignRight: false },
   { id: 'balance', label: 'Balance Amount ', alignRight: false },
+  { id: 'status', label: 'Status', alignRight: false },
   { id: '' },
 ];
 
@@ -95,9 +100,9 @@ export default function User() {
 
   const [filterName, setFilterName] = useState('');
 
-  const [query,setQuey]= useState(null);
+  const [query,setQuey]= useState('');
 
-  const [rowsPerPage, setRowsPerPage] = useState(30);
+  const [rowsPerPage, setRowsPerPage] = useState(50);
 
   const [open,setOpen] = useState(false)
 
@@ -108,6 +113,10 @@ export default function User() {
   const [editModel,setEditModel]= useState(false)
 
   const [reFetch,setReFetch]=useState(false)
+
+  const [loading,setLoading]=useState(true)
+
+  const[status,setStatus] = useState('')
 
   const navigate = useNavigate();
 
@@ -127,8 +136,8 @@ export default function User() {
   };
 
   useEffect(() => {
-    fetchData(query);
-  },[query,reFetch]);
+    fetchData(query,status);
+  },[query,reFetch,status]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -148,12 +157,13 @@ export default function User() {
     setEditModel(!editModel)
   }
 
-  const fetchData = async (query) => {
-    const url = query ? `${URL}/javasath?query=${query}` : `${URL}/javasath`
+  const fetchData = async (query,status) => {
+    const url = query || status ? `${URL}/javasath?query=${query}&status=${status}` : `${URL}/javasath`
     const response = await fetch(url);
     const newData = await response.json()
     console.log('<<<<',newData)
     setUSERLIST(newData)
+    setLoading(false)
   };
 
   const headers = [
@@ -184,38 +194,58 @@ export default function User() {
 
   const isUserNotFound = filteredUsers.length === 0;
 
-  const submitJavazath = async (data)=>{
-    const res = axios.post(`${URL}/javasath`,data)
-                .then((res)=>{
-                  console.log('----->',res)
-                  setOpen(false)
-                  setReFetch(!reFetch)
-                }).catch((err)=>{
-
-                })
+  const submitJavazath = async (data) => {
+    console.log('kkkkkkk', data)
+    setLoading(true)
+    axios.post(`${URL}/javasath`, data)
+      .then((res) => {
+        console.log('----->', res)
+        setOpen(false)
+        setReFetch(!reFetch)
+      }).catch((err) => {
+        setLoading(false)
+      })
   }
 
-  const editJavazath = async (data)=>{
-    const res = axios.put(`${URL}/javasath`,data)
-                .then((res)=>{
-                  console.log('----->',res)
-                  setEditModel(!editModel)
-                  setReFetch(!reFetch)
-                }).catch((err)=>{
+  const editJavazath = async (data) => {
+    setLoading(true)
+    axios.put(`${URL}/javasath`, data)
+      .then((res) => {
+        console.log('----->', res)
+        setEditData(null)
+        setEditModel(!editModel)
+        setReFetch(!reFetch)
+      }).catch((err) => {
+        setLoading(false)
+      })
+  }
 
-                })
+  const handleStatusChange = async (value,id) => {
+    setLoading(true)
+    axios.put(`${URL}/javasath`, {status:value,id})
+      .then((res) => {
+        console.log('----->', res)
+        setEditModel(!editModel)
+        setReFetch(!reFetch)
+      }).catch((err) => {
+        setLoading(false)
+      })
   }
 
   const handlePrint = async(data)=>{
-    // console.log('++++++',data)
     navigate('/print',{state:{path:"javasath",...data}})
+  }
+
+  const handleStatusFilter = async(data)=>{
+    setStatus(data)
+  }
+
+  const handleDelete = async(data)=>{
+    setStatus(data)
   }
 
   return (
     <>
-    {/* <Backdrop className={classes.backdrop} open={loading || deleteLoading}>
-        <CircularProgress color="inherit" />
-    </Backdrop> */}
     <Page title="Javasath">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -233,8 +263,11 @@ export default function User() {
         </Stack>
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
+          <UserListToolbar handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
           <Scrollbar>
+          {loading ? <Box sx={{ width:'100%',display:'flex',minHeight:'50vh',alignItems:'center',justifyContent:'center' }} >
+            <CircularProgress color="inherit" />
+          </Box>:
             <TableContainer>
               <Table style={{width:"200%"}} >
                 <UserListHead
@@ -248,7 +281,9 @@ export default function User() {
                 />
                 <TableBody>
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id,id_number, fileid='JZ1', name, sub_category='dss', insurance,service,sponser_name='test',paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',other='test',total_amount } = row;
+                    const {id,id_number, fileid='JZ1', name, sub_category='dss', insurance,service,sponser_name='test',
+                    paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',
+                    other='test',total_amount,status="pending" } = row;
 
                     return (
                       <TableRow
@@ -296,12 +331,24 @@ export default function User() {
                         <TableCell align="left">{total_amount}</TableCell>
                         <TableCell align="left">{paid_amount}</TableCell>
                         <TableCell align="left">{balance_amount}</TableCell>
-                        <TableCell align="left">
+                        <TableCell onClick={(e) =>{e.stopPropagation()} }  align="left">
+                          <Select onChange={(e)=>handleStatusChange(e.target.value,id)} defaultValue={status} sx={{height: 30,width:'84%' }} >
+                            <MenuItem value={"pending"}>Pending</MenuItem>
+                            <MenuItem value={"completed"}>Completed</MenuItem>
+                          </Select>
+                        </TableCell>
+                        <TableCell align="left" >
                           < PrintIcon onClick={(e) =>{e.stopPropagation()
                             handlePrint(row)} } />
                         </TableCell>
+                        <TableCell align="left" >
+                        {/* <Iconify icon="mdi:eye-outline" width={24} height={24} onClick={(e) =>{e.stopPropagation()
+                            handlePrint(row)} } /> */}
+                          < VisibilityIcon onClick={(e) =>{e.stopPropagation()
+                            handlePrint(row)} } />
+                        </TableCell>
                         <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
-                          <UserMoreMenu />
+                          <UserMoreMenu row={row} handlePrint={handlePrint} />
                         </TableCell>
                       </TableRow>
                     );
@@ -323,17 +370,23 @@ export default function User() {
                   </TableBody>
                 )}
               </Table>
-            </TableContainer>
+            </TableContainer>}
           </Scrollbar>
 
           <TablePagination
-            rowsPerPageOptions={[30, 50, 100]}
+            rowsPerPageOptions={[100]} 
             component="div"
             count={USERLIST.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            backIconButtonProps={{
+              "aria-label": "Previous Page",
+            }}
+            nextIconButtonProps={{
+              "aria-label": "Next Page",
+            }}
           />
         </Card>
       </Container>
@@ -342,14 +395,15 @@ export default function User() {
      open = {open} 
      handleClose = {() => setOpen(false)}
      submitHandler={submitJavazath}
+     loading={loading}
      />
     {editData ? <EditBill 
      open={editModel}
      editData={editData}
      handleClose = {handleCloseEdit}
      editHandler={editJavazath}
+     loading={loading}
      /> :''} 
-     {/* <Print ref={componentRef} /> */}
     </>
   );
 }

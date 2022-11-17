@@ -25,7 +25,7 @@ const validationSchema = Yup.object({
     paid_amount: Yup.number().required("Enter Amount"),
   });
 
-export default function BasicModal({open,handleClose,editData={},editHandler}) {
+export default function BasicModal({open,handleClose,editData={},editHandler,loading}) {
 //   const handleOpen = () => setOpen(true);
 console.log('////',editData)
 //   const handleClose = () => setOpen(false);
@@ -136,7 +136,7 @@ console.log('////',editData)
               onClick={() => handleSubmit()}
               color="primary"
               variant="contained"
-            //   disabled={loading}
+              disabled={loading}
             >Submit
               {/* {loading || editLoading ? "Saving ..." : "Submit"} */}
             </Button>

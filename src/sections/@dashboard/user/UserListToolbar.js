@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // material
 import { styled } from '@mui/material/styles';
-import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment } from '@mui/material';
+import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment, Select, MenuItem, InputLabel } from '@mui/material';
 // component
 import Iconify from '../../../components/Iconify';
 import Filter from './Filter';
@@ -40,7 +40,7 @@ UserListToolbar.propTypes = {
   onFilterName: PropTypes.func,
 };
 
-export default function UserListToolbar({ numSelected, filterName, onFilterName }) {
+export default function UserListToolbar({handleStatusFilter, numSelected, filterName, onFilterName,status }) {
   return (
     <RootStyle
       sx={{
@@ -54,7 +54,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
         <Typography component="div" variant="subtitle1">
           {numSelected} selected
         </Typography>
-      ) : (
+      ) : (<>
         <SearchStyle
           value={filterName}
           onChange={onFilterName}
@@ -65,7 +65,16 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
             </InputAdornment>
           }
         />
-        
+          <Select
+           onChange={(e) => handleStatusFilter(e.target.value)} 
+           defaultValue={status}
+           name='status'
+           sx={{width: 240,width: '200px',height: 55 }} >
+            <MenuItem value={''}>All</MenuItem>
+            <MenuItem value={"pending"}>Pending</MenuItem>
+            <MenuItem value={"completed"}>Completed</MenuItem>
+          </Select>
+        </>
       )}
 
       {numSelected > 0 ? (

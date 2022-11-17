@@ -17,43 +17,21 @@ const subCategories = [
   {value:'new',label:'New'}
 ]
 
-// const useStyles = makeStyles({
-//   grid: {
-//     height: 140,
-//   },
-//   input: {
-//     marginTop: 15,
-//     marginBottom: 15,
-//   },
-// });
-
 const validationSchema = Yup.object({
-  sub_category: Yup.string().required("Enter Category Name"),
   name: Yup.string().required("Enter Name)"),
-  sponser_name: Yup.string().required("Enter Unit Sponser Name"),
+  sponser_name: Yup.string().required("Enter Sponser Name"),
   id_number: Yup.string().required("Enter ID Number"),
   mobileNumber: Yup.string().required("Enter Mobile Number"),
   paid_amount: Yup.number().required("Enter Amount"),
   total_amount: Yup.number().required("Enter Amount"),
   balance:Yup.number(),
-  remarks: Yup.string().optional(),
 });
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({open,handleClose,editData={},submitHandler}) {
-  const [loading,setLoading]= React.useState(false)
-  // const classes = useStyles();
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const submitHandler = async (data)=>{
-  //   console.log('>>>>>>???',data)
-  // }
-
+export default function FullScreenDialog({open,handleClose,loading,submitHandler}) {
 
   return (
     <Formik
@@ -68,10 +46,13 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
         mobileNumber: "",
         paid_amount: "",
         balance: '',
-        remarks:''
+        remarks:'',
+        agent_amount:'',
+        service:'',
+        paid_date:''
       }}
       onSubmit={(values, actions) => {
-        submitHandler(values)
+        submitHandler(values,actions)
       }}
     >
     {({
@@ -244,6 +225,48 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             </Grid>
             <Grid item xs={6} >
             <TextField
+              id="service"
+              sx = {{
+                marginTop: 2,
+                marginBottom: 2,
+                marginRight:2
+              }}
+              label="Service Charge"
+              name="service"
+              type="number"
+              fullWidth
+              autoFocus
+              required
+              variant="outlined"
+              helperText={touched.service ? errors.service : ""}
+              error={touched.service && Boolean(errors.service)}
+              value={values.service}
+              onChange={handleChange("service")}
+            />
+            </Grid>
+            <Grid item xs={6} >
+            <TextField
+              id="agent_amount"
+              label="Agent Amount"
+              name="agent_amount"
+              type="number"
+              fullWidth
+              autoFocus
+              required
+              variant="outlined"
+              helperText={touched.agent_amount ? errors.agent_amount : ""}
+              error={touched.agent_amount && Boolean(errors.agent_amount)}
+              value={values.agent_amount}
+              onChange={handleChange("agent_amount")}
+              sx = {{
+                marginTop: 2,
+                marginBottom: 2,
+                marginLeft:2,
+              }}
+            /> 
+            </Grid>
+            <Grid item xs={6} >
+            <TextField
               id="total_amount"
               sx = {{
                 marginTop: 2,
@@ -256,10 +279,11 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               fullWidth
               autoFocus
               required
+              disabled
               variant="outlined" 
               helperText={touched.total_amount ? errors.total_amount : ""}
               error={touched.total_amount && Boolean(errors.total_amount)}
-              value={values.total_amount}
+              value={values.total_amount = (Number(values.agent_amount) + Number(values.service))}
               onChange={handleChange("total_amount")}
             />
             </Grid>
@@ -325,6 +349,27 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               error={touched.remarks && Boolean(errors.remarks)}
               value={values.remarks}
               onChange={handleChange("remarks")}
+            />
+            </Grid>
+            <Grid item xs={6} >
+            <TextField
+              id="paid_date"
+              sx = {{
+                marginTop: 2,
+                marginBottom: 2,
+                marginRight:2
+              }}
+              label="Agent Paid Date"
+              name="paid_date"
+              type="Text"
+              fullWidth
+              autoFocus
+              required
+              variant="outlined"
+              helperText={touched.paid_date ? errors.paid_date : ""}
+              error={touched.paid_date && Boolean(errors.paid_date)}
+              value={values.paid_date}
+              onChange={handleChange("paid_date")}
             />
             </Grid>
           </Grid>
