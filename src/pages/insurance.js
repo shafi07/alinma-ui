@@ -28,8 +28,8 @@ import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
-import AddBill from '../components/insurance/addBill'
-import EditBill from '../components/user/editBill'
+import AddBill from '../components/insurance/addInsurance'
+import EditBill from '../components/javasath/editBill'
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
 
@@ -99,7 +99,7 @@ export default function Insurance() {
 
   const [query,setQuey]= useState('');
 
-  const [rowsPerPage, setRowsPerPage] = useState(30);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
 
   const [open,setOpen] = useState(false)
 
@@ -214,8 +214,9 @@ export default function Insurance() {
   }
 
   const handleStatusChange = async (value,id) => {
+    console.log({status:value,id})
     setLoading(true)
-    axios.put(`${URL}/javasath`, {status:value,id})
+    axios.put(`${URL}/insurance`, {status:value,id})
       .then((res) => {
         console.log('----->', res)
         setEditModel(!editModel)
@@ -274,7 +275,7 @@ export default function Insurance() {
                         const { id, id_number, dob, agent_amount = 111, paid_date = '11-02-1993', fileid, name,
                           sub_category = 'dss', insurance, service = 100, sponser_name = 'test', paid_amount = 'test',
                           balance_amount = 'test', iqama = 'test', mol = 'test', mobilenumber = '989898989898',
-                          other = 'test', total_amount,agent = 'test_agent' } = row;
+                          other = 'test', total_amount,agent = 'test_agent',status } = row;
 
                     return (
                       <TableRow
@@ -323,7 +324,7 @@ export default function Insurance() {
                         <TableCell align="left">{paid_amount}</TableCell>
                         <TableCell align="left">{balance_amount}</TableCell>
                         <TableCell onClick={(e) =>{e.stopPropagation()} }  align="left">
-                          <Select onChange={(e)=>handleStatusChange(e.target.value,id)} defaultValue={"pending"} sx={{height: 30,width:'84%' }} >
+                          <Select onChange={(e)=>handleStatusChange(e.target.value,id)} defaultValue={status} sx={{height: 30,width:'84%' }} >
                             <MenuItem value={"pending"}>Pending</MenuItem>
                             <MenuItem value={"completed"}>Completed</MenuItem>
                           </Select>
@@ -359,7 +360,7 @@ export default function Insurance() {
           </Scrollbar>
 
           <TablePagination
-            rowsPerPageOptions={[30, 50, 100]}
+            rowsPerPageOptions={[100]}
             component="div"
             count={USERLIST.length}
             rowsPerPage={rowsPerPage}

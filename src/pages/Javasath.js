@@ -29,8 +29,8 @@ import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
-import AddBill from '../components/user/addBill'
-import EditBill from '../components/user/editBill'
+import AddBill from '../components/javasath/addJavasath'
+import EditBill from '../components/javasath/editBill'
 import Print from './print'
 import { CSVLink } from 'react-csv';
 import axios from 'axios';

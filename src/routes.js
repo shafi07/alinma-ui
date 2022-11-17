@@ -11,6 +11,7 @@ import Print from './pages/print'
 import Insurance from './pages/insurance';
 import Work from './pages/Work';
 import Other from './pages/Other'
+import Visa from './pages/visa';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +28,7 @@ export default function Router() {
         { path: 'javasath', element:<User /> },
         { path: 'insurance', element: <Insurance />},
         { path: 'work', element:<Work />},
+        { path: 'visa', element:<Visa />},
         { path: 'other', element:<Other /> },
       ],
     },

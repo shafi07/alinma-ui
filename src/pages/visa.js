@@ -28,7 +28,7 @@ import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
-import AddBill from '../components/work/addWork'
+import AddBill from '../components/visa/addVisa'
 import EditBill from '../components/javasath/editBill'
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
@@ -41,15 +41,17 @@ const TABLE_HEAD = [
   { id: 'id', label: 'ID', alignRight: false },
   { id: 'subCategory', label: 'Sub Category', alignRight: false },
   { id: 'sponserName', label: 'Sponser Name', alignRight: false },
-  { id: 'agent', label: 'Agent', alignRight: false },
   { id: 'mobileNumber', label: 'Mobile', alignRight: false },
   { id: 'cash', label: 'Cash', alignRight: false },
-  { id: 'service', label: 'Service', alignRight: false },
+  { id: 'agent', label: 'Agent', alignRight: false },
+  { id: 'agentDate', label: 'Agent Date', alignRight: false },
+  { id: 'visaNumber', label: 'Visa Number', alignRight: false },
+  { id: 'service', label: 'Service Amount', alignRight: false },
   { id: 'agentAmount', label: 'Agent Amount', alignRight: false },
   { id: 'total', label: 'Total Amount', alignRight: false },
   { id: 'paid', label: 'Paid Amount', alignRight: false },
   { id: 'balance', label: 'Balance Amount ', alignRight: false },
-  { id: 'status', label: 'Status ', alignRight: false },
+  { id: 'status', label: 'Status', alignRight: false },
   { id: '' },
 ];
 
@@ -84,7 +86,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Work() {
+export default function Visa() {
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -153,7 +155,7 @@ export default function Work() {
   }
 
   const fetchData = async (query,status) => {
-    const url = query || status ? `${URL}/work?query=${query}&status=${status}` : `${URL}/work`
+    const url = query || status ? `${URL}/visa?query=${query}&status=${status}` : `${URL}/visa`
     const response = await fetch(url);
     const newData = await response.json()
     console.log('<<<<',newData)
@@ -167,7 +169,6 @@ export default function Work() {
     { label: "ID", key: "id_number" },
     { label: "Sub Category", key: "sub_category" },
     { label: "Mobile", key: "mobilenumber" },
-    { label: "Agent", key: "agent" },
     { label: "total_amount", key: "total_amount" },
     { label: "paid_amount", key: "paid_amount" },
     { label: "balance_amount", key: "balance_amount" },
@@ -185,9 +186,9 @@ export default function Work() {
 
   const isUserNotFound = filteredUsers.length === 0;
 
-  const submitWork = async (data) => {
+  const submitVisa = async (data) => {
     setLoading(true)
-    axios.post(`${URL}/work`, data)
+    axios.post(`${URL}/visa`, data)
       .then((res) => {
         console.log('----->', res)
         setOpen(false)
@@ -197,9 +198,9 @@ export default function Work() {
       })
   }
 
-  const editWork = async (data) => {
+  const editVisa = async (data) => {
     setLoading(true)
-    axios.put(`${URL}/work`, data)
+    axios.put(`${URL}/visa`, data)
       .then((res) => {
         console.log('----->', res)
         setEditModel(!editModel)
@@ -211,7 +212,7 @@ export default function Work() {
 
   const handleStatusChange = async (value,id) => {
     setLoading(true)
-    axios.put(`${URL}/work`, {status:value,id})
+    axios.put(`${URL}/visa`, {status:value,id})
       .then((res) => {
         console.log('----->', res)
         setEditModel(!editModel)
@@ -226,19 +227,19 @@ export default function Work() {
   }
 
   const handlePrint = async(data)=>{
-    navigate('/print',{state:{path:"work",...data}})
+    navigate('/print',{state:{path:"visa",...data}})
   }
 
   return (
     <>
-    <Page title="Work">
+    <Page title="Visa">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            WORK
+            VISA
           </Typography>
           <Button variant="contained" sx={{backgroundColor:'#F51720'}} onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Work
+            New Visa
           </Button>
           <CSVLink headers={headers} data={USERLIST?USERLIST:[]} filename={'test'}>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
@@ -266,7 +267,10 @@ export default function Work() {
                 />
                 <TableBody>
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id,id_number,status,agent,agent_amount = '999', fileid, name, sub_category='dss',service=888,sponser_name,paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',other='test',total_amount } = row;
+                    const { id,id_number,status,agent='test',agent_amount=777, fileid, 
+                    name, sub_category='dss', insurance,service = 100,sponser_name,
+                    paid_amount='test',balance_amount='test',iqama='test',mol='test',
+                    mobilenumber='989898989898',other='test',total_amount,visa_number,paid_date } = row;
 
                     return (
                       <TableRow
@@ -300,15 +304,17 @@ export default function Work() {
                         </TableCell>
                         <TableCell align="left">{sub_category}</TableCell>
                         <TableCell align="left">{sponser_name}</TableCell>
-                        <TableCell align="left">{agent}</TableCell>
                         <TableCell align="left">{mobilenumber}</TableCell>
                         <TableCell align="left">
                           <Label variant="ghost" color={(balance_amount != 0 && 'error') || 'success'}>
                             {sentenceCase(balance_amount == 0 ? 'Paid':'Credit')}
                           </Label>
                         </TableCell>
-                        <TableCell align="left">{agent_amount}</TableCell>
+                        <TableCell align="left">{agent}</TableCell>
+                        <TableCell align="left">{paid_date}</TableCell>
+                        <TableCell align="left">{visa_number}</TableCell>
                         <TableCell align="left">{service}</TableCell>
+                        <TableCell align="left">{agent_amount}</TableCell>
                         <TableCell align="left">{total_amount}</TableCell>
                         <TableCell align="left">{paid_amount}</TableCell>
                         <TableCell align="left">{balance_amount}</TableCell>
@@ -363,14 +369,14 @@ export default function Work() {
     <AddBill
      open = {open} 
      handleClose = {() => setOpen(false)}
-     submitHandler={submitWork}
+     submitHandler={submitVisa}
      loading={loading}
      />
     {editData ? <EditBill 
      open={editModel}
      editData={editData}
      handleClose = {handleCloseEdit}
-     editHandler={editWork}
+     editHandler={editVisa}
      loading={loading}
      /> :''} 
     </>

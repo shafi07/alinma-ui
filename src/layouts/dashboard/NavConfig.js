@@ -27,6 +27,11 @@ const navConfig = [
     icon: getIcon('mdi:alpha-w-box'),
   },
   {
+    title: 'Visa',
+    path: '/dashboard/visa',
+    icon: getIcon('mdi:alpha-v-box'),
+  },
+  {
     title: 'Other',
     path: '/dashboard/other',
     icon: getIcon('mdi:wall'),

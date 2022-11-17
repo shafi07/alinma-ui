@@ -28,8 +28,8 @@ import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
-import AddBill from '../components/other/addBill'
-import EditBill from '../components/user/editBill'
+import AddBill from '../components/other/addOther'
+import EditBill from '../components/javasath/editBill'
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
 
@@ -44,6 +44,7 @@ const TABLE_HEAD = [
   { id: 'mobileNumber', label: 'Mobile', alignRight: false },
   { id: 'cash', label: 'Cash', alignRight: false },
   { id: 'agent', label: 'Agent', alignRight: false },
+  { id: 'agentDate', label: 'Agent Date', alignRight: false },
   { id: 'service', label: 'Service Amount', alignRight: false },
   { id: 'agentAmount', label: 'Agent Amount', alignRight: false },
   { id: 'total', label: 'Total Amount', alignRight: false },
@@ -97,7 +98,7 @@ export default function Other() {
 
   const [query,setQuey]= useState('');
 
-  const [rowsPerPage, setRowsPerPage] = useState(30);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
 
   const [open,setOpen] = useState(false)
 
@@ -184,7 +185,7 @@ export default function Other() {
 
   const isUserNotFound = filteredUsers.length === 0;
 
-  const submitInsurance = async (data) => {
+  const submitOther = async (data) => {
     setLoading(true)
     axios.post(`${URL}/other`, data)
       .then((res) => {
@@ -196,7 +197,7 @@ export default function Other() {
       })
   }
 
-  const editInsurance = async (data) => {
+  const editOther = async (data) => {
     setLoading(true)
     axios.put(`${URL}/other`, data)
       .then((res) => {
@@ -210,7 +211,7 @@ export default function Other() {
 
   const handleStatusChange = async (value,id) => {
     setLoading(true)
-    axios.put(`${URL}/javasath`, {status:value,id})
+    axios.put(`${URL}/other`, {status:value,id})
       .then((res) => {
         console.log('----->', res)
         setEditModel(!editModel)
@@ -265,7 +266,7 @@ export default function Other() {
                 />
                 <TableBody>
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id,id_number,agent='test',agent_amount=777, fileid, name, sub_category='dss', insurance,service = 100,sponser_name,paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',other='test',total_amount } = row;
+                    const { id,id_number,paid_date,status,agent='test',agent_amount=777, fileid, name, sub_category='dss', insurance,service = 100,sponser_name,paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',other='test',total_amount } = row;
 
                     return (
                       <TableRow
@@ -306,13 +307,14 @@ export default function Other() {
                           </Label>
                         </TableCell>
                         <TableCell align="left">{agent}</TableCell>
+                        <TableCell align="left">{paid_date}</TableCell>
                         <TableCell align="left">{service}</TableCell>
                         <TableCell align="left">{agent_amount}</TableCell>
                         <TableCell align="left">{total_amount}</TableCell>
                         <TableCell align="left">{paid_amount}</TableCell>
                         <TableCell align="left">{balance_amount}</TableCell>
                         <TableCell onClick={(e) =>{e.stopPropagation()} }  align="left">
-                          <Select onChange={(e)=>handleStatusChange(e.target.value,id)} defaultValue={"pending"} sx={{height: 30,width:'84%' }} >
+                          <Select onChange={(e)=>handleStatusChange(e.target.value,id)} defaultValue={status} sx={{height: 30,width:'84%' }} >
                             <MenuItem value={"pending"}>Pending</MenuItem>
                             <MenuItem value={"completed"}>Completed</MenuItem>
                           </Select>
@@ -348,7 +350,7 @@ export default function Other() {
           </Scrollbar>
 
           <TablePagination
-            rowsPerPageOptions={[30, 50, 100]}
+            rowsPerPageOptions={[100]}
             component="div"
             count={USERLIST.length}
             rowsPerPage={rowsPerPage}
@@ -362,14 +364,14 @@ export default function Other() {
     <AddBill
      open = {open} 
      handleClose = {() => setOpen(false)}
-     submitHandler={submitInsurance}
+     submitHandler={submitOther}
      loading={loading}
      />
     {editData ? <EditBill 
      open={editModel}
      editData={editData}
      handleClose = {handleCloseEdit}
-     editHandler={editInsurance}
+     editHandler={editOther}
      loading={loading}
      /> :''} 
     </>
