@@ -65,7 +65,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
         sponser_name: "",
         mol: '',
         service: "",
-        other: "",
+        other: null,
         iqama: "",
         id_number: "",
         insurance: '',

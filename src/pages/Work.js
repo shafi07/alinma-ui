@@ -42,6 +42,7 @@ const TABLE_HEAD = [
   { id: 'subCategory', label: 'Sub Category', alignRight: false },
   { id: 'sponserName', label: 'Sponser Name', alignRight: false },
   { id: 'agent', label: 'Agent', alignRight: false },
+  { id: 'agentDate', label: 'Agent Date', alignRight: false },
   { id: 'mobileNumber', label: 'Mobile', alignRight: false },
   { id: 'cash', label: 'Cash', alignRight: false },
   { id: 'service', label: 'Service', alignRight: false },
@@ -266,7 +267,7 @@ export default function Work() {
                 />
                 <TableBody>
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id,id_number,status,agent,agent_amount = '999', fileid, name, sub_category='dss',service=888,sponser_name,paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',other='test',total_amount } = row;
+                    const { id,id_number,paid_date,status,agent,agent_amount = '999', fileid, name, sub_category='dss',service=888,sponser_name,paid_amount='test',balance_amount='test',mobilenumber='989898989898',total_amount } = row;
 
                     return (
                       <TableRow
@@ -301,6 +302,7 @@ export default function Work() {
                         <TableCell align="left">{sub_category}</TableCell>
                         <TableCell align="left">{sponser_name}</TableCell>
                         <TableCell align="left">{agent}</TableCell>
+                        <TableCell align="left">{paid_date}</TableCell>
                         <TableCell align="left">{mobilenumber}</TableCell>
                         <TableCell align="left">
                           <Label variant="ghost" color={(balance_amount != 0 && 'error') || 'success'}>

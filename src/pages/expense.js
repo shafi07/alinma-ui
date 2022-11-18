@@ -17,8 +17,6 @@ import {
   TablePagination,
   CircularProgress,
   Box,
-  Select,
-  MenuItem,
 } from '@mui/material';
 import PrintIcon from '@mui/icons-material/Print';
 // components
@@ -28,30 +26,24 @@ import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
-import AddBill from '../components/insurance/addInsurance'
+import AddBill from '../components/expense/addExpense'
 import EditBill from '../components/javasath/editBill'
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
+import moment from 'moment';
 
 // ----------------------------------------------------------------------
 const URL =`http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
 const TABLE_HEAD = [
   { id: 'file', label: 'File', alignRight: false },
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'id', label: 'ID', alignRight: false },
-  { id: 'subCategory', label: 'Add/New', alignRight: false },
-  { id: 'sponserName', label: 'Sponser Name', alignRight: false },
-  { id: 'dob', label: 'Dob', alignRight: false },
-  { id: 'mobileNumber', label: 'Mobile', alignRight: false },
-  { id: 'cash', label: 'Cash', alignRight: false },
-  { id: 'agentDate', label: 'Agent Date', alignRight: false },
-  { id: 'agent', label: 'Agent', alignRight: false },
-  { id: 'agentAmount', label: 'Agent amount', alignRight: false },
-  { id: 'service', label: 'Service', alignRight: false },
-  { id: 'total', label: 'Total Amount', alignRight: false },
-  { id: 'paid', label: 'Paid Amount', alignRight: false },
-  { id: 'balance', label: 'Balance Amount ', alignRight: false },
-  { id: 'status', label: 'Status ', alignRight: false },
+  { id: 'electricity', label: 'Electricity', alignRight: false },
+  { id: 'telephone', label: 'Telephone', alignRight: false },
+  { id: 'salary', label: 'Salary', alignRight: false },
+  { id: 'stationary', label: 'stationary', alignRight: false },
+  { id: 'other', label: 'Other', alignRight: false },
+  { id: 'total', label: 'Total', alignRight: false },
+  { id: 'remarks', label: 'Remarks', alignRight: false },
+  { id: 'createdTime', label: 'Created Time', alignRight: false },
   { id: '' },
 ];
 
@@ -86,7 +78,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Insurance() {
+export default function Expense() {
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -133,8 +125,8 @@ export default function Insurance() {
   };
 
   useEffect(() => {
-    fetchData(query,status);
-  },[query,reFetch,status]);
+    fetchData(query);
+  },[query,reFetch]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -155,7 +147,7 @@ export default function Insurance() {
   }
 
   const fetchData = async (query,status) => {
-    const url = query || status ? `${URL}/insurance?query=${query}&status=${status}` : `${URL}/insurance`
+    const url = query ? `${URL}/expense?query=${query}` : `${URL}/expense`
     const response = await fetch(url);
     const newData = await response.json()
     console.log('<<<<',newData)
@@ -167,9 +159,8 @@ export default function Insurance() {
     { label: "File NO", key: "fileid" },
     { label: "Name", key: "name" },
     { label: "ID", key: "id_number" },
-    { label: "Add/New", key: "sub_category" },
+    { label: "Sub Category", key: "sub_category" },
     { label: "Mobile", key: "mobilenumber" },
-    { label: "dob", key: "dob" },
     { label: "total_amount", key: "total_amount" },
     { label: "paid_amount", key: "paid_amount" },
     { label: "balance_amount", key: "balance_amount" },
@@ -187,9 +178,10 @@ export default function Insurance() {
 
   const isUserNotFound = filteredUsers.length === 0;
 
-  const submitInsurance = async (data, actions) => {
+  const submitExpense = async (data,actions) => {
+    console.log('>>>>>>???',data)
     setLoading(true)
-    axios.post(`${URL}/insurance`, data)
+    axios.post(`${URL}/expense`, data)
       .then((res) => {
         console.log('----->', res)
         setOpen(false)
@@ -197,15 +189,14 @@ export default function Insurance() {
       }).catch((err) => {
         setLoading(false)
       })
-    actions.resetForm()
+      actions.resetForm()
   }
 
-  const editInsurance = async (data) => {
+  const editExpense = async (data) => {
     setLoading(true)
-    axios.put(`${URL}/insurance`, data)
+    axios.put(`${URL}/expense`, data)
       .then((res) => {
         console.log('----->', res)
-        setEditData(null)
         setEditModel(!editModel)
         setReFetch(!reFetch)
       }).catch((err) => {
@@ -214,9 +205,20 @@ export default function Insurance() {
   }
 
   const handleStatusChange = async (value,id) => {
-    console.log({status:value,id})
     setLoading(true)
-    axios.put(`${URL}/insurance`, {status:value,id})
+    axios.put(`${URL}/expense`, {status:value,id})
+      .then((res) => {
+        console.log('----->', res)
+        setEditModel(!editModel)
+        setReFetch(!reFetch)
+      }).catch((err) => {
+        setLoading(false)
+      })
+  }
+
+  const handleDelete = async (id) => {
+    setLoading(true)
+    axios.delete(`${URL}/expense/${id}`)
       .then((res) => {
         console.log('----->', res)
         setEditModel(!editModel)
@@ -227,24 +229,23 @@ export default function Insurance() {
   }
 
   const handleStatusFilter = async(data)=>{
-    setLoading(true)
     setStatus(data)
   }
 
   const handlePrint = async(data)=>{
-    navigate('/print',{state:{path:"insurance",...data}})
+    navigate('/print',{state:{path:"expense",...data}})
   }
 
   return (
     <>
-    <Page title="insurance">
+    <Page title="Expense">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            INSURANCE
+            EXPENSE
           </Typography>
           <Button variant="contained" sx={{backgroundColor:'#F51720'}} onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Insurance
+            Add Expense
           </Button>
           <CSVLink headers={headers} data={USERLIST?USERLIST:[]} filename={'test'}>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
@@ -254,13 +255,13 @@ export default function Insurance() {
         </Stack>
 
         <Card>
-          <UserListToolbar handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
+          <UserListToolbar expense={false} handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
           <Scrollbar>
           {loading ? <Box sx={{ width:'100%',display:'flex',minHeight:'50vh',alignItems:'center',justifyContent:'center' }} >
             <CircularProgress color="inherit" />
           </Box>:
             <TableContainer>
-              <Table style={{width:"200%"}} >
+              <Table style={{width:"150%"}} >
                 <UserListHead
                   order={order}
                   orderBy={orderBy}
@@ -271,11 +272,8 @@ export default function Insurance() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                      {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                        const { id, id_number, dob, agent_amount = 111, paid_date = '11-02-1993', fileid, name,
-                          sub_category = 'dss', insurance, service = 100, sponser_name = 'test', paid_amount = 'test',
-                          balance_amount = 'test', iqama = 'test', mol = 'test', mobilenumber = '989898989898',
-                          other = 'test', total_amount,agent = 'test_agent',status } = row;
+                  {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    const { id,fileid,total_amount,electricity,telephone,salary,stationary,other,remarks,createdtime  } = row;
 
                     return (
                       <TableRow
@@ -283,59 +281,35 @@ export default function Insurance() {
                         key={id}
                         tabIndex={-1}
                         align = 'center'
-                        sx = {{backgroundColor: balance_amount != 0?'#F7837C':'#73D393'}}
-                        onClick={() => editOpen(row)} 
+                        // sx = {{backgroundColor: balance_amount != 0?'#F7837C':'#73D393'}}
+                        // onClick={() => editOpen(row)} 
                       >
                         <TableCell component="th" scope="row" >
                           <Stack direction="row" alignItems="center" spacing={4}>
-                            <Typography variant="subtitle2" noWrap>
+                            <Typography variant="subtitle2" color={'blue'} noWrap>
                               {fileid}
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell component="th" scope="row" >
-                          <Stack direction="row" alignItems="center" spacing={4}>
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell component="th" scope="row" >
-                          <Stack direction="row" alignItems="center" spacing={4}>
-                            <Typography variant="subtitle2" noWrap>
-                              {id_number}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell align="left">{sub_category}</TableCell>
-                        <TableCell align="left">{sponser_name}</TableCell>
-                        <TableCell align="left">{dob}</TableCell>
-                        <TableCell align="left">{mobilenumber}</TableCell>
-                        <TableCell align="left">
-                          <Label variant="ghost" color={(balance_amount != 0 && 'error') || 'success'}>
-                            {sentenceCase(balance_amount == 0 ? 'Paid':'Credit')}
-                          </Label>
-                        </TableCell>
-                        <TableCell align="left">{paid_date}</TableCell>
-                        <TableCell align="left">{agent}</TableCell>
-                        <TableCell align="left">{agent_amount}</TableCell>
-                        <TableCell align="left">{service}</TableCell>
+                        <TableCell align="left">{electricity}</TableCell>
+                        <TableCell align="left">{telephone}</TableCell>
+                        <TableCell align="left">{salary}</TableCell>
+                        <TableCell align="left">{stationary}</TableCell>
+                        <TableCell align="left">{other}</TableCell>
                         <TableCell align="left">{total_amount}</TableCell>
-                        <TableCell align="left">{paid_amount}</TableCell>
-                        <TableCell align="left">{balance_amount}</TableCell>
-                        <TableCell onClick={(e) =>{e.stopPropagation()} }  align="left">
-                          <Select onChange={(e)=>handleStatusChange(e.target.value,id)} defaultValue={status} sx={{height: 30,width:'84%' }} >
-                            <MenuItem value={"pending"}>Pending</MenuItem>
-                            <MenuItem value={"completed"}>Completed</MenuItem>
-                          </Select>
-                        </TableCell>
-                        <TableCell align="left">
+                        <TableCell align="left">{remarks}</TableCell>
+                        <TableCell align="left">{moment(createdtime).format("DD-MM-YYYY")}</TableCell>
+                        {/* <TableCell align="left">
                           < PrintIcon onClick={(e) =>{e.stopPropagation()
                         handlePrint(row)} } />
+                        </TableCell> */}
+                        <TableCell align="left">
+                        <Iconify icon="ic:baseline-delete" width={24} height={24} onClick={(e) =>{e.stopPropagation()
+                            handleDelete(row.id)} } /> 
                         </TableCell>
-                        <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
+                        {/* <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
                           <UserMoreMenu />
-                        </TableCell>
+                        </TableCell> */}
                       </TableRow>
                     );
                   })}
@@ -374,14 +348,14 @@ export default function Insurance() {
     <AddBill
      open = {open} 
      handleClose = {() => setOpen(false)}
-     submitHandler={submitInsurance}
+     submitHandler={submitExpense}
      loading={loading}
      />
     {editData ? <EditBill 
      open={editModel}
      editData={editData}
      handleClose = {handleCloseEdit}
-     editHandler={editInsurance}
+     editHandler={editExpense}
      loading={loading}
      /> :''} 
     </>

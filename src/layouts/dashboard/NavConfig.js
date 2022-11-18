@@ -14,27 +14,32 @@ const navConfig = [
   {
     title: 'Javasath',
     path: '/dashboard/javasath',
-    icon: getIcon('mdi:alpha-j-box'),
+    icon: getIcon('mdi:passport'),
   },
   {
     title: 'Insurance',
     path: '/dashboard/insurance',
-    icon: getIcon('mdi:alpha-i-box'),
+    icon: getIcon('map:insurance-agency'),
   },
   {
     title: 'Work',
     path: '/dashboard/work',
-    icon: getIcon('mdi:alpha-w-box'),
+    icon: getIcon('mdi:worker'),
   },
   {
     title: 'Visa',
     path: '/dashboard/visa',
-    icon: getIcon('mdi:alpha-v-box'),
+    icon: getIcon('grommet-icons:visa'),
   },
   {
     title: 'Other',
     path: '/dashboard/other',
     icon: getIcon('mdi:wall'),
+  },
+  {
+    title: 'Expense',
+    path: '/dashboard/expense',
+    icon: getIcon('game-icons:expense'),
   },
   // {
   //   title: 'product',

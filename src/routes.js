@@ -12,6 +12,7 @@ import Insurance from './pages/insurance';
 import Work from './pages/Work';
 import Other from './pages/Other'
 import Visa from './pages/visa';
+import Expense from './pages/expense';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +31,7 @@ export default function Router() {
         { path: 'work', element:<Work />},
         { path: 'visa', element:<Visa />},
         { path: 'other', element:<Other /> },
+        { path: 'expense', element:<Expense /> },
       ],
     },
     {

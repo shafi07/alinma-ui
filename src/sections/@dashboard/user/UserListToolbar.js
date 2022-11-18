@@ -40,7 +40,7 @@ UserListToolbar.propTypes = {
   onFilterName: PropTypes.func,
 };
 
-export default function UserListToolbar({handleStatusFilter, numSelected, filterName, onFilterName,status }) {
+export default function UserListToolbar({handleStatusFilter,expense=true, numSelected, filterName, onFilterName,status }) {
   return (
     <RootStyle
       sx={{
@@ -58,14 +58,14 @@ export default function UserListToolbar({handleStatusFilter, numSelected, filter
         <SearchStyle
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search user..."
+          placeholder={expense?"Search File or Name...":"Search Date..."}
           startAdornment={
             <InputAdornment position="start">
               <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
             </InputAdornment>
           }
         />
-          <Select
+        { expense &&  <Select
            onChange={(e) => handleStatusFilter(e.target.value)} 
            defaultValue={status}
            name='status'
@@ -73,7 +73,7 @@ export default function UserListToolbar({handleStatusFilter, numSelected, filter
             <MenuItem value={''}>All</MenuItem>
             <MenuItem value={"pending"}>Pending</MenuItem>
             <MenuItem value={"completed"}>Completed</MenuItem>
-          </Select>
+          </Select>}
         </>
       )}
 
