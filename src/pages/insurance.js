@@ -32,6 +32,7 @@ import AddBill from '../components/insurance/addInsurance'
 import EditBill from '../components/javasath/editBill'
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
+import View from 'src/components/view';
 
 // ----------------------------------------------------------------------
 const URL =`http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
@@ -115,6 +116,10 @@ export default function Insurance() {
 
   const[status,setStatus] = useState('')
 
+  const[view,setView]=useState(false)
+
+  const[viewData,setViewData]=useState(null)
+
   const navigate = useNavigate();
 
   const handleRequestSort = (event, property) => {
@@ -152,6 +157,11 @@ export default function Insurance() {
   const handleCloseEdit = ()=>{
     setEditData(null)
     setEditModel(!editModel)
+  }
+
+  const handleCloseView = ()=>{
+    setViewData(null)
+    setView(!view)
   }
 
   const fetchData = async (query,status) => {
@@ -233,6 +243,11 @@ export default function Insurance() {
 
   const handlePrint = async(data)=>{
     navigate('/print',{state:{path:"insurance",...data}})
+  }
+
+  const viewOpen = async(data)=>{
+    setViewData(data)
+    setView(true)
   }
 
   return (
@@ -330,8 +345,16 @@ export default function Insurance() {
                           </Select>
                         </TableCell>
                         <TableCell align="left">
-                          < PrintIcon onClick={(e) =>{e.stopPropagation()
-                        handlePrint(row)} } />
+                          < PrintIcon onClick={(e) => {
+                            e.stopPropagation()
+                            handlePrint(row)
+                          }} />
+                        </TableCell>
+                        <TableCell align="left">
+                          <Iconify icon="mdi:eye-outline" width={24} height={24} onClick={(e) => {
+                            e.stopPropagation()
+                            viewOpen(row)
+                          }} />
                         </TableCell>
                         <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
                           <UserMoreMenu />
@@ -384,6 +407,11 @@ export default function Insurance() {
      editHandler={editInsurance}
      loading={loading}
      /> :''} 
+     {viewData ? <View
+    open={view}
+    viewData={viewData}
+    handleClose = {handleCloseView}
+    /> : '' }
     </>
   );
 }

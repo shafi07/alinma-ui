@@ -32,6 +32,7 @@ import AddBill from '../components/visa/addVisa'
 import EditBill from '../components/javasath/editBill'
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
+import View from 'src/components/view';
 
 // ----------------------------------------------------------------------
 const URL =`http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
@@ -115,6 +116,10 @@ export default function Visa() {
 
   const[status,setStatus] = useState('')
 
+  const[view,setView]=useState(false)
+
+  const[viewData,setViewData]=useState(null)
+
   const navigate = useNavigate();
 
   const handleRequestSort = (event, property) => {
@@ -152,6 +157,11 @@ export default function Visa() {
   const handleCloseEdit = ()=>{
     setEditData(null)
     setEditModel(!editModel)
+  }
+
+  const handleCloseView = ()=>{
+    setViewData(null)
+    setView(!view)
   }
 
   const fetchData = async (query,status) => {
@@ -203,6 +213,7 @@ export default function Visa() {
     axios.put(`${URL}/visa`, data)
       .then((res) => {
         console.log('----->', res)
+        setEditData(null)
         setEditModel(!editModel)
         setReFetch(!reFetch)
       }).catch((err) => {
@@ -228,6 +239,11 @@ export default function Visa() {
 
   const handlePrint = async(data)=>{
     navigate('/print',{state:{path:"visa",...data}})
+  }
+
+  const viewOpen = async(data)=>{
+    setViewData(data)
+    setView(true)
   }
 
   return (
@@ -328,6 +344,12 @@ export default function Visa() {
                           < PrintIcon onClick={(e) =>{e.stopPropagation()
                         handlePrint(row)} } />
                         </TableCell>
+                        <TableCell align="left" >
+                        <Iconify icon="mdi:eye-outline" width={24} height={24} onClick={(e) =>{e.stopPropagation()
+                            viewOpen(row)} } />
+                          {/* < VisibilityIcon onClick={(e) =>{e.stopPropagation()
+                            handlePrint(row)} } /> */}
+                        </TableCell>
                         <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
                           <UserMoreMenu />
                         </TableCell>
@@ -378,7 +400,12 @@ export default function Visa() {
      handleClose = {handleCloseEdit}
      editHandler={editVisa}
      loading={loading}
-     /> :''} 
+     /> :''}
+    {viewData ? <View
+    open={view}
+    viewData={viewData}
+    handleClose = {handleCloseView}
+    /> : '' } 
     </>
   );
 }

@@ -49,7 +49,8 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
         remarks:'',
         agent_amount:'',
         service:'',
-        paid_date:''
+        paid_date:'',
+        agent:''
       }}
       onSubmit={(values, actions) => {
         submitHandler(values,actions)
@@ -225,11 +226,32 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             </Grid>
             <Grid item xs={6} >
             <TextField
-              id="service"
+              id="agent"
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
                 marginRight:2
+              }}
+              label="Agent Name"
+              name="agent"
+              type="text"
+              fullWidth
+              autoFocus
+              required
+              variant="outlined"
+              helperText={touched.agent ? errors.agent : ""}
+              error={touched.agent && Boolean(errors.agent)}
+              value={values.agent}
+              onChange={handleChange("agent")}
+            />
+            </Grid>
+            <Grid item xs={6} >
+            <TextField
+              id="service"
+              sx = {{
+                marginTop: 2,
+                marginBottom: 2,
+                marginLeft:2,
               }}
               label="Service Charge"
               name="service"
@@ -261,7 +283,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2,
+                marginRight:2
               }}
             /> 
             </Grid>
@@ -271,7 +293,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2,
               }}
               label="Total Amount"
               name="total_amount"
@@ -304,7 +326,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2,
+                marginRight:2
               }}
             /> 
             </Grid>
@@ -314,7 +336,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2,
               }}
               label="Balance Amount"
               name="balance"
@@ -336,7 +358,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2,
+                marginRight:2
               }}
               label="Remarks"
               name="remarks"
@@ -357,7 +379,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2,
               }}
               label="Agent Paid Date"
               name="paid_date"
