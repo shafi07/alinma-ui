@@ -33,27 +33,7 @@ import EditBill from '../components/javasath/editBill'
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
 import View from 'src/components/view';
-
-// ----------------------------------------------------------------------
-const URL =`http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
-const TABLE_HEAD = [
-  { id: 'file', label: 'File', alignRight: false },
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'id', label: 'ID', alignRight: false },
-  { id: 'subCategory', label: 'Sub Category', alignRight: false },
-  { id: 'sponserName', label: 'Sponser Name', alignRight: false },
-  { id: 'mobileNumber', label: 'Mobile', alignRight: false },
-  { id: 'cash', label: 'Cash', alignRight: false },
-  { id: 'agent', label: 'Agent', alignRight: false },
-  { id: 'agentDate', label: 'Agent Date', alignRight: false },
-  { id: 'service', label: 'Service Amount', alignRight: false },
-  { id: 'agentAmount', label: 'Agent Amount', alignRight: false },
-  { id: 'total', label: 'Total Amount', alignRight: false },
-  { id: 'paid', label: 'Paid Amount', alignRight: false },
-  { id: 'balance', label: 'Balance Amount ', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' },
-];
+import { URL,otherHeaders,OTHER_TABLE_HEAD } from '../_mock/constant'
 
 // ----------------------------------------------------------------------
 
@@ -172,18 +152,6 @@ export default function Other() {
     setLoading(false)
   };
 
-  const headers = [
-    { label: "File NO", key: "fileid" },
-    { label: "Name", key: "name" },
-    { label: "ID", key: "id_number" },
-    { label: "Sub Category", key: "sub_category" },
-    { label: "Mobile", key: "mobilenumber" },
-    { label: "total_amount", key: "total_amount" },
-    { label: "paid_amount", key: "paid_amount" },
-    { label: "balance_amount", key: "balance_amount" },
-    { label: "sponser_name", key: "sponser_name" },
-  ];
-
   const editOpen = async(data)=>{
     setEditData(data)
     setEditModel(true)
@@ -255,7 +223,7 @@ export default function Other() {
           <Button variant="contained" sx={{backgroundColor:'#F51720'}} onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
             New Other
           </Button>
-          <CSVLink headers={headers} data={USERLIST?USERLIST:[]} filename={'test'}>
+          <CSVLink headers={otherHeaders} data={USERLIST?USERLIST:[]} filename={'test'}>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             Export CSV
           </Button>
@@ -273,7 +241,7 @@ export default function Other() {
                 <UserListHead
                   order={order}
                   orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
+                  headLabel={OTHER_TABLE_HEAD}
                   rowCount={USERLIST.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}

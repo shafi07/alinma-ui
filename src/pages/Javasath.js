@@ -15,7 +15,6 @@ import {
   Typography,
   TableContainer,
   TablePagination,
-  Backdrop,
   CircularProgress,
   Select,
   MenuItem,
@@ -36,28 +35,7 @@ import { CSVLink } from 'react-csv';
 import axios from 'axios';
 import { Box } from '@mui/system';
 import View from 'src/components/view';
-
-// ----------------------------------------------------------------------
-const URL =`http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
-const TABLE_HEAD = [
-  { id: 'file', label: 'File', alignRight: false },
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'id', label: 'ID', alignRight: false },
-  { id: 'company', label: 'Sub category', alignRight: false },
-  { id: 'sponserName', label: 'Sponser Name', alignRight: false },
-  { id: 'mobileNumber', label: 'Mobile', alignRight: false },
-  { id: 'cash', label: 'Cash', alignRight: false },
-  { id: 'mol', label: 'Mol', alignRight: false },
-  { id: 'iqama', label: 'Iqama', alignRight: false },
-  { id: 'insurance', label: 'Insurance', alignRight: false },
-  { id: 'service', label: 'Service', alignRight: false },
-  { id: 'other', label: 'other', alignRight: false },
-  { id: 'total', label: 'Total Amount', alignRight: false },
-  { id: 'paid', label: 'Paid Amount', alignRight: false },
-  { id: 'balance', label: 'Balance Amount ', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' },
-];
+import { URL,javasathHeaders,JAVASATH_TABLE_HEAD } from '../_mock/constant'
 
 // ----------------------------------------------------------------------
 
@@ -176,23 +154,6 @@ export default function User() {
     setLoading(false)
   };
 
-  const headers = [
-    { label: "File NO", key: "fileid" },
-    { label: "Name", key: "name" },
-    { label: "ID", key: "id_number" },
-    { label: "sub_category", key: "sub_category" },
-    { label: "sponser_name", key: "sponser_name" },
-    { label: "Mobile", key: "mobilenumber" },
-    { label: "insurance", key: "insurance" },
-    { label: "service", key: "service" },
-    { label: "mol", key: "mol" },
-    { label: "iqama", key: "iqama" },
-    { label: "other", key: "other" },
-    { label: "total_amount", key: "total_amount" },
-    { label: "paid_amount", key: "paid_amount" },
-    { label: "balance_amount", key: "balance_amount" },
-  ];
-
   const editOpen = async(data)=>{
     setEditData(data)
     setEditModel(true)
@@ -270,7 +231,7 @@ export default function User() {
           <Button variant="contained" sx={{backgroundColor:'#F51720'}} onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
             New Javasath
           </Button>
-          <CSVLink headers={headers} data={USERLIST?USERLIST:[]} filename={'test'}>
+          <CSVLink headers={javasathHeaders} data={USERLIST?USERLIST:[]} filename={'test'}>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             Export CSV
           </Button>
@@ -288,7 +249,7 @@ export default function User() {
                 <UserListHead
                   order={order}
                   orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
+                  headLabel={JAVASATH_TABLE_HEAD}
                   rowCount={USERLIST.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
@@ -357,9 +318,17 @@ export default function User() {
                             handlePrint(row)} } />
                         </TableCell>
                         <TableCell align="left" >
-                        <Iconify icon="mdi:eye-outline" width={24} height={24} onClick={(e) =>{e.stopPropagation()
-                            viewOpen(row)} } />
+                          <Iconify icon="mdi:eye-outline" width={24} height={24} onClick={(e) => {
+                            e.stopPropagation()
+                            viewOpen(row)
+                          }} />
                         </TableCell>
+                        {/* <TableCell align="left" >
+                          <Iconify icon="mdi:eye-outline" width={24} height={24} onClick={(e) => {
+                            e.stopPropagation()
+                            viewOpen(row)
+                          }} />
+                        </TableCell> */}
                         <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
                           <UserMoreMenu row={row} handlePrint={handlePrint} />
                         </TableCell>

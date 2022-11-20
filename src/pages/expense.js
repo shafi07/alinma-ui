@@ -1,5 +1,4 @@
 import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
 import { useState,useEffect } from 'react';
 import { useNavigate} from "react-router-dom";
 // material
@@ -31,21 +30,7 @@ import EditBill from '../components/javasath/editBill'
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
 import moment from 'moment';
-
-// ----------------------------------------------------------------------
-const URL =`http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
-const TABLE_HEAD = [
-  { id: 'file', label: 'File', alignRight: false },
-  { id: 'electricity', label: 'Electricity', alignRight: false },
-  { id: 'telephone', label: 'Telephone', alignRight: false },
-  { id: 'salary', label: 'Salary', alignRight: false },
-  { id: 'stationary', label: 'stationary', alignRight: false },
-  { id: 'other', label: 'Other', alignRight: false },
-  { id: 'total', label: 'Total', alignRight: false },
-  { id: 'remarks', label: 'Remarks', alignRight: false },
-  { id: 'createdTime', label: 'Created Time', alignRight: false },
-  { id: '' },
-];
+import { URL,expenseHeaders, EXPENSE_TABLE_HEAD } from '../_mock/constant'
 
 // ----------------------------------------------------------------------
 
@@ -155,18 +140,6 @@ export default function Expense() {
     setLoading(false)
   };
 
-  const headers = [
-    { label: "File NO", key: "fileid" },
-    { label: "Name", key: "name" },
-    { label: "ID", key: "id_number" },
-    { label: "Sub Category", key: "sub_category" },
-    { label: "Mobile", key: "mobilenumber" },
-    { label: "total_amount", key: "total_amount" },
-    { label: "paid_amount", key: "paid_amount" },
-    { label: "balance_amount", key: "balance_amount" },
-    { label: "sponser_name", key: "sponser_name" },
-  ];
-
   const editOpen = async(data)=>{
     setEditData(data)
     setEditModel(true)
@@ -247,7 +220,7 @@ export default function Expense() {
           <Button variant="contained" sx={{backgroundColor:'#F51720'}} onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
             Add Expense
           </Button>
-          <CSVLink headers={headers} data={USERLIST?USERLIST:[]} filename={'test'}>
+          <CSVLink headers={expenseHeaders} data={USERLIST?USERLIST:[]} filename={'test'}>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             Export CSV
           </Button>
@@ -265,7 +238,7 @@ export default function Expense() {
                 <UserListHead
                   order={order}
                   orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
+                  headLabel={EXPENSE_TABLE_HEAD}
                   rowCount={USERLIST.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
