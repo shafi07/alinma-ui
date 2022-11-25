@@ -2,19 +2,20 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Link, Container, Typography } from '@mui/material';
+import { Card, Link, Container, Typography} from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
 import Page from '../components/Page';
-import Logo from '../components/Logo';
+import Logo from '../components/Logo'; 
+import Toast from 'src/components/toast';
+import { URL} from '../_mock/constant'
 // sections
 import { LoginForm } from '../sections/auth/login';
 import AuthSocial from '../sections/auth/AuthSocial';
 import { useState } from 'react';
 
 // ----------------------------------------------------------------------
-const URL =`http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex',
@@ -65,6 +66,8 @@ export default function Login() {
 
   const [loading,setLoading]=useState(false)
 
+  const [toast,setToast]=useState(false)
+
   const navigate = useNavigate();
 
   const loginHandler = async(d)=>{
@@ -74,6 +77,7 @@ export default function Login() {
         if (res.status === 200) {
           localStorage.setItem('auth', res.data.id)
           navigate('/dashboard/app', { replace: true });
+          setToast(true)
         }
       }).catch((err) => {
         setLoading(false)

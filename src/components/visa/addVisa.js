@@ -161,8 +161,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
                 marginRight:2
               }}
             /> 
-            </Grid>
-            {values.sub_category == ('Wakala' || 'Work Visa') ? 
+            </Grid> 
             <Grid item xs={6} >
             <TextField
               id="id_number"
@@ -171,28 +170,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
                 marginBottom: 2,
                 marginLeft:2,
               }}
-              label="ID Number"
-              name="id_number"
-              type="text"
-              fullWidth
-              autoFocus
-              required
-              variant="outlined"
-              helperText={touched.id_number ? errors.id_number : ""}
-              error={touched.id_number && Boolean(errors.id_number)}
-              value={values.id_number}
-              onChange={handleChange("id_number")}
-            />
-            </Grid> : 
-            <Grid item xs={6} >
-            <TextField
-              id="id_number"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
-              label= "Iqama Number"
+              label={['Wakala','Work Visa'].includes(values.sub_category) ?'ID Number':'Iqama Number'}
               name="id_number"
               type="text"
               fullWidth
@@ -205,7 +183,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("id_number")}
             />
             </Grid>
-            }
             <Grid item xs={6} >
             <TextField
               id="mobileNumber"

@@ -73,6 +73,7 @@ export default function UserListToolbar({handleStatusFilter,expense=true, numSel
             <MenuItem value={''}>All</MenuItem>
             <MenuItem value={"pending"}>Pending</MenuItem>
             <MenuItem value={"completed"}>Completed</MenuItem>
+            <MenuItem value={"credit"} color='red'>Credit</MenuItem>
           </Select>}
         </>
       )}
