@@ -48,13 +48,13 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
         balance: '',
         remarks:'',
         agent:'',
-        agent_amount:'',
+        agent_amount:null,
         service:'',
-        paid_date:'',
+        paid_date:null,
         visa_number:''
       }}
       onSubmit={(values, actions) => {
-        // console.log(values)
+        values.paid_amount = values.paid_amount ? values.paid_amount :0
         submitHandler(values)
       }}
     >

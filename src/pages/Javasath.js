@@ -208,7 +208,8 @@ export default function User() {
   }
 
   const handleStatusFilter = async(data)=>{
-    setStatus(data)
+    setLoading(true)
+    data == 'All' ? setStatus('') : setStatus(data) 
   }
 
   const handleDelete = async(data)=>{

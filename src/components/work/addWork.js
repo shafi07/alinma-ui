@@ -50,14 +50,15 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
         id_number: "",
         total_amount: "",
         mobileNumber: "",
-        paid_amount: "",
+        paid_amount: null,
         balance: '',
         remarks:'',
-        agent_amount:'',
+        agent_amount:null,
         service:'',
         paid_date:''
       }}
       onSubmit={(values, actions) => {
+        values.paid_amount = values.paid_amount ? values.paid_amount :0
         submitHandler(values)
       }}
     >

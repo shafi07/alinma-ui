@@ -67,13 +67,13 @@ export default function UserListToolbar({handleStatusFilter,expense=true, numSel
         />
         { expense &&  <Select
            onChange={(e) => handleStatusFilter(e.target.value)} 
-           defaultValue={status}
+          defaultValue={status == ''? 'All':status}
            name='status'
            sx={{width: 240,width: '200px',height: 55 }} >
-            <MenuItem value={''}>All</MenuItem>
+            <MenuItem value={'All'}>All</MenuItem>
             <MenuItem value={"pending"}>Pending</MenuItem>
             <MenuItem value={"completed"}>Completed</MenuItem>
-            <MenuItem value={"credit"} color='red'>Credit</MenuItem>
+            <MenuItem value={"credit"}>Credit</MenuItem>
           </Select>}
         </>
       )}

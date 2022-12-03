@@ -70,7 +70,7 @@ export default function NotificationsPopover() {
       <IconButton
         ref={anchorRef}
         color={open ? 'primary' : 'default'}
-        onClick={handleOpen}
+        // onClick={handleOpen}
         sx={{ width: 40, height: 40 }}
       >
         <Badge badgeContent={totalUnRead} color="error">

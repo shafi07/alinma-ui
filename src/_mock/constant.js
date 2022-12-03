@@ -1,9 +1,11 @@
 export const URL = `http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
+// export const URL = `http://localhost:8000`
 
 // --------- CSV File Headers----------- //
 
 export const javasathHeaders = [
     { label: "File NO", key: "fileid" },
+    { label: "Date", key: "createdtime" },
     { label: "Name", key: "name" },
     { label: "ID", key: "id_number" },
     { label: "sub_category", key: "sub_category" },
@@ -13,60 +15,81 @@ export const javasathHeaders = [
     { label: "service", key: "service" },
     { label: "mol", key: "mol" },
     { label: "iqama", key: "iqama" },
-    { label: "other", key: "other" },
+    { label: "other", key: "Other" },
     { label: "total_amount", key: "total_amount" },
     { label: "paid_amount", key: "paid_amount" },
     { label: "balance_amount", key: "balance_amount" },
+    { label: "remarks", key: "remarks" },
   ];
 
 export const insuranceHeaders = [
     { label: "File NO", key: "fileid" },
+    { label: "Date", key: "createdtime" },
     { label: "Name", key: "name" },
     { label: "ID", key: "id_number" },
     { label: "Add/New", key: "sub_category" },
     { label: "Mobile", key: "mobilenumber" },
+    { label: "Agent Name", key: "agent" },
+    { label: "Agent Paid Date", key: "paid_date"},
     { label: "dob", key: "dob" },
+    { label: "Service Amount", key: "service" },
+    { label: "Agent Amount", key: "agent_amount" },
     { label: "total_amount", key: "total_amount" },
     { label: "paid_amount", key: "paid_amount" },
     { label: "balance_amount", key: "balance_amount" },
     { label: "sponser_name", key: "sponser_name" },
+    { label: "Remarks", key: "remarks" },
   ];
 
 export const workHeaders = [
     { label: "File NO", key: "fileid" },
+    { label: "Date", key: "createdtime" },
     { label: "Name", key: "name" },
     { label: "ID", key: "id_number" },
     { label: "Sub Category", key: "sub_category" },
     { label: "Mobile", key: "mobilenumber" },
-    { label: "Agent", key: "agent" },
+    { label: "Agent Name", key: "agent" },
+    { label: "Agent Paid Date", key: "paid_date"},
+    { label: "Agent amount", key: "agent_amount" },
     { label: "total_amount", key: "total_amount" },
     { label: "paid_amount", key: "paid_amount" },
     { label: "balance_amount", key: "balance_amount" },
     { label: "sponser_name", key: "sponser_name" },
+    { label: "Remarks", key: "remarks" },
   ];
 
 export const visaHeaders = [
     { label: "File NO", key: "fileid" },
+    { label: "Date", key: "createdtime" },
     { label: "Name", key: "name" },
     { label: "ID", key: "id_number" },
     { label: "Sub Category", key: "sub_category" },
     { label: "Mobile", key: "mobilenumber" },
+    { label: "Agent Name", key: "agent" },
+    { label: "Agent Paid Date", key: "paid_date"},
+    { label: "Agent amount", key: "agent_amount" },
     { label: "total_amount", key: "total_amount" },
     { label: "paid_amount", key: "paid_amount" },
     { label: "balance_amount", key: "balance_amount" },
     { label: "sponser_name", key: "sponser_name" },
+    { label: "Remarks", key: "remarks" },
   ];
 
 export const otherHeaders = [
     { label: "File NO", key: "fileid" },
+    { label: "Date", key: "createdtime" },
     { label: "Name", key: "name" },
     { label: "ID", key: "id_number" },
     { label: "Sub Category", key: "sub_category" },
     { label: "Mobile", key: "mobilenumber" },
+    { label: "Agent Name", key: "agent" },
+    { label: "Agent Paid Date", key: "paid_date"},
+    { label: "Agent amount", key: "agent_amount" },
     { label: "total_amount", key: "total_amount" },
     { label: "paid_amount", key: "paid_amount" },
     { label: "balance_amount", key: "balance_amount" },
     { label: "sponser_name", key: "sponser_name" },
+    { label: "Remarks", key: "remarks" },
   ];
 
 export const expenseHeaders = [
@@ -78,6 +101,7 @@ export const expenseHeaders = [
     { label: "Other", key: "other" },
     { label: "Total", key: "total_amount" },
     { label: "Date", key: "createdtime" },
+    { label: "Remarks", key: "remarks" },
   ];
 
   // ------- Table Headers -------- //
@@ -94,7 +118,7 @@ export const JAVASATH_TABLE_HEAD = [
     { id: 'iqama', label: 'Iqama', alignRight: false },
     { id: 'insurance', label: 'Insurance', alignRight: false },
     { id: 'service', label: 'Service', alignRight: false },
-    { id: 'other', label: 'other', alignRight: false },
+    { id: 'other', label: 'Other', alignRight: false },
     { id: 'total', label: 'Total Amount', alignRight: false },
     { id: 'paid', label: 'Paid Amount', alignRight: false },
     { id: 'balance', label: 'Balance Amount ', alignRight: false },
@@ -166,7 +190,7 @@ export const EXPENSE_TABLE_HEAD = [
   { id: 'electricity', label: 'Electricity', alignRight: false },
   { id: 'telephone', label: 'Telephone', alignRight: false },
   { id: 'salary', label: 'Salary', alignRight: false },
-  { id: 'stationary', label: 'stationary', alignRight: false },
+  { id: 'stationary', label: 'Stationary', alignRight: false },
   { id: 'other', label: 'Other', alignRight: false },
   { id: 'total', label: 'Total', alignRight: false },
   { id: 'remarks', label: 'Remarks', alignRight: false },

@@ -71,11 +71,12 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
         insurance: '',
         total_amount: "",
         mobileNumber: "",
-        paid_amount: "",
+        paid_amount: null,
         balance: '',
         remarks:'',
       }}
       onSubmit={(values, actions) => {
+        values.paid_amount = values.paid_amount ? values.paid_amount :0
         submitHandler(values)
       }}
     >
@@ -83,6 +84,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
       handleSubmit,
       errors,
       setFieldValue,
+      resetForm,
       handleChange,
       touched,
       values,
@@ -90,7 +92,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
       <Dialog
         fullScreen
         open={open}
-        onClose={handleClose}
+        onClose={()=>{handleClose();resetForm()}}
         TransitionComponent={Transition}
       >
         <AppBar sx={{ position: 'relative' }}>
@@ -167,7 +169,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             <Grid item xs={6} >
             <TextField
               id="sponser_name"
-              label="Sponser Name"
+              label="Sponser's Name"
               name="sponser_name"
               type="text"
               fullWidth

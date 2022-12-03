@@ -22,7 +22,7 @@ const validationSchema = Yup.object({
   sponser_name: Yup.string().required("Enter Sponser Name"),
   id_number: Yup.string().required("Enter ID Number"),
   mobileNumber: Yup.string().required("Enter Mobile Number"),
-  paid_amount: Yup.number().required("Enter Amount"),
+  // paid_amount: Yup.number().required("Enter Amount"),
   total_amount: Yup.number().required("Enter Amount"),
   balance:Yup.number(),
 });
@@ -44,15 +44,16 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
         id_number: "",
         total_amount: "",
         mobileNumber: "",
-        paid_amount: "",
+        paid_amount:null,
         balance: '',
         remarks:'',
-        agent_amount:'',
+        agent_amount:null,
         service:'',
         paid_date:'',
         agent:''
       }}
       onSubmit={(values, actions) => {
+        values.paid_amount = values.paid_amount ? values.paid_amount :0
         submitHandler(values,actions)
       }}
     >
@@ -237,7 +238,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               type="text"
               fullWidth
               autoFocus
-              required
               variant="outlined"
               helperText={touched.agent ? errors.agent : ""}
               error={touched.agent && Boolean(errors.agent)}
@@ -274,11 +274,10 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               type="number"
               fullWidth
               autoFocus
-              required
               variant="outlined"
               helperText={touched.agent_amount ? errors.agent_amount : ""}
               error={touched.agent_amount && Boolean(errors.agent_amount)}
-              value={values.agent_amount}
+              value={values.agent_amount == ''? 0 :values.agent_amount}
               onChange={handleChange("agent_amount")}
               sx = {{
                 marginTop: 2,
@@ -365,7 +364,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               type="text"
               fullWidth
               autoFocus
-              required
               variant="outlined"
               helperText={touched.remarks ? errors.remarks : ""}
               error={touched.remarks && Boolean(errors.remarks)}
@@ -386,7 +384,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               type="Text"
               fullWidth
               autoFocus
-              required
               variant="outlined"
               helperText={touched.paid_date ? errors.paid_date : ""}
               error={touched.paid_date && Boolean(errors.paid_date)}

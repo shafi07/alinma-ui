@@ -201,7 +201,8 @@ export default function Visa() {
   }
 
   const handleStatusFilter = async(data)=>{
-    setStatus(data)
+    setLoading(true)
+    data == 'All' ? setStatus('') : setStatus(data) 
   }
 
   const handlePrint = async(data)=>{

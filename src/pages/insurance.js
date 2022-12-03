@@ -204,7 +204,7 @@ export default function Insurance() {
 
   const handleStatusFilter = async(data)=>{
     setLoading(true)
-    setStatus(data)
+    data == 'All' ? setStatus('') : setStatus(data) 
   }
 
   const handlePrint = async(data)=>{
