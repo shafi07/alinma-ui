@@ -15,14 +15,16 @@ import Slide from '@mui/material/Slide';
 const subCategories = [
   {value:'Baladiya Card',label:'Baladiya Card'},
   {value:'Renew Pasport',label:'Renew Pasport'},
+  {value:'Vaccine',label:'Vaccine'},
+  {value:'Salary Transfer',label:'Salary Transfer'},
 ]
 
 const validationSchema = Yup.object({
   sub_category: Yup.string().required("Enter Category Name"),
   name: Yup.string().required("Enter Name"),
-  id_number: Yup.string().required("Enter ID Number"),
-  mobileNumber: Yup.string().required("Enter Mobile Number"),
-  paid_amount: Yup.number().required("Enter Amount"),
+  id_number: Yup.string().required("Enter ID Number").min(5,'ID number length between 7-15').max(12,'ID number length between 7-15'),
+  mobileNumber: Yup.string().required("Enter Mobile Number").min(7,'Mobile number length between 7-15').max(15,'Mobile number length between 7-15'),
+  // paid_amount: Yup.number().required("Enter Amount"),
   total_amount: Yup.number().required("Enter Amount"),
   balance:Yup.number(),
 });
@@ -48,7 +50,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
         remarks:'',
         agent:'',
         agent_amount:null,
-        service:'',
+        service:null,
         paid_date:''
       }}
       onSubmit={(values, actions) => {
@@ -186,7 +188,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               id="mobileNumber"
               label="Mobile Number"
               name="mobileNumber"
-              type="text"
+              type="number"
               fullWidth
               autoFocus
               required
@@ -251,7 +253,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               type="number"
               fullWidth
               autoFocus
-              required
               variant="outlined"
               helperText={touched.agent_amount ? errors.agent_amount : ""}
               error={touched.agent_amount && Boolean(errors.agent_amount)}
@@ -361,7 +362,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               type="Text"
               fullWidth
               autoFocus
-              required
               variant="outlined"
               helperText={touched.paid_date ? errors.paid_date : ""}
               error={touched.paid_date && Boolean(errors.paid_date)}

@@ -15,15 +15,16 @@ import Slide from '@mui/material/Slide';
 const subCategories = [
   {value:'Work Visa',label:'Work Visa'},
   {value:'Visit Visa',label:'Visit Visa'},
+  {value:'Visa Chamber',label:'Visa Chamber'},
   {value:'Wakala',label:'Wakala'},
 ]
 
 const validationSchema = Yup.object({
   sub_category: Yup.string().required("Enter Category Name"),
   name: Yup.string().required("Enter Name"),
-  id_number: Yup.string().required("Enter ID Number"),
-  mobileNumber: Yup.string().required("Enter Mobile Number"),
-  paid_amount: Yup.number().required("Enter Amount"),
+  id_number: Yup.string().required("Enter ID Number").min(5,'ID number length between 7-15').max(12,'ID number length between 7-15'),
+  mobileNumber: Yup.string().required("Enter Mobile Number").min(7,'Mobile number length between 7-15').max(15,'Mobile number length between 7-15'),
+  // paid_amount: Yup.number().required("Enter Amount"),
   visa_number: Yup.string().when("sub_category",{is:"Wakala",then:Yup.string().required("Enter Visa Number")}),
   balance:Yup.number(),
 });
@@ -44,14 +45,15 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
         id_number: "",
         total_amount: "",
         mobileNumber: "",
-        paid_amount: "",
+        paid_amount: null,
         balance: '',
         remarks:'',
         agent:'',
         agent_amount:null,
-        service:'',
+        service:null,
         paid_date:null,
-        visa_number:''
+        visa_number:'',
+        chamber_amount:null
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
@@ -188,7 +190,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               id="mobileNumber"
               label="Mobile Number"
               name="mobileNumber"
-              type="text"
+              type="number"
               fullWidth
               autoFocus
               required
@@ -253,7 +255,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               type="number"
               fullWidth
               autoFocus
-              required
               variant="outlined"
               helperText={touched.agent_amount ? errors.agent_amount : ""}
               error={touched.agent_amount && Boolean(errors.agent_amount)}
@@ -283,7 +284,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               variant="outlined" 
               helperText={touched.total_amount ? errors.total_amount : ""}
               error={touched.total_amount && Boolean(errors.total_amount)}
-              value={values.total_amount=(Number(values.agent_amount)+Number(values.service))}
+              value={values.total_amount=(Number(values.agent_amount)+Number(values.service)+Number(values.chamber_amount))}
               onChange={handleChange("total_amount")}
             />
             </Grid>
@@ -363,7 +364,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               type="Text"
               fullWidth
               autoFocus
-              required
               variant="outlined"
               helperText={touched.paid_date ? errors.paid_date : ""}
               error={touched.paid_date && Boolean(errors.paid_date)}
@@ -389,6 +389,26 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               error={touched.visa_number && Boolean(errors.visa_number)}
               value={values.visa_number}
               onChange={handleChange("visa_number")}
+            />
+            </Grid>}
+            {values.sub_category == "Visa Chamber" && <Grid item xs={6} >
+            <TextField
+              id="chamber_amount"
+              sx = {{
+                marginTop: 2,
+                marginBottom: 2,
+                marginLeft:2,
+              }}
+              label="Chamber Amount"
+              name="chamber_amount"
+              type="text"
+              fullWidth
+              autoFocus
+              variant="outlined"
+              helperText={touched.chamber_amount ? errors.chamber_amount : ""}
+              error={touched.chamber_amount && Boolean(errors.chamber_amount)}
+              value={values.chamber_amount}
+              onChange={handleChange("chamber_amount")}
             />
             </Grid>}
           </Grid>

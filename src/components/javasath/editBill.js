@@ -50,7 +50,17 @@ console.log('////',editData)
         touched,
         values,
       }) => (
-        <Dialog open={open} aria-labelledby="form-dialog-title" onClose={handleClose} >
+        <Dialog 
+        open={open} 
+        aria-labelledby="form-dialog-title" 
+        onClose={handleClose}
+        onKeyUp={(e)=>{
+          if(e.key === 'Enter'){
+            handleSubmit();
+            handleClose();
+          }
+        }}
+         >
           <DialogTitle id="form-dialog-title">Update Bill</DialogTitle>
           <DialogContent>
             {Boolean(errors.image) && (
@@ -137,6 +147,7 @@ console.log('////',editData)
               color="primary"
               variant="contained"
               disabled={loading}
+              type="submit"
             >Submit
               {/* {loading || editLoading ? "Saving ..." : "Submit"} */}
             </Button>

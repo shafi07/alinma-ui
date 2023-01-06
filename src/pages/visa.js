@@ -253,7 +253,7 @@ export default function Visa() {
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     const { id,id_number,status,agent='test',agent_amount=777, fileid, 
                     name, sub_category='dss', insurance,service = 100,sponser_name,
-                    paid_amount='test',balance_amount='test',iqama='test',mol='test',
+                    paid_amount='test',balance_amount='test',iqama='test',mol='test',chamber_amount="-",
                     mobilenumber='989898989898',other='test',total_amount,visa_number,paid_date } = row;
 
                     return (
@@ -299,6 +299,7 @@ export default function Visa() {
                         <TableCell align="left">{visa_number}</TableCell>
                         <TableCell align="left">{service}</TableCell>
                         <TableCell align="left">{agent_amount}</TableCell>
+                        <TableCell align="left">{chamber_amount}</TableCell>
                         <TableCell align="left">{total_amount}</TableCell>
                         <TableCell align="left">{paid_amount}</TableCell>
                         <TableCell align="left">{balance_amount}</TableCell>

@@ -1,5 +1,5 @@
 export const URL = `http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
-// export const URL = `http://localhost:8000`
+// export const URL = `http://localhost:80ui00`
 
 // --------- CSV File Headers----------- //
 
@@ -51,6 +51,7 @@ export const workHeaders = [
     { label: "Agent Name", key: "agent" },
     { label: "Agent Paid Date", key: "paid_date"},
     { label: "Agent amount", key: "agent_amount" },
+    { label: "Service amount", key: "service" },
     { label: "total_amount", key: "total_amount" },
     { label: "paid_amount", key: "paid_amount" },
     { label: "balance_amount", key: "balance_amount" },
@@ -156,8 +157,8 @@ export const WORK_TABLE_HEAD = [
   { id: 'agentDate', label: 'Agent Date', alignRight: false },
   { id: 'mobileNumber', label: 'Mobile', alignRight: false },
   { id: 'cash', label: 'Cash', alignRight: false },
-  { id: 'service', label: 'Service', alignRight: false },
   { id: 'agentAmount', label: 'Agent Amount', alignRight: false },
+  { id: 'service', label: 'Service', alignRight: false },
   { id: 'total', label: 'Total Amount', alignRight: false },
   { id: 'paid', label: 'Paid Amount', alignRight: false },
   { id: 'balance', label: 'Balance Amount ', alignRight: false },
@@ -178,6 +179,7 @@ export const VISA_TABLE_HEAD = [
   { id: 'visaNumber', label: 'Visa Number', alignRight: false },
   { id: 'service', label: 'Service Amount', alignRight: false },
   { id: 'agentAmount', label: 'Agent Amount', alignRight: false },
+  { id: 'chamberAmount', label: 'Chamber Amount', alignRight: false },
   { id: 'total', label: 'Total Amount', alignRight: false },
   { id: 'paid', label: 'Paid Amount', alignRight: false },
   { id: 'balance', label: 'Balance Amount ', alignRight: false },

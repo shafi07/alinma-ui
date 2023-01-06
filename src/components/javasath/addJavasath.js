@@ -39,12 +39,12 @@ const subCategories = [
 const validationSchema = Yup.object({
   sub_category: Yup.string().required("Select Category "),
   name: Yup.string().required("Enter Name"),
-  id_number: Yup.string().required("Enter ID Number"),
-  mol: Yup.number().required("Enter Mol Amount"),
-  iqama: Yup.number().required("Enter Iqama Amount"),
-  insurance: Yup.number().required("Enter Insurance Amount"),
-  mobileNumber: Yup.string().required("Enter Mobile Number"),
-  paid_amount: Yup.number().required("Enter Amount"),
+  id_number: Yup.string().required("Enter ID Number").min(5,'ID number length between 7-15').max(12,'ID number length between 7-15'),
+  // mol: Yup.number().required("Enter Mol Amount"),
+  // iqama: Yup.number().required("Enter Iqama Amount"),
+  // insurance: Yup.number().required("Enter Insurance Amount"),
+  mobileNumber: Yup.string().required("Enter Mobile Number").min(7,'Mobile number length between 7-15').max(15,'Mobile number length between 7-15'),
+  // paid_amount: Yup.number().required("Enter Amount"),
   total_amount: Yup.number(),
   service: Yup.string().required("Enter Service Amount"),
   balance:Yup.number(),
@@ -63,12 +63,12 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
         sub_category:"",
         name:"",
         sponser_name: "",
-        mol: '',
+        mol: null,
         service: "",
         other: null,
-        iqama: "",
+        iqama: null,
         id_number: "",
-        insurance: '',
+        insurance: null,
         total_amount: "",
         mobileNumber: "",
         paid_amount: null,
@@ -214,7 +214,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               id="mobileNumber"
               label="Mobile Number"
               name="mobileNumber"
-              type="text"
+              type="number"
               fullWidth
               autoFocus
               required
@@ -238,7 +238,6 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               type="number"
               fullWidth
               autoFocus
-              required
               variant="outlined"
               helperText={touched.iqama ? errors.iqama : ""}
               error={touched.iqama && Boolean(errors.iqama)}
@@ -264,7 +263,6 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               type="number"
               fullWidth
               autoFocus
-              required
               variant="outlined"
               helperText={touched.insurance ? errors.insurance : ""}
               error={touched.insurance && Boolean(errors.insurance)}
@@ -280,7 +278,6 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               type="number"
               fullWidth
               autoFocus
-              required
               variant="outlined"
               helperText={touched.other ? errors.other : ""}
               error={touched.other && Boolean(errors.other)}
@@ -327,7 +324,6 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               type="number"
               fullWidth
               autoFocus
-              required
               variant="outlined"
               helperText={touched.mol ? errors.mol : ""}
               error={touched.mol && Boolean(errors.mol)}
