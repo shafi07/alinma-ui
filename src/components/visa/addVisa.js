@@ -22,12 +22,24 @@ const subCategories = [
 const validationSchema = Yup.object({
   sub_category: Yup.string().required("Enter Category Name"),
   name: Yup.string().required("Enter Name"),
-  id_number: Yup.string().required("Enter ID Number").min(5,'ID number length between 7-15').max(12,'ID number length between 7-15'),
-  mobileNumber: Yup.string().required("Enter Mobile Number").min(7,'Mobile number length between 7-15').max(15,'Mobile number length between 7-15'),
+  id_number: Yup.string().required("Enter ID Number").length(10,'Iqama number length should be 10'),
+  mobileNumber: Yup.string().required("Enter Mobile Number").length(10,'Mobile number length should be 10'),
   // paid_amount: Yup.number().required("Enter Amount"),
   visa_number: Yup.string().when("sub_category",{is:"Wakala",then:Yup.string().required("Enter Visa Number")}),
   balance:Yup.number(),
 });
+
+const leftCss = {
+  marginTop: 2,
+  marginBottom: 2,
+  marginRight:2,
+}
+
+const rightCss = {
+  marginTop: 2,
+  marginBottom: 2,
+  marginLeft:2,
+}
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -109,12 +121,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               error={touched.sub_category && Boolean(errors.sub_category)}
               value={values.sub_category}
               onChange={handleChange("sub_category")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2,
-                input: { color: 'red' }
-              }}
+              sx = {{...leftCss,input: { color: 'red' }}}
             >
               {subCategories.map(option => (
              <MenuItem sx={{color:'red'}} key={option.value} value={option.label}>
@@ -126,11 +133,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             <Grid item xs={6} >
             <TextField
               id="name"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {rightCss}
               label="Customer name"
               name="name"
               type="text"
@@ -157,11 +160,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               error={touched.sponser_name && Boolean(errors.sponser_name)}
               value={values.sponser_name}
               onChange={handleChange("sponser_name")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {leftCss}
             /> 
             </Grid> 
             <Grid item xs={6} >
@@ -185,6 +184,22 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("id_number")}
             />
             </Grid>
+            {values.sub_category == "Wakala" && <Grid item xs={6} >
+            <TextField
+              id="visa_number"
+              sx = {leftCss}
+              label="Visa Number"
+              name="visa_number"
+              type="text"
+              fullWidth
+              autoFocus
+              variant="outlined"
+              helperText={touched.visa_number ? errors.visa_number : ""}
+              error={touched.visa_number && Boolean(errors.visa_number)}
+              value={values.visa_number}
+              onChange={handleChange("visa_number")}
+            />
+            </Grid>}
             <Grid item xs={6} >
             <TextField
               id="mobileNumber"
@@ -199,53 +214,8 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               error={touched.mobileNumber && Boolean(errors.mobileNumber)}
               value={values.mobileNumber}
               onChange={handleChange("mobileNumber")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {values.sub_category == "Wakala" ? rightCss : leftCss}
             /> 
-            </Grid>
-            <Grid item xs={6} >
-            <TextField
-              id="agent"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
-              label="Agent Name"
-              name="agent"
-              type="text"
-              fullWidth
-              autoFocus
-              variant="outlined"
-              helperText={touched.agent ? errors.agent : ""}
-              error={touched.agent && Boolean(errors.agent)}
-              value={values.agent}
-              onChange={handleChange("agent")}
-            />
-            </Grid>
-            <Grid item xs={6} >
-            <TextField
-              id="service"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
-              label="Service Charge"
-              name="service"
-              type="number"
-              fullWidth
-              autoFocus
-              required
-              variant="outlined" 
-              helperText={touched.service ? errors.service : ""}
-              error={touched.service && Boolean(errors.service)}
-              value={values.service}
-              onChange={handleChange("service")}
-            />
             </Grid>
             <Grid item xs={6} >
             <TextField
@@ -260,21 +230,29 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               error={touched.agent_amount && Boolean(errors.agent_amount)}
               value={values.agent_amount}
               onChange={handleChange("agent_amount")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {values.sub_category == "Wakala" ? leftCss : rightCss}
             /> 
             </Grid>
             <Grid item xs={6} >
             <TextField
+              id="service"
+              sx = {values.sub_category == "Wakala" ? rightCss : leftCss }
+              label="Service Charge"
+              name="service"
+              type="number"
+              fullWidth
+              autoFocus
+              variant="outlined" 
+              helperText={touched.service ? errors.service : ""}
+              error={touched.service && Boolean(errors.service)}
+              value={values.service}
+              onChange={handleChange("service")}
+            />
+            </Grid>
+            <Grid item xs={6} >
+            <TextField
               id="total_amount"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {values.sub_category == "Wakala" ? leftCss : rightCss}
               label="Total Amount"
               name="total_amount"
               type="number"
@@ -302,21 +280,13 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               error={touched.paid_amount && Boolean(errors.paid_amount)}
               value={values.paid_amount}
               onChange={handleChange("paid_amount")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {values.sub_category == "Wakala" ? rightCss : leftCss}
             /> 
             </Grid>
             <Grid item xs={6} >
             <TextField
               id="balance"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {values.sub_category == "Wakala" ? leftCss : rightCss}
               label="Balance Amount"
               name="balance"
               type="number"
@@ -333,32 +303,24 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             </Grid>
             <Grid item xs={6} >
             <TextField
-              id="remarks"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
-              label="Remarks"
-              name="remarks"
+              id="agent"
+              sx = {values.sub_category == "Wakala" ? rightCss : leftCss}
+              label="Agent Name"
+              name="agent"
               type="text"
               fullWidth
               autoFocus
               variant="outlined"
-              helperText={touched.remarks ? errors.remarks : ""}
-              error={touched.remarks && Boolean(errors.remarks)}
-              value={values.remarks}
-              onChange={handleChange("remarks")}
+              helperText={touched.agent ? errors.agent : ""}
+              error={touched.agent && Boolean(errors.agent)}
+              value={values.agent}
+              onChange={handleChange("agent")}
             />
             </Grid>
             <Grid item xs={6} >
             <TextField
               id="paid_date"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {values.sub_category == "Wakala" ? leftCss : rightCss}
               label="Agent Paid Date"
               name="paid_date"
               type="Text"
@@ -371,26 +333,22 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("paid_date")}
             />
             </Grid>
-            {values.sub_category == "Wakala" && <Grid item xs={6} >
+            <Grid item xs={6} >
             <TextField
-              id="visa_number"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
-              label="Visa Number"
-              name="visa_number"
+              id="remarks"
+              sx = {values.sub_category == "Wakala" ? rightCss : leftCss}
+              label="Remarks"
+              name="remarks"
               type="text"
               fullWidth
               autoFocus
               variant="outlined"
-              helperText={touched.visa_number ? errors.visa_number : ""}
-              error={touched.visa_number && Boolean(errors.visa_number)}
-              value={values.visa_number}
-              onChange={handleChange("visa_number")}
+              helperText={touched.remarks ? errors.remarks : ""}
+              error={touched.remarks && Boolean(errors.remarks)}
+              value={values.remarks}
+              onChange={handleChange("remarks")}
             />
-            </Grid>}
+            </Grid>
             {values.sub_category == "Visa Chamber" && <Grid item xs={6} >
             <TextField
               id="chamber_amount"

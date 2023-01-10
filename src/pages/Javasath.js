@@ -165,7 +165,7 @@ export default function User() {
 
   const isUserNotFound = filteredUsers.length === 0;
 
-  const submitJavazath = async (data) => {
+  const submitJavazath = async (data,actions) => {
     console.log('kkkkkkk', data)
     setLoading(true)
     axios.post(`${URL}/javasath`, data)
@@ -173,6 +173,7 @@ export default function User() {
         console.log('----->', res)
         setOpen(false)
         setReFetch(!reFetch)
+        actions.resetForm()
       }).catch((err) => {
         setLoading(false)
       })
