@@ -19,6 +19,8 @@ const subCategories = [
   {value:'Wakala',label:'Wakala'},
 ]
 
+const cssArray=['Visa Chamber','Wakala']
+
 const validationSchema = Yup.object({
   sub_category: Yup.string().required("Enter Category Name"),
   name: Yup.string().required("Enter Name"),
@@ -217,7 +219,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               sx = {values.sub_category == "Wakala" ? rightCss : leftCss}
             /> 
             </Grid>
-            <Grid item xs={6} >
+            {values.sub_category != "Visa Chamber" &&<Grid item xs={6} >
             <TextField
               id="agent_amount"
               label="Agent amount"
@@ -232,13 +234,32 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("agent_amount")}
               sx = {values.sub_category == "Wakala" ? leftCss : rightCss}
             /> 
-            </Grid>
+            </Grid>}
+            {values.sub_category == "Visa Chamber" && <Grid item xs={6} >
+            <TextField
+              id="chamber_amount"
+              sx = {rightCss}
+              label="Chamber Amount"
+              name="chamber_amount"
+              type="text"
+              fullWidth
+              autoFocus
+              variant="outlined"
+              helperText={touched.chamber_amount ? errors.chamber_amount : ""}
+              error={touched.chamber_amount && Boolean(errors.chamber_amount)}
+              value={values.chamber_amount}
+              onChange={handleChange("chamber_amount")}
+            />
+            </Grid>}
             <Grid item xs={6} >
             <TextField
               id="service"
-              sx = {values.sub_category == "Wakala" ? rightCss : leftCss }
+              sx = {values.sub_category == 'Wakala' ? rightCss: values.sub_category == 'Visa Chamber' ? leftCss : leftCss }
               label="Service Charge"
               name="service"
+              InputLabelProps={{
+                style: { color: '#BC3110' },
+              }}
               type="number"
               fullWidth
               autoFocus
@@ -252,7 +273,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             <Grid item xs={6} >
             <TextField
               id="total_amount"
-              sx = {values.sub_category == "Wakala" ? leftCss : rightCss}
+              sx = {values.sub_category == 'Wakala' ?  leftCss : values.sub_category == 'Visa Chamber' ? rightCss : rightCss}
               label="Total Amount"
               name="total_amount"
               type="number"
@@ -280,13 +301,13 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               error={touched.paid_amount && Boolean(errors.paid_amount)}
               value={values.paid_amount}
               onChange={handleChange("paid_amount")}
-              sx = {values.sub_category == "Wakala" ? rightCss : leftCss}
+              sx = {values.sub_category == 'Wakala' ? rightCss: values.sub_category == 'Visa Chamber' ? leftCss : leftCss }
             /> 
             </Grid>
             <Grid item xs={6} >
             <TextField
               id="balance"
-              sx = {values.sub_category == "Wakala" ? leftCss : rightCss}
+              sx = {values.sub_category == 'Wakala' ?  leftCss : values.sub_category == 'Visa Chamber' ? rightCss : rightCss}
               label="Balance Amount"
               name="balance"
               type="number"
@@ -301,42 +322,40 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("balance")}
             />
             </Grid>
-            <Grid item xs={6} >
-            <TextField
-              id="agent"
-              sx = {values.sub_category == "Wakala" ? rightCss : leftCss}
-              label="Agent Name"
-              name="agent"
-              type="text"
-              fullWidth
-              autoFocus
-              variant="outlined"
-              helperText={touched.agent ? errors.agent : ""}
-              error={touched.agent && Boolean(errors.agent)}
-              value={values.agent}
-              onChange={handleChange("agent")}
-            />
-            </Grid>
-            <Grid item xs={6} >
-            <TextField
-              id="paid_date"
-              sx = {values.sub_category == "Wakala" ? leftCss : rightCss}
-              label="Agent Paid Date"
-              name="paid_date"
-              type="Text"
-              fullWidth
-              autoFocus
-              variant="outlined"
-              helperText={touched.paid_date ? errors.paid_date : ""}
-              error={touched.paid_date && Boolean(errors.paid_date)}
-              value={values.paid_date}
-              onChange={handleChange("paid_date")}
-            />
-            </Grid>
+            {values.sub_category != "Visa Chamber" && <><Grid item xs={6}>
+                <TextField
+                  id="agent"
+                  sx={cssArray.includes(values.sub_category) ? rightCss : leftCss}
+                  label="Agent Name"
+                  name="agent"
+                  type="text"
+                  fullWidth
+                  autoFocus
+                  variant="outlined"
+                  helperText={touched.agent ? errors.agent : ""}
+                  error={touched.agent && Boolean(errors.agent)}
+                  value={values.agent}
+                  onChange={handleChange("agent")} />
+              </Grid>
+              <Grid item xs={6}>
+                  <TextField
+                    id="paid_date"
+                    sx={cssArray.includes(values.sub_category) ? leftCss : rightCss}
+                    label="Agent Paid Date"
+                    name="paid_date"
+                    type="Text"
+                    fullWidth
+                    autoFocus
+                    variant="outlined"
+                    helperText={touched.paid_date ? errors.paid_date : ""}
+                    error={touched.paid_date && Boolean(errors.paid_date)}
+                    value={values.paid_date}
+                    onChange={handleChange("paid_date")} />
+                </Grid></>}
             <Grid item xs={6} >
             <TextField
               id="remarks"
-              sx = {values.sub_category == "Wakala" ? rightCss : leftCss}
+              sx = {values.sub_category == 'Wakala' ? rightCss: values.sub_category == 'Visa Chamber' ? leftCss : leftCss }
               label="Remarks"
               name="remarks"
               type="text"
@@ -349,26 +368,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("remarks")}
             />
             </Grid>
-            {values.sub_category == "Visa Chamber" && <Grid item xs={6} >
-            <TextField
-              id="chamber_amount"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
-              label="Chamber Amount"
-              name="chamber_amount"
-              type="text"
-              fullWidth
-              autoFocus
-              variant="outlined"
-              helperText={touched.chamber_amount ? errors.chamber_amount : ""}
-              error={touched.chamber_amount && Boolean(errors.chamber_amount)}
-              value={values.chamber_amount}
-              onChange={handleChange("chamber_amount")}
-            />
-            </Grid>}
           </Grid>
           </DialogContent>
           <DialogActions>

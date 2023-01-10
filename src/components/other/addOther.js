@@ -206,27 +206,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             </Grid>
             <Grid item xs={6} >
             <TextField
-              id="service"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
-              label="Service Charge"
-              name="service"
-              type="number"
-              fullWidth
-              autoFocus
-              required
-              variant="outlined" 
-              helperText={touched.service ? errors.service : ""}
-              error={touched.service && Boolean(errors.service)}
-              value={values.service}
-              onChange={handleChange("service")}
-            />
-            </Grid>
-            <Grid item xs={6} >
-            <TextField
               id="agent_amount"
               label="Agent amount"
               name="agent_amount"
@@ -241,9 +220,33 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2,
               }}
             /> 
+            </Grid>
+            <Grid item xs={6} >
+            <TextField
+              id="service"
+              sx = {{
+                marginTop: 2,
+                marginBottom: 2,
+                marginRight:2
+              }}
+              InputLabelProps={{
+                style: { color: '#BC3110' },
+              }}
+              label="Service Charge"
+              name="service"
+              type="number"
+              fullWidth
+              autoFocus
+              required
+              variant="outlined" 
+              helperText={touched.service ? errors.service : ""}
+              error={touched.service && Boolean(errors.service)}
+              value={values.service}
+              onChange={handleChange("service")}
+            />
             </Grid>
             <Grid item xs={6} >
             <TextField

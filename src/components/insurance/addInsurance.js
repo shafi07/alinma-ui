@@ -249,6 +249,9 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
                 marginBottom: 2,
                 marginLeft:2,
               }}
+              InputLabelProps={{
+                style: { color: '#BC3110' },
+              }}
               label="Service Charge"
               name="service"
               type="number"

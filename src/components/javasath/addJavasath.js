@@ -26,6 +26,20 @@ const subCategories = [
   {value:'Profession Change',label:'Profession Change'},
 ]
 
+const leftCss = {
+  marginTop: 2,
+  marginBottom: 2,
+  marginRight:2,
+}
+
+const rightCss = {
+  marginTop: 2,
+  marginBottom: 2,
+  marginLeft:2,
+}
+
+const cssArray=['Sponser Change','Profession Change']
+
 // const useStyles = makeStyles({
 //   grid: {
 //     height: 140,
@@ -63,7 +77,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
         name:"",
         sponser_name: "",
         mol: null,
-        service: "",
+        service: null,
         other: null,
         iqama: null,
         id_number: "",
@@ -75,7 +89,9 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
         remarks:'',
         agent_amount:null,
         paid_date:'',
-        agent:''
+        agent:'',
+        professionName:'',
+        newSponser:''
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
@@ -132,12 +148,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               error={touched.sub_category && Boolean(errors.sub_category)}
               value={values.sub_category}
               onChange={handleChange("sub_category")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2,
-                input: { color: 'red' }
-              }}
+              sx = {leftCss}
             >
               {subCategories.map(option => (
              <MenuItem sx={{color:'red'}} key={option.value} value={option.label}>
@@ -149,12 +160,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             <Grid item xs={6} >
             <TextField
               id="name"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-                // input: { color: 'red' }
-              }}
+              sx = {rightCss}
               label="Customer name"
               name="name"
               type="text"
@@ -182,22 +188,14 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               error={touched.sponser_name && Boolean(errors.sponser_name)}
               value={values.sponser_name}
               onChange={handleChange("sponser_name")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {leftCss}
             /> 
             </Grid>
             <Grid item xs={6} >
             <TextField
               id="id_number"
               // className={classes.input}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2
-              }}
+              sx = {rightCss}
               label="Iqama Number"
               name="id_number"
               type="text"
@@ -225,13 +223,43 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               error={touched.mobileNumber && Boolean(errors.mobileNumber)}
               value={values.mobileNumber}
               onChange={handleChange("mobileNumber")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
-            /> 
+              sx = {leftCss}
+            />
             </Grid> 
+            {values.sub_category == "Profession Change" && <Grid item xs={6} >
+            <TextField
+              id="professionName"
+              sx = {rightCss}
+              label="Profession Name"
+              name="professionName"
+              type="text"
+              fullWidth
+              autoFocus
+              required
+              variant="outlined"
+              helperText={touched.professionName ? errors.professionName : ""}
+              error={touched.professionName && Boolean(errors.professionName)}
+              value={values.professionName}
+              onChange={handleChange("professionName")}
+            />
+            </Grid>}
+            {values.sub_category == "Sponser Change" && <Grid item xs={6} >
+            <TextField
+              id="newSponser"
+              sx = {rightCss}
+              label="New Sponser Name"
+              name="newSponser"
+              type="text"
+              fullWidth
+              autoFocus
+              required
+              variant="outlined"
+              helperText={touched.newSponser ? errors.newSponser : ""}
+              error={touched.newSponser && Boolean(errors.newSponser)}
+              value={values.newSponser}
+              onChange={handleChange("newSponser")}
+            />
+            </Grid>}
             <Grid item xs={6} >
             <TextField
               id="iqama"
@@ -245,21 +273,13 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               error={touched.iqama && Boolean(errors.iqama)}
               value={values.iqama}
               onChange={handleChange("iqama")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2
-              }}
+              sx = {cssArray.includes(values.sub_category) ? leftCss : rightCss }
             /> 
             </Grid>
             <Grid item xs={6} >
             <TextField
               id="insurance"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {cssArray.includes(values.sub_category) ? rightCss : leftCss }
               label="Insurance"
               name="insurance"
               type="number"
@@ -285,21 +305,13 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               error={touched.other && Boolean(errors.other)}
               value={values.other}
               onChange={handleChange("other")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2
-              }}
+              sx = {cssArray.includes(values.sub_category) ? leftCss : rightCss }
             /> 
             </Grid>
             <Grid item xs={6} >
             <TextField
               id="mol"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {cssArray.includes(values.sub_category) ? rightCss : leftCss }
               label="Mol Amount"
               name="mol"
               type="number"
@@ -315,11 +327,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             <Grid item xs={6} >
             <TextField
               id="agent_amount"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {cssArray.includes(values.sub_category) ? leftCss : rightCss }
               label="Agent Amount"
               name="agent_amount"
               type="number"
@@ -335,10 +343,9 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             <Grid item xs={6} >
             <TextField
               id="service"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
+              sx = {cssArray.includes(values.sub_category) ? rightCss : leftCss }
+              InputLabelProps={{
+                style: { color: '#BC3110' },
               }}
               label="Service Charge"
               name="service"
@@ -354,11 +361,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             <Grid item xs={6} >
             <TextField
               id="total_amount"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {cssArray.includes(values.sub_category) ? leftCss : rightCss }
               label="Total Amount"
               name="total_amount"
               type="number"
@@ -386,21 +389,13 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
               error={touched.paid_amount && Boolean(errors.paid_amount)}
               value={values.paid_amount}
               onChange={handleChange("paid_amount")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {cssArray.includes(values.sub_category) ? rightCss : leftCss }
             /> 
             </Grid>
             <Grid item xs={6} >
             <TextField
               id="balance"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {cssArray.includes(values.sub_category) ? leftCss : rightCss }
               label="Balance Amount"
               name="balance"
               type="number"
@@ -418,11 +413,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             <Grid item xs={6} >
             <TextField
               id="agent"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {cssArray.includes(values.sub_category) ? rightCss : leftCss }
               label="Agent"
               name="agent"
               type="text"
@@ -438,11 +429,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             <Grid item xs={6} >
             <TextField
               id="paid_date"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {cssArray.includes(values.sub_category) ? leftCss : rightCss }
               label="Agent Paid Date"
               name="paid_date"
               type="Text"
@@ -458,11 +445,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             <Grid item xs={6} >
             <TextField
               id="remarks"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {cssArray.includes(values.sub_category) ? rightCss : leftCss }
               label="Remarks"
               name="remarks"
               type="text"

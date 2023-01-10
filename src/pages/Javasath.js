@@ -247,7 +247,7 @@ export default function User() {
             <CircularProgress color="inherit" />
           </Box>:
             <TableContainer>
-              <Table style={{width:"200%"}} >
+              <Table style={{width:"250%"}} >
                 <UserListHead
                   order={order}
                   orderBy={orderBy}
@@ -259,9 +259,9 @@ export default function User() {
                 />
                 <TableBody>
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const {id,id_number, fileid='JZ1', name, sub_category='dss', insurance,service,sponser_name='test',
-                    paid_amount='test',balance_amount='test',iqama='test',mol='test',mobilenumber='989898989898',
-                    other='test',total_amount,status="pending" } = row;
+                    const {id, id_number, fileid, name, sub_category, insurance, service, sponser_name,
+                    paid_amount, balance_amount, iqama,mol, mobilenumber,other, total_amount, status,
+                    agent = 'test', paid_date = '12-02-2021',professionName='new', newSponser='newS',agent_amount='100' } = row;
 
                     return (
                       <TableRow
@@ -301,6 +301,11 @@ export default function User() {
                             {sentenceCase(balance_amount == 0 ? 'Paid':'Credit')}
                           </Label>
                         </TableCell>
+                        <TableCell align="left">{agent}</TableCell>
+                        <TableCell align="left">{paid_date}</TableCell>
+                        <TableCell align="left">{professionName}</TableCell>
+                        <TableCell align="left">{newSponser}</TableCell>
+                        <TableCell align="left">{agent_amount}</TableCell>
                         <TableCell align="left">{mol}</TableCell>
                         <TableCell align="left">{iqama}</TableCell>
                         <TableCell align="left">{insurance}</TableCell>
