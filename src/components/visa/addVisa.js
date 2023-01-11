@@ -235,7 +235,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               sx = {values.sub_category == "Wakala" ? leftCss : rightCss}
             /> 
             </Grid>}
-            {values.sub_category == "Visa Chamber" && <Grid item xs={6} >
+            {cssArray.includes(values.sub_category) && <Grid item xs={6} >
             <TextField
               id="chamber_amount"
               sx = {rightCss}
@@ -254,7 +254,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             <Grid item xs={6} >
             <TextField
               id="service"
-              sx = {values.sub_category == 'Wakala' ? rightCss: values.sub_category == 'Visa Chamber' ? leftCss : leftCss }
+              sx = {leftCss }
               label="Service Charge"
               name="service"
               InputLabelProps={{
@@ -273,7 +273,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             <Grid item xs={6} >
             <TextField
               id="total_amount"
-              sx = {values.sub_category == 'Wakala' ?  leftCss : values.sub_category == 'Visa Chamber' ? rightCss : rightCss}
+              sx = {rightCss}
               label="Total Amount"
               name="total_amount"
               type="number"
@@ -301,13 +301,13 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               error={touched.paid_amount && Boolean(errors.paid_amount)}
               value={values.paid_amount}
               onChange={handleChange("paid_amount")}
-              sx = {values.sub_category == 'Wakala' ? rightCss: values.sub_category == 'Visa Chamber' ? leftCss : leftCss }
+              sx = {leftCss }
             /> 
             </Grid>
             <Grid item xs={6} >
             <TextField
               id="balance"
-              sx = {values.sub_category == 'Wakala' ?  leftCss : values.sub_category == 'Visa Chamber' ? rightCss : rightCss}
+              sx = {rightCss}
               label="Balance Amount"
               name="balance"
               type="number"
@@ -325,7 +325,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             {values.sub_category != "Visa Chamber" && <><Grid item xs={6}>
                 <TextField
                   id="agent"
-                  sx={cssArray.includes(values.sub_category) ? rightCss : leftCss}
+                  sx={leftCss}
                   label="Agent Name"
                   name="agent"
                   type="text"
@@ -340,7 +340,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               <Grid item xs={6}>
                   <TextField
                     id="paid_date"
-                    sx={cssArray.includes(values.sub_category) ? leftCss : rightCss}
+                    sx={rightCss}
                     label="Agent Paid Date"
                     name="paid_date"
                     type="Text"
@@ -355,7 +355,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             <Grid item xs={6} >
             <TextField
               id="remarks"
-              sx = {values.sub_category == 'Wakala' ? rightCss: values.sub_category == 'Visa Chamber' ? leftCss : leftCss }
+              sx = {leftCss }
               label="Remarks"
               name="remarks"
               type="text"

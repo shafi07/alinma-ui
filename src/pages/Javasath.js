@@ -100,7 +100,9 @@ export default function User() {
   const[view,setView]=useState(false)
 
   let scrl = useRef(null);
+
   const [scrollX, setscrollX] = useState(0);
+  
   const [scrolEnd, setscrolEnd] = useState(false);
 
 
