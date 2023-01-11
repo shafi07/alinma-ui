@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // material
 import { styled } from '@mui/material/styles';
-import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment, Select, MenuItem, InputLabel } from '@mui/material';
+import { Toolbar,Button, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment, Select, MenuItem, InputLabel } from '@mui/material';
 // component
 import Iconify from '../../../components/Iconify';
 import Filter from './Filter';
@@ -40,7 +40,7 @@ UserListToolbar.propTypes = {
   onFilterName: PropTypes.func,
 };
 
-export default function UserListToolbar({handleStatusFilter,expense=true, numSelected, filterName, onFilterName,status }) {
+export default function UserListToolbar({handleStatusFilter, expense=true, slide, numSelected, filterName, onFilterName,status }) {
   return (
     <RootStyle
       sx={{
@@ -55,6 +55,7 @@ export default function UserListToolbar({handleStatusFilter,expense=true, numSel
           {numSelected} selected
         </Typography>
       ) : (<>
+        {/* <Button onClick={() => slide(-200)} >{'<'}</Button> */}
         <SearchStyle
           value={filterName}
           onChange={onFilterName}
@@ -65,6 +66,8 @@ export default function UserListToolbar({handleStatusFilter,expense=true, numSel
             </InputAdornment>
           }
         />
+        <Button onClick={() => slide(-200)} >{'<'}</Button>
+        <Button onClick={() => slide(+200)} >{'>'}</Button>
         { expense &&  <Select
            onChange={(e) => handleStatusFilter(e.target.value)} 
           defaultValue={status == ''? 'All':status}
@@ -91,6 +94,7 @@ export default function UserListToolbar({handleStatusFilter,expense=true, numSel
           </IconButton> */}
           <Filter/>
         </Tooltip>
+        // <Button onClick={() => slide(+200)} >{'>'}</Button>
       )}
     </RootStyle>
   );

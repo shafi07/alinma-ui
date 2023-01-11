@@ -1,5 +1,5 @@
 import { filter } from 'lodash';
-import { useState,useEffect } from 'react';
+import { useState,useEffect, useRef } from 'react';
 import { useNavigate} from "react-router-dom";
 // material
 import {
@@ -91,6 +91,12 @@ export default function Expense() {
   const [loading,setLoading]=useState(true)
 
   const[status,setStatus] = useState('')
+
+  let scrl = useRef(null);
+
+  const [scrollX, setscrollX] = useState(0);
+
+  const [scrolEnd, setscrolEnd] = useState(false);
 
   const navigate = useNavigate();
 
@@ -209,6 +215,31 @@ export default function Expense() {
     navigate('/print',{state:{path:"expense",...data}})
   }
 
+  const slide = (shift) => {
+    scrl.current.scrollLeft += shift;
+    setscrollX(scrollX + shift);
+    if (
+      Math.floor(scrl.current.scrollWidth - scrl.current.scrollLeft) <=
+      scrl.current.offsetWidth
+    ) {
+      setscrolEnd(true);
+    } else {
+      setscrolEnd(false);
+    }
+  };
+
+  const scrollCheck = () => {
+    setscrollX(scrl.current.scrollLeft);
+    if (
+      Math.floor(scrl.current.scrollWidth - scrl.current.scrollLeft) <=
+      scrl.current.offsetWidth
+    ) {
+      setscrolEnd(true);
+    } else {
+      setscrolEnd(false);
+    }
+  };
+
   return (
     <>
     <Page title="Expense">
@@ -220,20 +251,20 @@ export default function Expense() {
           <Button variant="contained" sx={{backgroundColor:'#F51720'}} onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
             Add Expense
           </Button>
-          <CSVLink headers={expenseHeaders} data={USERLIST?USERLIST:[]} filename={'test'}>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+          <CSVLink headers={expenseHeaders} data={USERLIST ? USERLIST :[]} filename={'test'}>
+          <Button variant="contained" startIcon={<Iconify icon="prime:file-excel" />}>
             Export CSV
           </Button>
           </CSVLink>
         </Stack>
 
         <Card>
-          <UserListToolbar expense={false} handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
+          <UserListToolbar slide={slide} expense={false} handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
           <Scrollbar>
           {loading ? <Box sx={{ width:'100%',display:'flex',minHeight:'50vh',alignItems:'center',justifyContent:'center' }} >
             <CircularProgress color="inherit" />
           </Box>:
-            <TableContainer>
+            <TableContainer ref={scrl} onScroll={scrollCheck}  >
               <Table style={{width:"150%"}} >
                 <UserListHead
                   order={order}

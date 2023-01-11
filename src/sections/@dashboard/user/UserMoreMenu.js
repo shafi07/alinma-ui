@@ -7,7 +7,7 @@ import Iconify from '../../../components/Iconify';
 
 // ----------------------------------------------------------------------
 
-export default function UserMoreMenu({row,handlePrint}) {
+export default function UserMoreMenu({row,handlePrint,viewOpen}) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -27,14 +27,14 @@ export default function UserMoreMenu({row,handlePrint}) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem  sx={{ color: 'text.secondary' }}>
+        <MenuItem onClick={()=>viewOpen(row)} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
-            <Iconify icon="eva:trash-2-outline" width={24} height={24} />
+            <Iconify icon="eva:eye-outline" width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="View" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem component={RouterLink} to="#" sx={{ color: 'text.secondary' }}>
+        <MenuItem onClick={()=>handlePrint(row)} sx={{ color: 'text.secondary' }}>
           <ListItemIcon >
             <Iconify icon="material-symbols:print" width={24} height={24} />
           </ListItemIcon>

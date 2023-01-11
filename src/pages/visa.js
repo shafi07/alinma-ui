@@ -1,6 +1,6 @@
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState,useEffect } from 'react';
+import { useState,useEffect,useRef } from 'react';
 import { useNavigate} from "react-router-dom";
 // material
 import {
@@ -98,6 +98,12 @@ export default function Visa() {
   const[view,setView]=useState(false)
 
   const[viewData,setViewData]=useState(null)
+
+  let scrl = useRef(null);
+
+  const [scrollX, setscrollX] = useState(0);
+
+  const [scrolEnd, setscrolEnd] = useState(false);
 
   const navigate = useNavigate();
 
@@ -200,6 +206,18 @@ export default function Visa() {
       })
   }
 
+  const handleDelete = async (id) => {
+    setLoading(true)
+    axios.delete(`${URL}/visa/${id}`)
+      .then((res) => {
+        console.log('----->', res)
+        setEditModel(!editModel)
+        setReFetch(!reFetch)
+      }).catch((err) => {
+        setLoading(false)
+      })
+  }
+
   const handleStatusFilter = async(data)=>{
     setLoading(true)
     data == 'All' ? setStatus('') : setStatus(data) 
@@ -214,6 +232,31 @@ export default function Visa() {
     setView(true)
   }
 
+  const slide = (shift) => {
+    scrl.current.scrollLeft += shift;
+    setscrollX(scrollX + shift);
+    if (
+      Math.floor(scrl.current.scrollWidth - scrl.current.scrollLeft) <=
+      scrl.current.offsetWidth
+    ) {
+      setscrolEnd(true);
+    } else {
+      setscrolEnd(false);
+    }
+  };
+
+  const scrollCheck = () => {
+    setscrollX(scrl.current.scrollLeft);
+    if (
+      Math.floor(scrl.current.scrollWidth - scrl.current.scrollLeft) <=
+      scrl.current.offsetWidth
+    ) {
+      setscrolEnd(true);
+    } else {
+      setscrolEnd(false);
+    }
+  };
+
   return (
     <>
     <Page title="Visa">
@@ -226,20 +269,20 @@ export default function Visa() {
             New Visa
           </Button>
           <CSVLink headers={visaHeaders} data={USERLIST?USERLIST:[]} filename={'test'}>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+          <Button variant="contained" startIcon={<Iconify icon="prime:file-excel" />}>
             Export CSV
           </Button>
           </CSVLink>
         </Stack>
 
         <Card>
-          <UserListToolbar handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
+          <UserListToolbar slide={slide} handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
           <Scrollbar>
           {loading ? <Box sx={{ width:'100%',display:'flex',minHeight:'50vh',alignItems:'center',justifyContent:'center' }} >
             <CircularProgress color="inherit" />
           </Box>:
-            <TableContainer>
-              <Table style={{width:"200%"}} >
+            <TableContainer ref={scrl} onScroll={scrollCheck}  >
+              <Table style={{width:"250%"}} >
                 <UserListHead
                   order={order}
                   orderBy={orderBy}
@@ -251,10 +294,9 @@ export default function Visa() {
                 />
                 <TableBody>
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id,id_number,status,agent='test',agent_amount=777, fileid, 
-                    name, sub_category='dss', insurance,service = 100,sponser_name,
-                    paid_amount='test',balance_amount='test',iqama='test',mol='test',chamber_amount="-",
-                    mobilenumber='989898989898',other='test',total_amount,visa_number,paid_date } = row;
+                    const { id, id_number, status, agent, agent_amount, fileid, 
+                    name, sub_category, service, sponser_name, paid_amount, balance_amount,
+                    chamber_amount, mobilenumber, total_amount, visa_number, paid_date } = row;
 
                     return (
                       <TableRow
@@ -310,17 +352,19 @@ export default function Visa() {
                           </Select>
                         </TableCell>
                         <TableCell align="left">
-                          < PrintIcon onClick={(e) =>{e.stopPropagation()
-                        handlePrint(row)} } />
+                          {/* < PrintIcon onClick={(e) =>{e.stopPropagation()
+                        handlePrint(row)} } /> */}
+                        <Iconify icon="ic:baseline-delete" width={24} height={24} onClick={(e) =>{e.stopPropagation()
+                            handleDelete(row.id)} } /> 
                         </TableCell>
-                        <TableCell align="left" >
+                        {/* <TableCell align="left" >
                         <Iconify icon="mdi:eye-outline" width={24} height={24} onClick={(e) =>{e.stopPropagation()
-                            viewOpen(row)} } />
+                            viewOpen(row)} } /> */}
                           {/* < VisibilityIcon onClick={(e) =>{e.stopPropagation()
                             handlePrint(row)} } /> */}
-                        </TableCell>
+                        {/* </TableCell> */}
                         <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
-                          <UserMoreMenu />
+                          <UserMoreMenu row={row} handlePrint={handlePrint} viewOpen={viewOpen} />
                         </TableCell>
                       </TableRow>
                     );

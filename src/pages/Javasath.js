@@ -99,6 +99,11 @@ export default function User() {
 
   const[view,setView]=useState(false)
 
+  let scrl = useRef(null);
+  const [scrollX, setscrollX] = useState(0);
+  const [scrolEnd, setscrolEnd] = useState(false);
+
+
   const[viewData,setViewData]=useState(null)
 
   const navigate = useNavigate();
@@ -204,6 +209,18 @@ export default function User() {
       })
   }
 
+  const handleDelete = async (id) => {
+    setLoading(true)
+    axios.delete(`${URL}/javasath/${id}`)
+      .then((res) => {
+        console.log('----->', res)
+        setEditModel(!editModel)
+        setReFetch(!reFetch)
+      }).catch((err) => {
+        setLoading(false)
+      })
+  }
+
   const handlePrint = async(data)=>{
     navigate('/print',{state:{path:"javasath",...data}})
   }
@@ -213,14 +230,39 @@ export default function User() {
     data == 'All' ? setStatus('') : setStatus(data) 
   }
 
-  const handleDelete = async(data)=>{
-    setStatus(data)
-  }
+  // const handleDelete = async(data)=>{
+  //   setStatus(data)
+  // }
 
   const viewOpen = async(data)=>{
     setViewData(data)
     setView(true)
   }
+
+  const slide = (shift) => {
+    scrl.current.scrollLeft += shift;
+    setscrollX(scrollX + shift);
+    if (
+      Math.floor(scrl.current.scrollWidth - scrl.current.scrollLeft) <=
+      scrl.current.offsetWidth
+    ) {
+      setscrolEnd(true);
+    } else {
+      setscrolEnd(false);
+    }
+  };
+
+  const scrollCheck = () => {
+    setscrollX(scrl.current.scrollLeft);
+    if (
+      Math.floor(scrl.current.scrollWidth - scrl.current.scrollLeft) <=
+      scrl.current.offsetWidth
+    ) {
+      setscrolEnd(true);
+    } else {
+      setscrolEnd(false);
+    }
+  };
 
   return (
     <>
@@ -234,19 +276,19 @@ export default function User() {
             New Javasath
           </Button>
           <CSVLink headers={javasathHeaders} data={USERLIST?USERLIST:[]} filename={'test'}>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+          <Button variant="contained" startIcon={<Iconify icon="prime:file-excel" />}>
             Export CSV
           </Button>
           </CSVLink>
         </Stack>
 
         <Card>
-          <UserListToolbar handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
-          <Scrollbar>
+          <UserListToolbar slide={slide} handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
+          <Scrollbar >
           {loading ? <Box sx={{ width:'100%',display:'flex',minHeight:'50vh',alignItems:'center',justifyContent:'center' }} >
             <CircularProgress color="inherit" />
           </Box>:
-            <TableContainer>
+            <TableContainer ref={scrl} onScroll={scrollCheck}  >
               <Table style={{width:"250%"}} >
                 <UserListHead
                   order={order}
@@ -260,8 +302,8 @@ export default function User() {
                 <TableBody>
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     const {id, id_number, fileid, name, sub_category, insurance, service, sponser_name,
-                    paid_amount, balance_amount, iqama,mol, mobilenumber,other, total_amount, status,
-                    agent = 'test', paid_date = '12-02-2021',professionName='new', newSponser='newS',agent_amount='100' } = row;
+                    paid_amount, balance_amount, iqama, mol, mobilenumber, other, total_amount, status,
+                    agent, paid_date, professionName, newSponser, agent_amount } = row;
 
                     return (
                       <TableRow
@@ -269,7 +311,7 @@ export default function User() {
                         key={id}
                         tabIndex={-1}
                         align = 'center'
-                        sx = {{backgroundColor: balance_amount != 0?'#F7837C':'#73D393'}}
+                        sx = {{backgroundColor: balance_amount != 0  ? '#F7837C' : '#73D393'}}
                         onClick={() => editOpen(row)} 
                       >
                         <TableCell component="th" scope="row" >
@@ -321,15 +363,16 @@ export default function User() {
                           </Select>
                         </TableCell>
                         <TableCell align="left" >
-                          < PrintIcon onClick={(e) =>{e.stopPropagation()
-                            handlePrint(row)} } />
+                          {/* < PrintIcon onClick={(e) =>{e.stopPropagation()
+                            handlePrint(row)} } /> */}
+                            <Iconify icon="eva:trash-2-outline" width={24} height={24} onClick={(e) =>{e.stopPropagation()
+                            handleDelete(row.id)} } /> 
                         </TableCell>
-                        <TableCell align="left" >
+                        {/* <TableCell align="left" >
                           <Iconify icon="mdi:eye-outline" width={24} height={24} onClick={(e) => {
                             e.stopPropagation()
-                            viewOpen(row)
                           }} />
-                        </TableCell>
+                        </TableCell> */}
                         {/* <TableCell align="left" >
                           <Iconify icon="mdi:eye-outline" width={24} height={24} onClick={(e) => {
                             e.stopPropagation()
@@ -337,7 +380,7 @@ export default function User() {
                           }} />
                         </TableCell> */}
                         <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
-                          <UserMoreMenu row={row} handlePrint={handlePrint} />
+                          <UserMoreMenu row={row} handlePrint={handlePrint} viewOpen={viewOpen} />
                         </TableCell>
                       </TableRow>
                     );
@@ -361,7 +404,6 @@ export default function User() {
               </Table>
             </TableContainer>}
           </Scrollbar>
-
           <TablePagination
             rowsPerPageOptions={[100]} 
             component="div"

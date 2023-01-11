@@ -21,7 +21,7 @@ const validationSchema = Yup.object({
   name: Yup.string().required("Enter Name)"),
   sponser_name: Yup.string().required("Enter Sponser Name"),
   id_number: Yup.string().required("Enter ID Number").length(10,'Iqama number length should be 10'),
-  mobileNumber: Yup.string().required("Enter Mobile Number").length(10,'Mobile number length should be 10'),
+  mobileNumber: Yup.string().required("Enter Mobile Number").matches(/^\d{10}$/,'mobile number length should be 10'),
   // paid_amount: Yup.number().required("Enter Amount"),
   total_amount: Yup.number().required("Enter Amount"),
   balance:Yup.number(),
@@ -226,7 +226,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               id="mobileNumber"
               label="Mobile Number"
               name="mobileNumber"
-              type="number"
+              type="text"
               fullWidth
               required
               variant="outlined"
