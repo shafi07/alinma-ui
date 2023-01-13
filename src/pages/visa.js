@@ -20,7 +20,6 @@ import {
   Select,
   MenuItem,
 } from '@mui/material';
-import PrintIcon from '@mui/icons-material/Print';
 // components
 import Page from '../components/Page';
 import Label from '../components/Label';

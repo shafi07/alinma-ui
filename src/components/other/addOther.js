@@ -3,8 +3,7 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import * as Yup from "yup";
 import { Formik } from "formik";
-import {DialogActions,DialogContent,Grid,InputLabel,MenuItem,Select,TextField} from "@mui/material";
-// import {makeStyles} from "@mui/styles";
+import {DialogActions,DialogContent,Grid,MenuItem,TextField} from "@mui/material";
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -24,7 +23,6 @@ const validationSchema = Yup.object({
   name: Yup.string().required("Enter Name"),
   id_number: Yup.string().required("Enter ID Number").length(10,'Iqama number length should be 10'),
   mobileNumber: Yup.string().required("Enter Mobile Number").matches(/^\d{10}$/,'mobile number length should be 10'),
-  // paid_amount: Yup.number().required("Enter Amount"),
   total_amount: Yup.number().required("Enter Amount"),
   balance:Yup.number(),
 });

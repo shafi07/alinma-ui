@@ -259,10 +259,6 @@ export default function User() {
     data == 'All' ? setStatus('') : setStatus(data) 
   }
 
-  // const handleDelete = async(data)=>{
-  //   setStatus(data)
-  // }
-
   const viewOpen = async(data)=>{
     setViewData(data)
     setView(true)
