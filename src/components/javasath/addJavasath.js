@@ -118,7 +118,7 @@ export default function FullScreenDialog({open,handleClose,editData={},submitHan
             <IconButton
               edge="start"
               color="inherit"
-              onClick={handleClose}
+              onClick={()=>{handleClose();resetForm()}}
               aria-label="close"
             >
               <CloseIcon />

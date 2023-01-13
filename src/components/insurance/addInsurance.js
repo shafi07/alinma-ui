@@ -65,6 +65,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
       handleChange,
       touched,
       values,
+      resetForm
       }) => (
       <Dialog
         fullScreen
@@ -77,7 +78,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             <IconButton
               edge="start"
               color="inherit"
-              onClick={handleClose}
+              onClick={()=>{handleClose();resetForm()}}
               aria-label="close"
             >
               <CloseIcon />

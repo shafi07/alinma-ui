@@ -31,6 +31,7 @@ import { CSVLink } from 'react-csv';
 import axios from 'axios';
 import moment from 'moment';
 import { URL,expenseHeaders, EXPENSE_TABLE_HEAD } from '../_mock/constant'
+import Toast from '../components/toast';
 
 // ----------------------------------------------------------------------
 
@@ -97,6 +98,10 @@ export default function Expense() {
   const [scrollX, setscrollX] = useState(0);
 
   const [scrolEnd, setscrolEnd] = useState(false);
+
+  const [toast,setToast]=useState(false)
+
+  const [message,setMessage]=useState(null)
 
   const navigate = useNavigate();
 
@@ -165,7 +170,12 @@ export default function Expense() {
         console.log('----->', res)
         setOpen(false)
         setReFetch(!reFetch)
+        actions.resetForm()
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
       actions.resetForm()
@@ -176,21 +186,14 @@ export default function Expense() {
     axios.put(`${URL}/expense`, data)
       .then((res) => {
         console.log('----->', res)
+        setEditData(null)
         setEditModel(!editModel)
         setReFetch(!reFetch)
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
-        setLoading(false)
-      })
-  }
-
-  const handleStatusChange = async (value,id) => {
-    setLoading(true)
-    axios.put(`${URL}/expense`, {status:value,id})
-      .then((res) => {
-        console.log('----->', res)
-        setEditModel(!editModel)
-        setReFetch(!reFetch)
-      }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -202,7 +205,11 @@ export default function Expense() {
         console.log('----->', res)
         setEditModel(!editModel)
         setReFetch(!reFetch)
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -348,6 +355,7 @@ export default function Expense() {
           />
         </Card>
       </Container>
+      <Toast toast={toast} setToast={setToast} message={message} />
     </Page>
     <AddBill
      open = {open} 

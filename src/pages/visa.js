@@ -34,6 +34,7 @@ import { CSVLink } from 'react-csv';
 import axios from 'axios';
 import View from 'src/components/view';
 import { URL,visaHeaders,VISA_TABLE_HEAD } from '../_mock/constant'
+import Toast from '../components/toast';
 
 // ----------------------------------------------------------------------
 
@@ -97,6 +98,10 @@ export default function Visa() {
 
   const[view,setView]=useState(false)
 
+  const [toast,setToast]=useState(false)
+
+  const [message,setMessage]=useState(null)
+
   const[viewData,setViewData]=useState(null)
 
   let scrl = useRef(null);
@@ -149,14 +154,29 @@ export default function Visa() {
     setView(!view)
   }
 
-  const fetchData = async (query,status) => {
+  const handleCloseAdd = (resetForm)=>{
+    setOpen(false)
+    resetForm()
+  }
+
+  const fetchData = async (query, status) => {
     const url = query || status ? `${URL}/visa?query=${query}&status=${status}` : `${URL}/visa`
-    const response = await fetch(url);
-    const newData = await response.json()
-    console.log('<<<<',newData)
-    setUSERLIST(newData)
-    setLoading(false)
-  };
+    setLoading(true)
+    axios.get(url)
+      .then((res) => {
+        console.log('----->', res)
+        if (res.status == 200) {
+          setUSERLIST(res.data)
+          setLoading(false)
+        } else {
+          setUSERLIST([])
+          setLoading(false)
+        }
+      }).catch((err) => {
+        setUSERLIST([])
+        setLoading(false)
+      })
+  }
 
   const editOpen = async(data)=>{
     setEditData(data)
@@ -169,14 +189,19 @@ export default function Visa() {
 
   const isUserNotFound = filteredUsers.length === 0;
 
-  const submitVisa = async (data) => {
+  const submitVisa = async (data,actions) => {
     setLoading(true)
     axios.post(`${URL}/visa`, data)
       .then((res) => {
         console.log('----->', res)
         setOpen(false)
         setReFetch(!reFetch)
+        actions.resetForm()
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -189,7 +214,11 @@ export default function Visa() {
         setEditData(null)
         setEditModel(!editModel)
         setReFetch(!reFetch)
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -201,7 +230,11 @@ export default function Visa() {
         console.log('----->', res)
         setEditModel(!editModel)
         setReFetch(!reFetch)
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -213,7 +246,11 @@ export default function Visa() {
         console.log('----->', res)
         setEditModel(!editModel)
         setReFetch(!reFetch)
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -400,6 +437,7 @@ export default function Visa() {
           />
         </Card>
       </Container>
+      <Toast toast={toast} setToast={setToast} message={message} />
     </Page>
     <AddBill
      open = {open} 

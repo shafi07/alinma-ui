@@ -68,18 +68,20 @@ export default function Login() {
 
   const [toast,setToast]=useState(false)
 
+  const [message,setMessage]=useState(null)
+
   const navigate = useNavigate();
 
   const loginHandler = async(d)=>{
     setLoading(true)
     axios.post(`${URL}/user/auth`, d)
       .then((res) => {
-        if (res.status === 200) {
           localStorage.setItem('auth', res.data.id)
           navigate('/dashboard/app', { replace: true });
           setToast(true)
-        }
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
     setLoading(false)
@@ -107,6 +109,7 @@ export default function Login() {
           </ContentStyle>
         </Container>
       </RootStyle>
+      <Toast toast={toast} setToast={setToast} message={message}/>
     </Page>
   );
 }

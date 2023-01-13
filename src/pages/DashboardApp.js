@@ -17,7 +17,6 @@ import {
   AppCurrentSubject,
   AppConversionRates,
 } from '../sections/@dashboard/app';
-import Toast from 'src/components/toast';
 
 // ----------------------------------------------------------------------
 

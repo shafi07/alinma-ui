@@ -8,7 +8,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function Toast({toast,setToast}) { 
+export default function Toast({toast,setToast,message}) { 
   const [open, setOpen] = React.useState(true);
 
   const handleClose = (event, reason) => {
@@ -21,8 +21,8 @@ export default function Toast({toast,setToast}) {
 
   return (
       <Snackbar open={toast} autoHideDuration={3000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-          This is a success message!
+        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+          {message}
         </Alert>
       </Snackbar>
   );

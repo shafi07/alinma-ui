@@ -34,6 +34,7 @@ import { CSVLink } from 'react-csv';
 import axios from 'axios';
 import View from 'src/components/view';
 import { URL,otherHeaders,OTHER_TABLE_HEAD } from '../_mock/constant'
+import Toast from '../components/toast';
 
 // ----------------------------------------------------------------------
 
@@ -97,6 +98,10 @@ export default function Other() {
 
   const[view,setView]=useState(false)
 
+  const [toast,setToast]=useState(false)
+
+  const [message,setMessage]=useState(null)
+
   const[viewData,setViewData]=useState(null)
 
   let scrl = useRef(null);
@@ -149,14 +154,24 @@ export default function Other() {
     setView(!view)
   }
 
-  const fetchData = async (query,status) => {
+  const fetchData = async (query, status) => {
     const url = query || status ? `${URL}/other?query=${query}&status=${status}` : `${URL}/other`
-    const response = await fetch(url);
-    const newData = await response.json()
-    console.log('<<<<',newData)
-    setUSERLIST(newData)
-    setLoading(false)
-  };
+    setLoading(true)
+    axios.get(url)
+      .then((res) => {
+        console.log('----->', res)
+        if (res.status == 200) {
+          setUSERLIST(res.data)
+          setLoading(false)
+        } else {
+          setUSERLIST([])
+          setLoading(false)
+        }
+      }).catch((err) => {
+        setUSERLIST([])
+        setLoading(false)
+      })
+  }
 
   const editOpen = async(data)=>{
     setEditData(data)
@@ -169,14 +184,19 @@ export default function Other() {
 
   const isUserNotFound = filteredUsers.length === 0;
 
-  const submitOther = async (data) => {
+  const submitOther = async (data,actions) => {
     setLoading(true)
     axios.post(`${URL}/other`, data)
       .then((res) => {
         console.log('----->', res)
         setOpen(false)
         setReFetch(!reFetch)
+        actions.resetForm()
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -186,9 +206,14 @@ export default function Other() {
     axios.put(`${URL}/other`, data)
       .then((res) => {
         console.log('----->', res)
+        setEditData(null)
         setEditModel(!editModel)
         setReFetch(!reFetch)
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -200,7 +225,11 @@ export default function Other() {
         console.log('----->', res)
         setEditModel(!editModel)
         setReFetch(!reFetch)
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -212,7 +241,11 @@ export default function Other() {
         console.log('----->', res)
         setEditModel(!editModel)
         setReFetch(!reFetch)
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -393,6 +426,7 @@ export default function Other() {
           />
         </Card>
       </Container>
+      <Toast toast={toast} setToast={setToast} message={message} />
     </Page>
     <AddBill
      open = {open} 

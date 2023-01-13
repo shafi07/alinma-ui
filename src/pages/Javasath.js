@@ -19,8 +19,6 @@ import {
   Select,
   MenuItem,
 } from '@mui/material';
-import PrintIcon from '@mui/icons-material/Print';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 // components
 import Page from '../components/Page';
 import Label from '../components/Label';
@@ -30,7 +28,7 @@ import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
 import AddBill from '../components/javasath/addJavasath'
 import EditBill from '../components/javasath/editBill'
-import Print from './print'
+import Toast from '../components/toast';
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
 import { Box } from '@mui/system';
@@ -105,6 +103,9 @@ export default function User() {
   
   const [scrolEnd, setscrolEnd] = useState(false);
 
+  const [toast,setToast]=useState(false)
+
+  const [message,setMessage]=useState(null)
 
   const[viewData,setViewData]=useState(null)
 
@@ -152,14 +153,24 @@ export default function User() {
     setView(!view)
   }
 
-  const fetchData = async (query,status) => {
+  const fetchData = async (query,status)=>{
     const url = query || status ? `${URL}/javasath?query=${query}&status=${status}` : `${URL}/javasath`
-    const response = await fetch(url);
-    const newData = await response.json()
-    console.log('<<<<',newData)
-    setUSERLIST(newData)
-    setLoading(false)
-  };
+    setLoading(true)
+    axios.get(url)
+      .then((res) => {
+        console.log('----->', res)
+        if(res.status == 200){
+        setUSERLIST(res.data)
+        setLoading(false)
+        }else{
+          setUSERLIST([])
+          setLoading(false) 
+        }
+      }).catch((err) => {
+        setUSERLIST([])
+        setLoading(false)
+      })
+  }
 
   const editOpen = async(data)=>{
     setEditData(data)
@@ -181,7 +192,11 @@ export default function User() {
         setOpen(false)
         setReFetch(!reFetch)
         actions.resetForm()
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -194,7 +209,11 @@ export default function User() {
         setEditData(null)
         setEditModel(!editModel)
         setReFetch(!reFetch)
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -206,7 +225,11 @@ export default function User() {
         console.log('----->', res)
         setEditModel(!editModel)
         setReFetch(!reFetch)
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -218,7 +241,11 @@ export default function User() {
         console.log('----->', res)
         setEditModel(!editModel)
         setReFetch(!reFetch)
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -423,6 +450,7 @@ export default function User() {
           />
         </Card>
       </Container>
+      <Toast toast={toast} setToast={setToast} message={message} />
     </Page>
     <AddBill
      open = {open} 

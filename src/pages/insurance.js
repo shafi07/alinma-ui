@@ -34,6 +34,7 @@ import { CSVLink } from 'react-csv';
 import axios from 'axios';
 import View from 'src/components/view';
 import { URL,insuranceHeaders,INSURANCE_TABLE_HEAD } from '../_mock/constant'
+import Toast from '../components/toast';
 
 // ----------------------------------------------------------------------
 
@@ -105,6 +106,10 @@ export default function Insurance() {
   
   const [scrolEnd, setscrolEnd] = useState(false);
 
+  const [toast,setToast]=useState(false)
+
+  const [message,setMessage]=useState(null)
+
   const navigate = useNavigate();
 
   const handleRequestSort = (event, property) => {
@@ -149,18 +154,28 @@ export default function Insurance() {
     setView(!view)
   }
 
-  const fetchData = async (query,status) => {
-    const url = query || status ? `${URL}/insurance?query=${query}&status=${status}` : `${URL}/insurance`
-    const response = await fetch(url);
-    const newData = await response.json()
-    console.log('<<<<',newData)
-    setUSERLIST(newData)
-    setLoading(false)
-  };
-
   const editOpen = async(data)=>{
     setEditData(data)
     setEditModel(true)
+  }
+
+  const fetchData = async (query,status)=>{
+    const url = query || status ? `${URL}/insurance?query=${query}&status=${status}` : `${URL}/insurance`
+    setLoading(true)
+    axios.get(url)
+      .then((res) => {
+        console.log('----->', res)
+        if(res.status == 200){
+        setUSERLIST(res.data)
+        setLoading(false)
+        }else{
+          setUSERLIST([])
+          setLoading(false) 
+        }
+      }).catch((err) => {
+        setUSERLIST([])
+        setLoading(false)
+      })
   }
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
@@ -176,7 +191,12 @@ export default function Insurance() {
         console.log('----->', res)
         setOpen(false)
         setReFetch(!reFetch)
+        actions.resetForm()
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
     actions.resetForm()
@@ -190,7 +210,11 @@ export default function Insurance() {
         setEditData(null)
         setEditModel(!editModel)
         setReFetch(!reFetch)
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -203,7 +227,11 @@ export default function Insurance() {
         console.log('----->', res)
         setEditModel(!editModel)
         setReFetch(!reFetch)
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -215,7 +243,11 @@ export default function Insurance() {
         console.log('----->', res)
         setEditModel(!editModel)
         setReFetch(!reFetch)
+        setMessage(res.data.message)
+        setToast(true)
       }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
         setLoading(false)
       })
   }
@@ -404,6 +436,7 @@ export default function Insurance() {
           />
         </Card>
       </Container>
+      <Toast toast={toast} setToast={setToast} message={message} />
     </Page>
     <AddBill
      open = {open} 

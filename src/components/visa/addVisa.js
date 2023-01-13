@@ -71,7 +71,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
-        submitHandler(values)
+        submitHandler(values,actions)
       }}
     >
     {({
@@ -81,6 +81,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
       handleChange,
       touched,
       values,
+      resetForm,
       }) => (
       <Dialog
         fullScreen
@@ -93,7 +94,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             <IconButton
               edge="start"
               color="inherit"
-              onClick={handleClose}
+              onClick={()=>{handleClose();resetForm()}}
               aria-label="close"
             >
               <CloseIcon />
@@ -101,8 +102,8 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Visa
             </Typography>
-            <Button autoFocus color="inherit" onClick={() => handleSubmit()}>
-              save
+            <Button autoFocus sx={{backgroundColor:'black',color:'white'}} onClick={() => resetForm()}>
+              Reset
             </Button>
           </Toolbar>
         </AppBar>

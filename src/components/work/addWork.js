@@ -60,7 +60,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
-        submitHandler(values)
+        submitHandler(values,actions)
       }}
     >
     {({
@@ -70,11 +70,12 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
       handleChange,
       touched,
       values,
+      resetForm
       }) => (
       <Dialog
         fullScreen
         open={open}
-        onClose={handleClose}
+        onClose={()=>{handleClose();resetForm()}}
         TransitionComponent={Transition}
       >
         <AppBar sx={{ position: 'relative' }}>

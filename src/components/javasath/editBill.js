@@ -23,8 +23,12 @@ export default function BasicModal({open,handleClose,editData={},editHandler,loa
 const[agent,setAgent]=useState(false)
 // console.log('////',editData)
 
-const validationSchema = Yup.object({
+const validationSchema = !agent ? 
+Yup.object({
   paid_amount: !agent ? Yup.number().required("Enter Amount") : null,
+}):
+Yup.object({
+  agent_amount: agent ? Yup.number().required("Enter Amount") : null,
 });
 
   return (
