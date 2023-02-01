@@ -313,7 +313,7 @@ export default function Expense() {
                         handlePrint(row)} } />
                         </TableCell> */}
                         <TableCell align="left">
-                        <Iconify icon="ic:baseline-delete" width={24} height={24} onClick={(e) =>{e.stopPropagation()
+                        <Iconify icon="eva:trash-2-outline" width={24} height={24} onClick={(e) =>{e.stopPropagation()
                             handleDelete(row.id)} } /> 
                         </TableCell>
                         {/* <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">

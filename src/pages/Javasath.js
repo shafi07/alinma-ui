@@ -446,7 +446,7 @@ export default function User() {
           />
         </Card>
       </Container>
-      <Toast toast={toast} setToast={setToast} message={message} />
+      {toast&&<Toast toast={toast} setToast={setToast} message={message} />}
     </Page>
     <AddBill
      open = {open} 

@@ -1,5 +1,6 @@
-export const URL = `http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
+// export const URL = `http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
 // export const URL = `http://localhost:8000`
+export const URL = `https://alinma-api.shellfixer.com`
 
 // --------- CSV File Headers----------- //
 

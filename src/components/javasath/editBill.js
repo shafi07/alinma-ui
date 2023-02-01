@@ -72,7 +72,7 @@ Yup.object({
           }
         }}
          >
-          <Stack direction="row" alignItems="center" >
+          <Stack direction="row" alignItems="center" justifyContent="space-evenly" >
           <DialogTitle id="form-dialog-title">{ agent ?'Update Agent' : 'Update Bill'}</DialogTitle>
           <Radio
           onClick={()=>setAgent(!agent)}
