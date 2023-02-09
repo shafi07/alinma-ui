@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------
 
 const account = {
-  displayName: 'ALINMA TRAVELS',
-  email: 'admin@alinma.com',
+  displayName: 'ABDULLA',
+  email: 'abdulla@alinma.com',
   // photoURL: '/static/mock-images/avatars/avatar_default.jpg',
   role:'admin'
 };

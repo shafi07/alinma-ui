@@ -16,6 +16,8 @@ const subCategories = [
   {value:'Renew Pasport',label:'Renew Pasport'},
   {value:'Vaccine',label:'Vaccine'},
   {value:'Salary Transfer',label:'Salary Transfer'},
+  {value:'Qiwa',label:'Qiwa'},
+  {value:'Certificate',label:'Certificate'},
 ]
 
 const validationSchema = Yup.object({

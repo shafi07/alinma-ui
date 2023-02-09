@@ -27,7 +27,6 @@ const validationSchema = Yup.object({
   sub_category: Yup.string().required("Enter Category Name"),
   name: Yup.string().required("Enter Name"),
   sponser_name: Yup.string().required("Enter Sponser Name"),
-  id_number: Yup.string().required("Enter ID Number").length(10,'Iqama number length should be 10'),
   mobileNumber: Yup.string().required("Enter Mobile Number").matches(/^\d{10}$/,'mobile number length should be 10'),
   total_amount: Yup.number().required("Enter Amount"),
   balance:Yup.number(),
@@ -54,6 +53,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
         balance: '',
         remarks:'',
         agent_amount:null,
+        // government_fee:null,
         service:null,
         paid_date:''
       }}
@@ -176,7 +176,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
                 marginBottom: 2,
                 marginLeft:2,
               }}
-              label="Iqama Number"
+              label="Number"
               name="id_number"
               type="text"
               fullWidth
@@ -254,6 +254,26 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("agent_amount")}
             />
             </Grid>
+            {/* <Grid item xs={6} >
+            <TextField
+              id="government_fee"
+              sx = {{
+                marginTop: 2,
+                marginBottom: 2,
+                marginRight:2
+              }}
+              label="Government Fee"
+              name="government_fee"
+              type="number"
+              fullWidth
+              autoFocus
+              variant="outlined" 
+              helperText={touched.government_fee ? errors.government_fee : ""}
+              error={touched.government_fee&& Boolean(errors.government_fee)}
+              value={values.government_fee}
+              onChange={handleChange("government_fee")}
+            />
+            </Grid> */}
             <Grid item xs={6} >
             <TextField
               id="total_amount"

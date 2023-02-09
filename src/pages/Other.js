@@ -359,12 +359,19 @@ export default function Other() {
                         </TableCell>
                         <TableCell align="left">{sub_category}</TableCell>
                         <TableCell align="left">{sponser_name}</TableCell>
-                        <TableCell align="left">{mobilenumber}</TableCell>
                         <TableCell align="left">
                           <Label variant="ghost" color={(balance_amount != 0 && 'error') || 'success'}>
                             {sentenceCase(balance_amount == 0 ? 'Paid':'Credit')}
                           </Label>
                         </TableCell>
+                        <TableCell onClick={(e) =>{e.stopPropagation()} }  align="left">
+                          <Select onChange={(e)=>handleStatusChange(e.target.value,id)} defaultValue={status} sx={{height: 30,width:'84%' }} >
+                            <MenuItem value={"pending"}>Pending</MenuItem>
+                            <MenuItem value={"completed"}>Completed</MenuItem>
+                            <MenuItem value={"returned"}>Returned</MenuItem>
+                          </Select>
+                        </TableCell>
+                        <TableCell align="left">{mobilenumber}</TableCell>
                         <TableCell align="left">{agent}</TableCell>
                         <TableCell align="left">{paid_date}</TableCell>
                         <TableCell align="left">{service}</TableCell>
@@ -372,12 +379,6 @@ export default function Other() {
                         <TableCell align="left">{total_amount}</TableCell>
                         <TableCell align="left">{paid_amount}</TableCell>
                         <TableCell align="left">{balance_amount}</TableCell>
-                        <TableCell onClick={(e) =>{e.stopPropagation()} }  align="left">
-                          <Select onChange={(e)=>handleStatusChange(e.target.value,id)} defaultValue={status} sx={{height: 30,width:'84%' }} >
-                            <MenuItem value={"pending"}>Pending</MenuItem>
-                            <MenuItem value={"completed"}>Completed</MenuItem>
-                          </Select>
-                        </TableCell>
                         <TableCell align="left">
                           {/* < PrintIcon onClick={(e) =>{e.stopPropagation()
                         handlePrint(row)} } /> */}
