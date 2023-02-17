@@ -177,6 +177,11 @@ export default function Work() {
     setEditModel(true)
   }
 
+  const editDataOpen = async(data)=>{
+    setEditData(data)
+    setOpen(true)
+  }
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
   const filteredUsers = USERLIST.length>=0?applySortFilter(USERLIST, getComparator(order, orderBy), filterName):[];
@@ -209,6 +214,24 @@ export default function Work() {
         setEditModel(!editModel)
         setReFetch(!reFetch)
         setMessage(res.data.message)
+        setToast(true)
+      }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
+        setLoading(false)
+      })
+  }
+
+  const editWorkHandler = async (data,actions) => {
+    setLoading(true)
+    axios.patch(`${URL}/work`, data)
+      .then((res) => {
+        console.log('----->', res)
+        setOpen(false)
+        setReFetch(!reFetch)
+        actions.resetForm()
+        setMessage(res.data.message)
+        setEditData(null)
         setToast(true)
       }).catch((err) => {
         setMessage(err.response.data.message)
@@ -325,7 +348,8 @@ export default function Work() {
                 />
                 <TableBody>
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id,id_number,paid_date,status,agent,agent_amount = '999', fileid, name, sub_category='dss',service=888,sponser_name,paid_amount='test',balance_amount='test',mobilenumber='989898989898',total_amount } = row;
+                    const { id,id_number,paid_date,status,agent,agent_amount, fileid, name, 
+                    sub_category,service,sponser_name,paid_amount,balance_amount,mobilenumber,total_amount,government_fee } = row;
 
                     return (
                       <TableRow
@@ -376,6 +400,7 @@ export default function Work() {
                         <TableCell align="left">{paid_date}</TableCell>
                         <TableCell align="left">{agent_amount}</TableCell>
                         <TableCell align="left">{service}</TableCell>
+                        <TableCell align="left">{government_fee}</TableCell>
                         <TableCell align="left">{total_amount}</TableCell>
                         <TableCell align="left">{paid_amount}</TableCell>
                         <TableCell align="left">{balance_amount}</TableCell>
@@ -390,7 +415,11 @@ export default function Work() {
                             viewOpen(row)} } />
                         </TableCell> */}
                         <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
-                          <UserMoreMenu row={row} handlePrint={handlePrint} viewOpen={viewOpen} />
+                          <UserMoreMenu 
+                          row={row} 
+                          handlePrint={handlePrint} 
+                          viewOpen={viewOpen} 
+                          editDataOpen={editDataOpen}  />
                         </TableCell>
                       </TableRow>
                     );
@@ -441,6 +470,17 @@ export default function Work() {
      editHandler={editWork}
      loading={loading}
      /> :''} 
+      {editData ? <AddBill
+        open={open}
+        handleClose={() => {
+          setEditData(null);
+          setOpen(false)
+        }}
+        submitHandler={submitWork}
+        loading={loading}
+        editData={editData}
+        editWorkHandler = {editWorkHandler}
+      /> :''}
      {viewData ? <View
     open={view}
     viewData={viewData}

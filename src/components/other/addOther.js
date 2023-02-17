@@ -33,29 +33,33 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({open,handleClose,loading,submitHandler}) {
+export default function FullScreenDialog({open,handleClose,loading,submitHandler,editData=null,editOtherHandler}) {
 
   return (
     <Formik
     validationSchema={validationSchema}
       initialValues={{
-        sub_category:"",
-        name:"",
-        sponser_name: "",
-        id_number: "",
-        total_amount: "",
-        mobileNumber: "",
-        paid_amount: null,
-        balance: '',
-        remarks:'',
-        agent:'',
-        agent_amount:null,
-        service:null,
-        paid_date:''
+        sub_category:editData ? editData.sub_category : "",
+        name: editData ? editData.name : "",
+        sponser_name:editData ? editData.sponser_name :  "",
+        id_number:editData ? editData.id_number :  "",
+        total_amount:editData ? editData.total_amount :  "",
+        mobileNumber:editData ? editData.mobilenumber :  "",
+        paid_amount:editData ? editData.paid_amount :  null,
+        balance:editData ? editData.balance :  '',
+        remarks:editData ? editData.remarks : '',
+        agent:editData ? editData.agent : '',
+        agent_amount:editData ? editData.agent_amount : null,
+        service:editData ? editData.service : null,
+        paid_date:editData ? editData.paid_date : ''
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
-        submitHandler(values,actions)
+        if(editData){
+          editOtherHandler({...values,id:editData.id},actions)
+        }else{
+          submitHandler(values,actions)
+        }  
       }}
     >
     {({
@@ -276,6 +280,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               label="Paid amount"
               name="paid_amount"
               type="number"
+              disabled = {editData}
               fullWidth
               autoFocus
               required

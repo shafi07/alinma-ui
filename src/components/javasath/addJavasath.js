@@ -52,35 +52,40 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({open,handleClose,editData={},submitHandler,loading}) {
+export default function FullScreenDialog({open,handleClose,submitHandler,loading,editData=null,editJavazathHandler}) {
 
   return (
     <Formik
     validationSchema={validationSchema}
       initialValues={{
-        sub_category:"",
-        name:"",
-        sponser_name: "",
-        mol: null,
-        service: null,
-        other: null,
-        iqama: null,
-        id_number: "",
-        insurance: null,
-        total_amount: "",
-        mobileNumber: "",
-        paid_amount: null,
-        balance: '',
-        remarks:'',
-        agent_amount:null,
-        paid_date:'',
-        agent:'',
-        professionName:'',
-        newSponser:''
+        sub_category: editData ? editData.sub_category : "",
+        name: editData ? editData.name :"",
+        sponser_name: editData ? editData.sponser_name : "",
+        mol: editData ? editData.mol : null,
+        service: editData ? editData.service : null,
+        other: editData ? editData.other : null,
+        iqama: editData ? editData.iqama : null,
+        id_number: editData ? editData.id_number : "",
+        insurance: editData ? editData.insurance : null,
+        total_amount: editData ? editData.total_amount : "",
+        mobileNumber: editData ? editData.mobilenumber : "",
+        paid_amount: editData ? editData.paid_amount : null,
+        balance: editData ? editData.balance : '',
+        remarks: editData ? editData.remarks :'',
+        agent_amount: editData ? editData.agent_amount : null,
+        paid_date: editData ? editData.paid_date :'',
+        agent:editData ? editData.agent :'',
+        professionName: editData ? editData.professionname :'',
+        newSponser: editData ? editData.newsponser :''
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
-        submitHandler(values,actions)
+        if(editData){
+          editJavazathHandler({...values,id:editData.id},actions)
+        }else{
+         submitHandler(values,actions) 
+        }
+        
       }}
     >
     {({

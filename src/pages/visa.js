@@ -182,6 +182,11 @@ export default function Visa() {
     setEditModel(true)
   }
 
+  const editDataOpen = async(data)=>{
+    setEditData(data)
+    setOpen(true)
+  }
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
   const filteredUsers = USERLIST.length>=0?applySortFilter(USERLIST, getComparator(order, orderBy), filterName):[];
@@ -214,6 +219,24 @@ export default function Visa() {
         setEditModel(!editModel)
         setReFetch(!reFetch)
         setMessage(res.data.message)
+        setToast(true)
+      }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
+        setLoading(false)
+      })
+  }
+
+  const editVisaHandler = async (data,actions) => {
+    setLoading(true)
+    axios.patch(`${URL}/visa`, data)
+      .then((res) => {
+        console.log('----->', res)
+        setOpen(false)
+        setReFetch(!reFetch)
+        actions.resetForm()
+        setMessage(res.data.message)
+        setEditData(null)
         setToast(true)
       }).catch((err) => {
         setMessage(err.response.data.message)
@@ -332,7 +355,7 @@ export default function Visa() {
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     const { id, id_number, status, agent, agent_amount, fileid, 
                     name, sub_category, service, sponser_name, paid_amount, balance_amount,
-                    chamber_amount, mobilenumber, total_amount, visa_number, paid_date } = row;
+                    chamber_amount, mobilenumber, total_amount, visa_number, paid_date,government_fee='00' } = row;
 
                     return (
                       <TableRow
@@ -383,6 +406,7 @@ export default function Visa() {
                         <TableCell align="left">{paid_date}</TableCell>
                         <TableCell align="left">{visa_number}</TableCell>
                         <TableCell align="left">{service}</TableCell>
+                        <TableCell align="left">{government_fee}</TableCell>
                         <TableCell align="left">{agent_amount}</TableCell>
                         <TableCell align="left">{chamber_amount}</TableCell>
                         <TableCell align="left">{total_amount}</TableCell>
@@ -401,7 +425,12 @@ export default function Visa() {
                             handlePrint(row)} } /> */}
                         {/* </TableCell> */}
                         <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
-                          <UserMoreMenu row={row} handlePrint={handlePrint} viewOpen={viewOpen} />
+                          <UserMoreMenu 
+                          row={row} 
+                          handlePrint={handlePrint} 
+                          viewOpen={viewOpen} 
+                          editDataOpen={editDataOpen}  
+                          />
                         </TableCell>
                       </TableRow>
                     );
@@ -437,13 +466,19 @@ export default function Visa() {
           />
         </Card>
       </Container>
-      <Toast toast={toast} setToast={setToast} message={message} />
+      <Toast 
+      toast={toast} 
+      setToast={setToast} 
+      message={message} 
+      />
     </Page>
     <AddBill
      open = {open} 
-     handleClose = {() => setOpen(false)}
+     handleClose = {() => {setEditData(null) ;
+      setOpen(false)}}
      submitHandler={submitVisa}
      loading={loading}
+    //  editData = {editData}
      />
     {editData ? <EditBill 
      open={editModel}
@@ -451,6 +486,15 @@ export default function Visa() {
      handleClose = {handleCloseEdit}
      editHandler={editVisa}
      loading={loading}
+     /> :''}
+     {editData ? <AddBill
+     open = {open} 
+     handleClose = {() => {setEditData(null) ;
+      setOpen(false)}}
+     submitHandler={submitVisa}
+     loading={loading}
+     editData = {editData}
+     editVisaHandler={editVisaHandler}
      /> :''}
     {viewData ? <View
     open={view}

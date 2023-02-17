@@ -45,31 +45,38 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({open,handleClose,loading,submitHandler}) {
+export default function FullScreenDialog({open,handleClose,loading,submitHandler,editData,editVisaHandler}) {
+
+console.log('------',editData)
 
   return (
     <Formik
     validationSchema={validationSchema}
       initialValues={{
-        sub_category:"",
-        name:"",
-        sponser_name: "",
-        id_number: "",
-        total_amount: "",
-        mobileNumber: "",
-        paid_amount: null,
-        balance: '',
-        remarks:'',
-        agent:'',
-        agent_amount:null,
-        service:null,
-        paid_date:null,
-        visa_number:'',
-        chamber_amount:null
+        sub_category: editData ? editData.sub_category : "",
+        name: editData ? editData.name : "",
+        sponser_name: editData ? editData.sponser_name : "",
+        id_number: editData ? editData.id_number : "",
+        total_amount: editData ? editData.total_amount : "",
+        mobileNumber: editData ? editData.mobilenumber : "",
+        paid_amount: editData ? editData.paid_amount : null,
+        balance_amount: editData ? editData.balance_amount : '',
+        remarks: editData ? editData.remarks : '',
+        agent: editData ? editData.agent : '',
+        agent_amount: editData ? editData.agent_amount : null,
+        service: editData ? editData.service : null,
+        paid_date: editData ? editData.paid_date : null,
+        visa_number: editData ? editData.visa_number : '',
+        chamber_amount: editData ? editData.chamber_amount : null,
+        government_fee: editData ? editData.government_fee : null,
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
-        submitHandler(values,actions)
+        if (editData){
+        editVisaHandler({...values,id:editData.id},actions)
+        }else{
+          submitHandler(values,actions)
+        } 
       }}
     >
     {({
@@ -271,8 +278,23 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             </Grid>
             <Grid item xs={6} >
             <TextField
+              id="government_fee"
+              sx = {rightCss }
+              label="Government Fee"
+              name="government_fee"
+              type="number"
+              fullWidth
+              variant="outlined" 
+              helperText={touched.government_fee ? errors.government_fee : ""}
+              error={touched.government_fee && Boolean(errors.government_fee)}
+              value={values.government_fee}
+              onChange={handleChange("government_fee")}
+            />
+            </Grid>
+            <Grid item xs={6} >
+            <TextField
               id="total_amount"
-              sx = {rightCss}
+              sx = {leftCss}
               label="Total Amount"
               name="total_amount"
               type="number"
@@ -282,7 +304,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               variant="outlined" 
               helperText={touched.total_amount ? errors.total_amount : ""}
               error={touched.total_amount && Boolean(errors.total_amount)}
-              value={values.total_amount=(Number(values.agent_amount)+Number(values.service)+Number(values.chamber_amount))}
+              value={values.total_amount=(Number(values.agent_amount)+Number(values.service)+Number(values.chamber_amount)+Number(values.government_fee))}
               onChange={handleChange("total_amount")}
             />
             </Grid>
@@ -294,19 +316,20 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               type="number"
               fullWidth
               autoFocus
+              disabled = {editData}
               required
               variant="outlined"
               helperText={touched.paid_amount ? errors.paid_amount : ""}
               error={touched.paid_amount && Boolean(errors.paid_amount)}
               value={values.paid_amount}
               onChange={handleChange("paid_amount")}
-              sx = {leftCss }
+              sx = {rightCss }
             /> 
             </Grid>
             <Grid item xs={6} >
             <TextField
               id="balance"
-              sx = {rightCss}
+              sx = {leftCss}
               label="Balance Amount"
               name="balance"
               type="number"
@@ -324,7 +347,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             {values.sub_category != "Visa Chamber" && <><Grid item xs={6}>
                 <TextField
                   id="agent"
-                  sx={leftCss}
+                  sx={rightCss}
                   label="Agent Name"
                   name="agent"
                   type="text"
@@ -339,7 +362,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               <Grid item xs={6}>
                   <TextField
                     id="paid_date"
-                    sx={rightCss}
+                    sx={leftCss}
                     label="Agent Paid Date"
                     name="paid_date"
                     type="Text"
@@ -354,7 +377,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             <Grid item xs={6} >
             <TextField
               id="remarks"
-              sx = {leftCss }
+              sx = {rightCss }
               label="Remarks"
               name="remarks"
               type="text"

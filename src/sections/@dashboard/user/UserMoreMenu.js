@@ -7,7 +7,7 @@ import Iconify from '../../../components/Iconify';
 
 // ----------------------------------------------------------------------
 
-export default function UserMoreMenu({row,handlePrint,viewOpen}) {
+export default function UserMoreMenu({row,handlePrint,viewOpen,editDataOpen}) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -39,6 +39,13 @@ export default function UserMoreMenu({row,handlePrint,viewOpen}) {
             <Iconify icon="material-symbols:print" width={24} height={24} />
           </ListItemIcon>
           <ListItemText primary="Print" primaryTypographyProps={{ variant: 'body2' }} />
+        </MenuItem>
+
+        <MenuItem onClick={()=>{editDataOpen(row);setIsOpen(!isOpen)}} sx={{ color: 'text.secondary' }}>
+          <ListItemIcon >
+            <Iconify icon="material-symbols:edit-document-outline" width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
       </Menu>
     </>

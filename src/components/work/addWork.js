@@ -36,30 +36,34 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({open,handleClose,loading,submitHandler}) {
+export default function FullScreenDialog({open,handleClose,loading,submitHandler,editData=null,editWorkHandler}) {
 
   return (
     <Formik
     validationSchema={validationSchema}
       initialValues={{
-        sub_category:"",
-        name:"",
-        agent:"",
-        sponser_name: "",
-        id_number: "",
-        total_amount: "",
-        mobileNumber: "",
-        paid_amount: null,
-        balance: '',
-        remarks:'',
-        agent_amount:null,
-        // government_fee:null,
-        service:null,
-        paid_date:''
+        sub_category:editData ? editData.sub_category : "",
+        name:editData ? editData.name : "",
+        agent:editData ? editData.agent : "",
+        sponser_name:editData ? editData.sponser_name : "",
+        id_number:editData ? editData.id_number : "",
+        total_amount:editData ? editData.total_amount : "",
+        mobileNumber:editData ? editData.mobilenumber : "",
+        paid_amount:editData ? editData.paid_amount : null,
+        balance: editData ? editData.balance :'',
+        remarks:editData ? editData.remarks :'',
+        agent_amount:editData ? editData.agent_amount :null,
+        government_fee:editData ? editData.government_fee :null,
+        service:editData ? editData.service :null,
+        paid_date:editData ? editData.paid_date :''
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
-        submitHandler(values,actions)
+        if(editData){
+          editWorkHandler({...values,id:editData.id},actions)
+        }else{
+          submitHandler(values,actions)
+        }
       }}
     >
     {({
@@ -254,13 +258,13 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("agent_amount")}
             />
             </Grid>
-            {/* <Grid item xs={6} >
+            <Grid item xs={6} >
             <TextField
               id="government_fee"
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2,
               }}
               label="Government Fee"
               name="government_fee"
@@ -273,14 +277,14 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               value={values.government_fee}
               onChange={handleChange("government_fee")}
             />
-            </Grid> */}
+            </Grid>
             <Grid item xs={6} >
             <TextField
               id="total_amount"
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2,
+                marginRight:2
               }}
               label="Total Amount"
               name="total_amount"
@@ -292,7 +296,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               variant="outlined" 
               helperText={touched.total_amount ? errors.total_amount : ""}
               error={touched.total_amount && Boolean(errors.total_amount)}
-              value={values.total_amount=(Number(values.agent_amount) + Number(values.service))}
+              value={values.total_amount=(Number(values.agent_amount) + Number(values.service) + Number(values.government_fee))}
               onChange={handleChange("total_amount")}
             />
             </Grid>
@@ -303,6 +307,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               name="paid_amount"
               type="number"
               fullWidth
+              disabled = {editData}
               autoFocus
               required
               variant="outlined"
@@ -313,7 +318,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2,
               }}
             /> 
             </Grid>
@@ -323,7 +328,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2,
+                marginRight:2
               }}
               label="Balance Amount"
               name="balance"
@@ -345,7 +350,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2,
               }}
               label="Agent"
               name="agent"
@@ -365,7 +370,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginLeft:2,
+                marginRight:2
               }}
               label="Agent Paid Date"
               name="paid_date"
@@ -385,7 +390,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
-                marginRight:2
+                marginLeft:2,
               }}
               label="Remarks"
               name="remarks"

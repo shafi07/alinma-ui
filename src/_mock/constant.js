@@ -1,4 +1,3 @@
-// export const URL = `http://alinma-env.eba-8frrdp32.ap-south-1.elasticbeanstalk.com`
 // export const URL = `http://localhost:8000`
 export const URL = `https://alinma-api.shellfixer.com`
 
@@ -143,6 +142,7 @@ export const INSURANCE_TABLE_HEAD = [
   { id: 'status', label: 'Status', alignRight: false },
   { id: 'mobileNumber', label: 'Mobile', alignRight: false },
   { id: 'dob', label: 'Dob', alignRight: false },
+  { id: 'company', label: 'Company', alignRight: false },
   { id: 'agentDate', label: 'Agent Date', alignRight: false },
   { id: 'agent', label: 'Agent', alignRight: false },
   { id: 'agentAmount', label: 'Agent amount', alignRight: false },
@@ -167,6 +167,7 @@ export const WORK_TABLE_HEAD = [
   { id: 'agentDate', label: 'Agent Date', alignRight: false },
   { id: 'agentAmount', label: 'Agent Amount', alignRight: false },
   { id: 'service', label: 'Service', alignRight: false },
+  { id: 'government', label: 'Gvt-fee', alignRight: false },
   { id: 'total', label: 'Total Amount', alignRight: false },
   { id: 'paid', label: 'Paid Amount', alignRight: false },
   { id: 'balance', label: 'Balance Amount ', alignRight: false },
@@ -187,6 +188,7 @@ export const VISA_TABLE_HEAD = [
   { id: 'agentDate', label: 'Agent Date', alignRight: false },
   { id: 'visaNumber', label: 'Visa Number', alignRight: false },
   { id: 'service', label: 'Service Amount', alignRight: false },
+  { id: 'government', label: 'Gvt-fee', alignRight: false },
   { id: 'agentAmount', label: 'Agent Amount', alignRight: false },
   { id: 'chamberAmount', label: 'Chamber Amount', alignRight: false },
   { id: 'total', label: 'Total Amount', alignRight: false },

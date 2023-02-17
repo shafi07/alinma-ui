@@ -29,31 +29,35 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({open,handleClose,loading,submitHandler}) {
+export default function FullScreenDialog({open,handleClose,loading,submitHandler,editData=null,editInsuranceHandler}) {
 
   return (
     <Formik
     validationSchema={validationSchema}
       initialValues={{
-        sub_category:"",
-        name:"",
-        dob:"",
-        sponser_name: "",
-        id_number: "",
-        total_amount: "",
-        mobileNumber: "",
-        paid_amount:null,
-        balance: '',
-        remarks:'',
-        agent_amount:null,
-        service:null,
-        paid_date:'',
-        agent:'',
-        company:''
+        sub_category: editData ? editData.sub_category :"",
+        name:editData ? editData.name :"",
+        dob:editData ? editData.dob :"",
+        sponser_name:editData ? editData.sponser_name : "",
+        id_number:editData ? editData.id_number : "",
+        total_amount:editData ? editData.total_amount : "",
+        mobileNumber:editData ? editData.mobilenumber : "",
+        paid_amount:editData ? editData.paid_amount :null,
+        balance:editData ? editData.balance : '',
+        remarks:editData ? editData.remarks :'',
+        agent_amount:editData ? editData.agent_amount :null,
+        service:editData ? editData.service :null,
+        paid_date:editData ? editData.paid_date:'',
+        agent:editData ? editData.agent :'',
+        company:editData ? editData.company :''
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
-        submitHandler(values,actions)
+        if(editData){
+          editInsuranceHandler({...values,id:editData.id},actions)
+        }else{
+          submitHandler(values,actions)
+        } 
       }}
     >
     {({
@@ -291,6 +295,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               type="number"
               fullWidth
               required
+              disabled={editData}
               variant="outlined"
               helperText={touched.paid_amount ? errors.paid_amount : ""}
               error={touched.paid_amount && Boolean(errors.paid_amount)}

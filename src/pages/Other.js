@@ -177,6 +177,11 @@ export default function Other() {
     setEditModel(true)
   }
 
+  const editDataOpen = async(data)=>{
+    setEditData(data)
+    setOpen(true)
+  }
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
   const filteredUsers = USERLIST.length>=0?applySortFilter(USERLIST, getComparator(order, orderBy), filterName):[];
@@ -209,6 +214,24 @@ export default function Other() {
         setEditModel(!editModel)
         setReFetch(!reFetch)
         setMessage(res.data.message)
+        setToast(true)
+      }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
+        setLoading(false)
+      })
+  }
+
+  const editOtherHandler = async (data,actions) => {
+    setLoading(true)
+    axios.patch(`${URL}/other`, data)
+      .then((res) => {
+        console.log('----->', res)
+        setOpen(false)
+        setReFetch(!reFetch)
+        actions.resetForm()
+        setMessage(res.data.message)
+        setEditData(null)
         setToast(true)
       }).catch((err) => {
         setMessage(err.response.data.message)
@@ -380,17 +403,16 @@ export default function Other() {
                         <TableCell align="left">{paid_amount}</TableCell>
                         <TableCell align="left">{balance_amount}</TableCell>
                         <TableCell align="left">
-                          {/* < PrintIcon onClick={(e) =>{e.stopPropagation()
-                        handlePrint(row)} } /> */}
                         <Iconify icon="eva:trash-2-outline" width={24} height={24} onClick={(e) =>{e.stopPropagation()
                             handleDelete(row.id)} } /> 
                         </TableCell>
-                        {/* <TableCell align="left" >
-                        <Iconify icon="mdi:eye-outline" width={24} height={24} onClick={(e) =>{e.stopPropagation()
-                            viewOpen(row)} } />
-                        </TableCell> */}
                         <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
-                          <UserMoreMenu row={row} handlePrint={handlePrint} viewOpen={viewOpen} />
+                          <UserMoreMenu 
+                          row={row} 
+                          handlePrint={handlePrint} 
+                          viewOpen={viewOpen} 
+                          editDataOpen={editDataOpen} 
+                          />
                         </TableCell>
                       </TableRow>
                     );
@@ -440,6 +462,15 @@ export default function Other() {
      handleClose = {handleCloseEdit}
      editHandler={editOther}
      loading={loading}
+     /> :''}
+     {editData ? <AddBill
+     open = {open} 
+     handleClose = {() => {setEditData(null) ;
+      setOpen(false)}}
+     submitHandler={submitOther}
+     loading={loading}
+     editData={editData}
+     editOtherHandler={editOtherHandler}
      /> :''} 
      {viewData ? <View
     open={view}

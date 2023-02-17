@@ -158,6 +158,11 @@ export default function Insurance() {
     setEditModel(true)
   }
 
+  const editDataOpen = async(data)=>{
+    setEditData(data)
+    setOpen(true)
+  }
+
   const fetchData = async (query,status)=>{
     const url = query || status ? `${URL}/insurance?query=${query}&status=${status}` : `${URL}/insurance`
     setLoading(true)
@@ -216,6 +221,25 @@ export default function Insurance() {
         setToast(true)
         setLoading(false)
       })
+  }
+
+  const editInsuranceHandler = async (data, actions) => {
+    setLoading(true)
+    axios.patch(`${URL}/insurance`, data)
+      .then((res) => {
+        console.log('----->', res)
+        setOpen(false)
+        setReFetch(!reFetch)
+        actions.resetForm()
+        setMessage(res.data.message)
+        setEditData(null)
+        setToast(true)
+      }).catch((err) => {
+        setMessage(err.response.data.message)
+        setToast(true)
+        setLoading(false)
+      })
+    actions.resetForm()
   }
 
   const handleStatusChange = async (value,id) => {
@@ -327,10 +351,9 @@ export default function Insurance() {
                 />
                 <TableBody>
                       {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                        const { id, id_number, dob, agent_amount = 111, paid_date = '11-02-1993', fileid, name,
-                          sub_category = 'dss', insurance, service = 100, sponser_name = 'test', paid_amount = 'test',
-                          balance_amount = 'test', iqama = 'test', mol = 'test', mobilenumber = '989898989898',
-                          other = 'test', total_amount,agent = 'test_agent',status } = row;
+                        const { id, id_number, dob, agent_amount, paid_date, fileid, name,
+                          sub_category, service, sponser_name , paid_amount ,
+                          balance_amount, mobilenumber , total_amount,agent ,status,company } = row;
 
                     return (
                       <TableRow
@@ -378,6 +401,7 @@ export default function Insurance() {
                         </TableCell>
                         <TableCell align="left">{mobilenumber}</TableCell>
                         <TableCell align="left">{dob}</TableCell>
+                        <TableCell align="left">{company}</TableCell>
                         <TableCell align="left">{paid_date}</TableCell>
                         <TableCell align="left">{agent}</TableCell>
                         <TableCell align="left">{agent_amount}</TableCell>
@@ -386,21 +410,16 @@ export default function Insurance() {
                         <TableCell align="left">{paid_amount}</TableCell>
                         <TableCell align="left">{balance_amount}</TableCell>
                         <TableCell align="left">
-                          {/* < PrintIcon onClick={(e) => {
-                            e.stopPropagation()
-                            handlePrint(row)
-                          }} /> */}
                           <Iconify icon="eva:trash-2-outline" width={24} height={24} onClick={(e) =>{e.stopPropagation()
                             handleDelete(row.id)} } /> 
                         </TableCell>
-                        {/* <TableCell align="left">
-                          <Iconify icon="mdi:eye-outline" width={24} height={24} onClick={(e) => {
-                            e.stopPropagation()
-                            viewOpen(row)
-                          }} />
-                        </TableCell> */}
                         <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
-                          <UserMoreMenu row={row} handlePrint={handlePrint} viewOpen={viewOpen} />
+                          <UserMoreMenu 
+                          row={row} 
+                          handlePrint={handlePrint} 
+                          viewOpen={viewOpen} 
+                          editDataOpen={editDataOpen} 
+                          />
                         </TableCell>
                       </TableRow>
                     );
@@ -451,6 +470,15 @@ export default function Insurance() {
      editHandler={editInsurance}
      loading={loading}
      /> :''} 
+     {editData ? <AddBill
+     open = {open} 
+     handleClose = {() => {setEditData(null) ;
+      setOpen(false)}}
+     submitHandler={submitInsurance}
+     loading={loading}
+     editData={editData}
+     editInsuranceHandler={editInsuranceHandler}
+     /> :''}
      {viewData ? <View
     open={view}
     viewData={viewData}
