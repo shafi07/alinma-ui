@@ -245,7 +245,7 @@ export default function Insurance() {
   const handleStatusChange = async (value,id) => {
     console.log({status:value,id})
     setLoading(true)
-    axios.put(`${URL}/insurance`, {status:value,id})
+    axios.put(`${URL}/insurance`, {status:value,id,updatedTime: new Date().toLocaleDateString()})
       .then((res) => {
         console.log('----->', res)
         setEditModel(!editModel)

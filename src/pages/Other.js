@@ -242,7 +242,7 @@ export default function Other() {
 
   const handleStatusChange = async (value,id) => {
     setLoading(true)
-    axios.put(`${URL}/other`, {status:value,id})
+    axios.put(`${URL}/other`, {status:value,id,updatedTime: new Date().toLocaleDateString()})
       .then((res) => {
         console.log('----->', res)
         setEditModel(!editModel)

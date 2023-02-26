@@ -371,6 +371,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               label="Paid amount"
               name="paid_amount"
               type="number"
+              disabled={editData}
               fullWidth
               autoFocus
               required

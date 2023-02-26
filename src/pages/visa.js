@@ -247,7 +247,7 @@ export default function Visa() {
 
   const handleStatusChange = async (value,id) => {
     setLoading(true)
-    axios.put(`${URL}/visa`, {status:value,id})
+    axios.put(`${URL}/visa`, {status:value,id,updatedTime: new Date().toLocaleDateString()})
       .then((res) => {
         console.log('----->', res)
         setEditModel(!editModel)

@@ -244,7 +244,7 @@ export default function User() {
 
   const handleStatusChange = async (value,id) => {
     setLoading(true)
-    axios.put(`${URL}/javasath`, {status:value,id})
+    axios.put(`${URL}/javasath`, {status:value,id,updatedTime: new Date().toLocaleDateString()})
       .then((res) => {
         console.log('----->', res)
         setEditModel(!editModel)

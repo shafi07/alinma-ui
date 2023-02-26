@@ -74,10 +74,10 @@ Yup.object({
          >
           <Stack direction="row" alignItems="center" justifyContent="space-evenly" >
           <DialogTitle id="form-dialog-title">{ agent ?'Update Agent' : 'Update Bill'}</DialogTitle>
-          <Radio
+          {/* <Radio
           onClick={()=>setAgent(!agent)}
           checked={agent === true}
-          />
+          /> */}
           </Stack>
           <DialogContent>
             {Boolean(errors.image) && (
