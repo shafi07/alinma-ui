@@ -277,7 +277,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             <Grid item xs={6} >
             <TextField
               id="paid_amount"
-              label="Paid amount"
+              label={editData?`Paid amount-${editData.paid_amount}`:`Paid amount`}
               name="paid_amount"
               type="number"
               disabled = {editData}

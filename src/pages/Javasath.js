@@ -363,7 +363,7 @@ export default function User() {
                         sx = {{backgroundColor: balance_amount != 0  ? '#F7837C' : '#73D393'}}
                         onClick={() => editOpen(row)} 
                       >
-                        <TableCell component="th" scope="row" >
+                        <TableCell onClick={() => editDataOpen(row)} component="th" scope="row" >
                           <Stack direction="row" alignItems="center" spacing={4}>
                             <Typography variant="subtitle2" noWrap>
                               {fileid}

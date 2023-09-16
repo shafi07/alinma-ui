@@ -150,7 +150,7 @@ export const INSURANCE_TABLE_HEAD = [
   { id: 'total', label: 'Total Amount', alignRight: false },
   { id: 'paid', label: 'Paid Amount', alignRight: false },
   { id: 'balance', label: 'Balance Amount ', alignRight: false },
-  { id: 'status', label: 'Status ', alignRight: false },
+  // { id: 'status', label: 'Status ', alignRight: false },
   { id: '' },
 ];
 
@@ -171,7 +171,7 @@ export const WORK_TABLE_HEAD = [
   { id: 'total', label: 'Total Amount', alignRight: false },
   { id: 'paid', label: 'Paid Amount', alignRight: false },
   { id: 'balance', label: 'Balance Amount ', alignRight: false },
-  { id: 'status', label: 'Status ', alignRight: false },
+  // { id: 'status', label: 'Status ', alignRight: false },
   { id: '' },
 ];
 
@@ -194,7 +194,7 @@ export const VISA_TABLE_HEAD = [
   { id: 'total', label: 'Total Amount', alignRight: false },
   { id: 'paid', label: 'Paid Amount', alignRight: false },
   { id: 'balance', label: 'Balance Amount ', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  // { id: 'status', label: 'Status', alignRight: false },
   { id: '' },
 ];
 
@@ -227,6 +227,6 @@ export const OTHER_TABLE_HEAD = [
   { id: 'total', label: 'Total Amount', alignRight: false },
   { id: 'paid', label: 'Paid Amount', alignRight: false },
   { id: 'balance', label: 'Balance Amount ', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  // { id: 'status', label: 'Status', alignRight: false },
   { id: '' },
 ];
