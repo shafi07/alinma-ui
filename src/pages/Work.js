@@ -158,7 +158,6 @@ export default function Work() {
     setLoading(true)
     axios.get(url)
       .then((res) => {
-        console.log('----->', res)
         if (res.status == 200) {
           setUSERLIST(res.data)
           setLoading(false)
@@ -192,7 +191,6 @@ export default function Work() {
     setLoading(true)
     axios.post(`${URL}/work`, data)
       .then((res) => {
-        console.log('----->', res)
         setOpen(false)
         setReFetch(!reFetch)
         actions.resetForm()
@@ -209,7 +207,6 @@ export default function Work() {
     setLoading(true)
     axios.put(`${URL}/work`, data)
       .then((res) => {
-        console.log('----->', res)
         setEditData(null)
         setEditModel(!editModel)
         setReFetch(!reFetch)
@@ -226,7 +223,6 @@ export default function Work() {
     setLoading(true)
     axios.patch(`${URL}/work`, data)
       .then((res) => {
-        console.log('----->', res)
         setOpen(false)
         setReFetch(!reFetch)
         actions.resetForm()
@@ -244,7 +240,6 @@ export default function Work() {
     setLoading(true)
     axios.put(`${URL}/work`, { status: value, id, updatedTime: new Date().toLocaleDateString() })
       .then((res) => {
-        console.log('----->', res)
         setEditModel(!editModel)
         setReFetch(!reFetch)
         setMessage(res.data.message)
@@ -260,7 +255,6 @@ export default function Work() {
     setLoading(true)
     axios.delete(`${URL}/work/${id}`)
       .then((res) => {
-        console.log('----->', res)
         setEditModel(!editModel)
         setReFetch(!reFetch)
         setMessage(res.data.message)
@@ -360,7 +354,7 @@ export default function Work() {
                             sx={{ backgroundColor: balance_amount != 0 ? '#F7837C' : '#73D393' }}
                             onClick={() => editOpen(row)}
                           >
-                            <TableCell onClick={() => editDataOpen(row)} component="th" scope="row" >
+                            <TableCell sx={{cursor:"pointer"}} onClick={() => editDataOpen(row)} component="th" scope="row" >
                               <Stack direction="row" alignItems="center" spacing={4}>
                                 <Typography variant="subtitle2" noWrap>
                                   {fileid}

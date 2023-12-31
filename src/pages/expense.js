@@ -144,7 +144,6 @@ export default function Expense() {
     const url = query ? `${URL}/expense?query=${query}` : `${URL}/expense`
     const response = await fetch(url);
     const newData = await response.json()
-    console.log('<<<<',newData)
     setUSERLIST(newData)
     setLoading(false)
   };
@@ -161,11 +160,9 @@ export default function Expense() {
   const isUserNotFound = filteredUsers.length === 0;
 
   const submitExpense = async (data,actions) => {
-    console.log('>>>>>>???',data)
     setLoading(true)
     axios.post(`${URL}/expense`, data)
       .then((res) => {
-        console.log('----->', res)
         setOpen(false)
         setReFetch(!reFetch)
         actions.resetForm()
@@ -183,7 +180,6 @@ export default function Expense() {
     setLoading(true)
     axios.put(`${URL}/expense`, data)
       .then((res) => {
-        console.log('----->', res)
         setEditData(null)
         setEditModel(!editModel)
         setReFetch(!reFetch)
@@ -200,7 +196,6 @@ export default function Expense() {
     setLoading(true)
     axios.delete(`${URL}/expense/${id}`)
       .then((res) => {
-        console.log('----->', res)
         setEditModel(!editModel)
         setReFetch(!reFetch)
         setMessage(res.data.message)
@@ -293,7 +288,7 @@ export default function Expense() {
                         // sx = {{backgroundColor: balance_amount != 0?'#F7837C':'#73D393'}}
                         // onClick={() => editOpen(row)} 
                       >
-                        <TableCell component="th" scope="row" >
+                        <TableCell sx={{cursor:"pointer"}} component="th" scope="row" >
                           <Stack direction="row" alignItems="center" spacing={4}>
                             <Typography variant="subtitle2" color={'blue'} noWrap>
                               {fileid}
