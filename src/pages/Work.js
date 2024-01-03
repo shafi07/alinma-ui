@@ -351,7 +351,11 @@ export default function Work() {
                             key={id}
                             tabIndex={-1}
                             align='center'
-                            sx={{ backgroundColor: balance_amount != 0 ? '#F7837C' : '#73D393' }}
+                            sx={{
+                              "&:hover": {
+                                backgroundColor: balance_amount == 0 ? "#B6E2D3 !important" :"#FAE8E0 !important" 
+                              }
+                            }}
                             onClick={() => editOpen(row)}
                           >
                             <TableCell sx={{cursor:"pointer"}} onClick={() => editDataOpen(row)} component="th" scope="row" >

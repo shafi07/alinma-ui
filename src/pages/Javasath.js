@@ -344,7 +344,7 @@ export default function User() {
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     const {id, id_number, fileid, name, sub_category, insurance, service, sponser_name,
                     paid_amount, balance_amount, iqama, mol, mobilenumber, other, total_amount, status,
-                    agent, paid_date, professionName, newSponser, agent_amount } = row;
+                    agent, paid_date, professionName, newSponser, agent_amount, due } = row;
 
                     return (
                       <TableRow
@@ -352,7 +352,11 @@ export default function User() {
                         key={id}
                         tabIndex={-1}
                         align = 'center'
-                        sx = {{backgroundColor: balance_amount != 0  ? '#F7837C' : '#73D393'}}
+                        sx={{
+                          "&:hover": {
+                            backgroundColor: balance_amount == 0 ? "#B6E2D3 !important" :"#FAE8E0 !important" 
+                          }
+                        }}
                         onClick={() => editOpen(row)} 
                       >
                         <TableCell sx={{cursor:"pointer"}} onClick={() => editDataOpen(row)} component="th" scope="row" >
@@ -390,6 +394,7 @@ export default function User() {
                             <MenuItem value={"returned"}>Returned</MenuItem>
                           </Select>
                         </TableCell>
+                        <TableCell align="left">{`${due || ''} Months`}</TableCell>
                         <TableCell align="left">{mobilenumber}</TableCell>
                         <TableCell align="left">{agent}</TableCell>
                         <TableCell align="left">{paid_date}</TableCell>

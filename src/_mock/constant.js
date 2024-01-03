@@ -115,6 +115,7 @@ export const JAVASATH_TABLE_HEAD = [
     { id: 'sponserName', label: 'Sponser Name', alignRight: false },
     { id: 'cash', label: 'Cash', alignRight: false },
     { id: 'status', label: 'Status', alignRight: false },
+    { id: 'due', label: 'Due', alignRight: false },
     { id: 'mobileNumber', label: 'Mobile', alignRight: false },
     { id: 'agent', label: 'Agent', alignRight: false },
     { id: 'agentDate', label: 'Agent Date', alignRight: false },

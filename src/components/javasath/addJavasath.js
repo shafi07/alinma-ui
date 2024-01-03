@@ -76,7 +76,8 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
         paid_date: editData ? editData.paid_date :'',
         agent:editData ? editData.agent :'',
         professionName: editData ? editData.professionname :'',
-        newSponser: editData ? editData.newsponser :''
+        newSponser: editData ? editData.newsponser :'',
+        due: editData?.due ||'',
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
@@ -184,7 +185,6 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
             <Grid item xs={6} >
             <TextField
               id="id_number"
-              // className={classes.input}
               sx = {rightCss}
               label="Iqama Number"
               name="id_number"
@@ -441,13 +441,26 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               name="remarks"
               type="text"
               fullWidth
-              autoFocus
-              required
               variant="outlined"
               helperText={touched.remarks ? errors.remarks : ""}
               error={touched.remarks && Boolean(errors.remarks)}
               value={values.remarks}
               onChange={handleChange("remarks")}
+            />
+            </Grid>
+            <Grid item xs={6} >
+            <TextField
+              id="due"
+              sx = {cssArray.includes(values.sub_category) ? leftCss : rightCss }
+              label="Due in months"
+              name="due"
+              type="text"
+              fullWidth
+              variant="outlined"
+              helperText={touched.due ? errors.due : ""}
+              error={touched.due && Boolean(errors.due)}
+              value={values.due}
+              onChange={handleChange("due")}
             />
             </Grid>
           </Grid>

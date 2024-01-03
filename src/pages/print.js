@@ -22,19 +22,17 @@ export default function Print (){
       <Row >
         <Col  style={{width:'100%'}}>
           <Divider>Alinma-Invoice</Divider>
-          <Divider/>
         </Col>
       </Row>
 
       <Row gutter={24} style={{ marginTop: 32}}>
-        <Col span={8}>
+        <Col span={10} >
           <h1>Alinma Travles</h1>
-          <div>#944/945, 4th Cross, 9th Main,</div>
-          <div>Al kharj road,</div>
-          <div>Riyadh second road Road,</div>
-          <div>Al-kharj - 560076</div>
+          <div>Near Gold Market(Sulaimaniya),</div>
+          <div>Al kharj</div>
+          <div>Riyadh, Saudi Arabia</div>
         </Col>
-        <Col span={8} offset={8}>
+        <Col span={10} offset={16}>
           <table>
             <tr>
               <th>File No :</th>
@@ -44,10 +42,6 @@ export default function Print (){
               <th>Invoice Date :</th>
               <td>{new Date().toLocaleString().split(',')[0].replaceAll('/','-')}</td>
             </tr>
-            <tr>
-              <th>Due Date :</th>
-              <td>10-01-2018</td>
-            </tr>
           </table>
         </Col>
       </Row>
@@ -56,8 +50,6 @@ export default function Print (){
         <div>
           Bill To: <strong>Alinma-Travels Ltd</strong>
         </div>
-        <div>Riyadh Road,</div>
-        <div>AL-Kharj - 560076</div>
       </Row>
       <Row style={{ marginTop: 10 }}>
         <Table
@@ -70,7 +62,6 @@ export default function Print (){
           <Table.Column title="ID number" dataIndex="id_number" />
           <Table.Column title="Total" dataIndex="total_amount" />
           <Table.Column title="Balance" dataIndex="balance_amount" />
-          {/* <Table.Column title="Line Total" /> */}
         </Table>
       </Row>
 

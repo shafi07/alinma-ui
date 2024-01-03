@@ -53,6 +53,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
+        values.agent_amount = values.agent_amount ? values.agent_amount : 0
         if(editData){
           editInsuranceHandler({...values,id:editData.id},actions)
         }else{
@@ -358,7 +359,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               variant="outlined"
               helperText={touched.agent_amount ? errors.agent_amount : ""}
               error={touched.agent_amount && Boolean(errors.agent_amount)}
-              value={values.agent_amount == ''? 0 :values.agent_amount}
+              value={values.agent_amount}
               onChange={handleChange("agent_amount")}
               sx = {{
                 marginTop: 2,
