@@ -366,22 +366,22 @@ export default function User() {
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell component="th" scope="row" >
+                        <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(name)} } component="th" scope="row" >
                           <Stack direction="row" alignItems="center" spacing={4}>
                             <Typography variant="subtitle2" noWrap>
                               {name}
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell component="th" scope="row" >
+                        <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(id_number)} } component="th" scope="row" >
                           <Stack direction="row" alignItems="center" spacing={4}>
                             <Typography variant="subtitle2" noWrap>
                               {id_number}
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{sub_category}</TableCell>
-                        <TableCell align="left">{sponser_name}</TableCell>
+                        <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(sub_category)} } align="left">{sub_category}</TableCell>
+                        <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(sponser_name)} } align="left">{sponser_name}</TableCell>
                         <TableCell align="left">
                           <Label variant="ghost" color={(balance_amount != 0 && 'error') || 'success'}>
                             {sentenceCase(balance_amount == 0 ? 'Paid':'Credit')}

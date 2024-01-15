@@ -18,6 +18,7 @@ const subCategories = [
   {value:'Salary Transfer',label:'Salary Transfer'},
   {value:'Qiwa',label:'Qiwa'},
   {value:'Certificate',label:'Certificate'},
+  {value:'Rent agreement',label:'Rent agreement'}
 ]
 
 const validationSchema = Yup.object({

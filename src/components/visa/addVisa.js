@@ -14,7 +14,7 @@ import Slide from '@mui/material/Slide';
 const subCategories = [
   {value:'Work Visa',label:'Work Visa'},
   {value:'Visit Visa',label:'Visit Visa'},
-  {value:'Visa Chamber',label:'Visa Chamber'},
+  {value:'Visit Chamber',label:'Visit Chamber'},
   {value:'Wakala',label:'Wakala'},
 ]
 
@@ -107,8 +107,8 @@ console.log('------',editData)
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Visa
             </Typography>
-            <Button autoFocus sx={{backgroundColor:'black',color:'white'}} onClick={() => resetForm()}>
-              Reset
+            <Button autoFocus color="inherit" onClick={() => handleSubmit()}>
+              save
             </Button>
           </Toolbar>
         </AppBar>
@@ -128,7 +128,7 @@ console.log('------',editData)
               helperText={touched.sub_category ? errors.sub_category : ""}
               error={touched.sub_category && Boolean(errors.sub_category)}
               value={values.sub_category}
-              onChange={handleChange("sub_category")}
+              onChange={(e)=>{resetForm();setFieldValue('sub_category',e.target.value)}}
               sx = {{...leftCss,input: { color: 'red' }}}
             >
               {subCategories.map(option => (

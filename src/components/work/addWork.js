@@ -20,7 +20,7 @@ const subCategories = [
   {value:'Renew Ruksa',label:'Renew Ruksa'},
   {value:'Update Ruksa',label:'Update Ruksa'},
   {value:'Cancel Ruksa',label:'Cancel Ruksa'},
-  {value:'QRCODE RUKSA',label:'QRCODE RUKSA'}
+  {value:'QRCODE RUKSA',label:'QRCODE RUKSA'},
 ]
 
 const validationSchema = Yup.object({
@@ -185,7 +185,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               type="text"
               fullWidth
               autoFocus
-              required
+              required ={values.sub_category == 'New Ruksa' ? false :true}
               variant="outlined"
               helperText={touched.id_number ? errors.id_number : ""}
               error={touched.id_number && Boolean(errors.id_number)}

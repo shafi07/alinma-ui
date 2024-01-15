@@ -78,6 +78,7 @@ export default function UserListToolbar({handleStatusFilter, expense=true, slide
             <MenuItem value={"completed"}>Completed</MenuItem>
             <MenuItem value={"credit"}>Credit</MenuItem>
             <MenuItem value={"returned"}>Returned</MenuItem>
+            <MenuItem value={"collected"}>Collected</MenuItem>
           </Select>}
         </>
       )}
