@@ -1,7 +1,7 @@
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState,useEffect,useRef } from 'react';
-import { useNavigate} from "react-router-dom";
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from "react-router-dom";
 // material
 import {
   Card,
@@ -33,7 +33,7 @@ import { CSVLink } from 'react-csv';
 import axios from 'axios';
 import { Box } from '@mui/system';
 import View from 'src/components/view';
-import { URL,javasathHeaders,JAVASATH_TABLE_HEAD } from '../_mock/constant'
+import { URL, javasathHeaders, JAVASATH_TABLE_HEAD } from '../_mock/constant'
 
 // ----------------------------------------------------------------------
 
@@ -330,7 +330,7 @@ export default function User() {
             <CircularProgress color="inherit" />
           </Box>:
             <TableContainer ref={scrl} onScroll={scrollCheck}  >
-              <Table style={{width:"250%"}} >
+              <Table style={{width:"125%"}} >
                 <UserListHead
                   order={order}
                   orderBy={orderBy}
@@ -342,10 +342,7 @@ export default function User() {
                 />
                 <TableBody>
                   {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const {id, id_number, fileid, name, sub_category, insurance, service, sponser_name,
-                    paid_amount, balance_amount, iqama, mol, mobilenumber, other, total_amount, status,
-                    agent, paid_date, professionName, newSponser, agent_amount, due } = row;
-
+                    const {id, id_number, fileid, name, sub_category,  sponser_name, balance_amount, mobilenumber,total_amount, status,re_entry_type} = row;
                     return (
                       <TableRow
                         hover
@@ -373,6 +370,7 @@ export default function User() {
                             </Typography>
                           </Stack>
                         </TableCell>
+                        <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(sub_category)} } align="left">{sub_category == 'Re Entry'?`${sub_category}/${re_entry_type}`:sub_category}</TableCell>
                         <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(id_number)} } component="th" scope="row" >
                           <Stack direction="row" alignItems="center" spacing={4}>
                             <Typography variant="subtitle2" noWrap>
@@ -380,7 +378,6 @@ export default function User() {
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(sub_category)} } align="left">{sub_category}</TableCell>
                         <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(sponser_name)} } align="left">{sponser_name}</TableCell>
                         <TableCell align="left">
                           <Label variant="ghost" color={(balance_amount != 0 && 'error') || 'success'}>
@@ -394,20 +391,8 @@ export default function User() {
                             <MenuItem value={"returned"}>Returned</MenuItem>
                           </Select>
                         </TableCell>
-                        <TableCell align="left">{`${due || ''} Months`}</TableCell>
                         <TableCell align="left">{mobilenumber}</TableCell>
-                        <TableCell align="left">{agent}</TableCell>
-                        <TableCell align="left">{paid_date}</TableCell>
-                        <TableCell align="left">{professionName}</TableCell>
-                        <TableCell align="left">{newSponser}</TableCell>
-                        <TableCell align="left">{agent_amount}</TableCell>
-                        <TableCell align="left">{mol}</TableCell>
-                        <TableCell align="left">{iqama}</TableCell>
-                        <TableCell align="left">{insurance}</TableCell>
-                        <TableCell align="left">{service}</TableCell>
-                        <TableCell align="left">{other}</TableCell>
                         <TableCell align="left">{total_amount}</TableCell>
-                        <TableCell align="left">{paid_amount}</TableCell>
                         <TableCell align="left">{balance_amount}</TableCell>
                         <TableCell align="left" >
                             <Iconify icon="eva:trash-2-outline" width={24} height={24} onClick={(e) =>{e.stopPropagation()

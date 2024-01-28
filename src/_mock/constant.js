@@ -1,5 +1,5 @@
 // export const URL = `http://localhost:8000`
-export const URL = `https://alinma-api.shellfixer.com`
+export const URL = `https://alinma-api.shellfixer.com` 
 
 // --------- CSV File Headers----------- //
 
@@ -110,25 +110,13 @@ export const expenseHeaders = [
 export const JAVASATH_TABLE_HEAD = [
     { id: 'file', label: 'File', alignRight: false },
     { id: 'name', label: 'Name', alignRight: false },
-    { id: 'id', label: 'ID', alignRight: false },
     { id: 'company', label: 'Sub category', alignRight: false },
+    { id: 'id', label: 'ID', alignRight: false },
     { id: 'sponserName', label: 'Sponser Name', alignRight: false },
     { id: 'cash', label: 'Cash', alignRight: false },
     { id: 'status', label: 'Status', alignRight: false },
-    { id: 'due', label: 'Due', alignRight: false },
     { id: 'mobileNumber', label: 'Mobile', alignRight: false },
-    { id: 'agent', label: 'Agent', alignRight: false },
-    { id: 'agentDate', label: 'Agent Date', alignRight: false },
-    { id: 'newProfession', label: 'New Profession', alignRight: false },
-    { id: 'newSponser', label: 'New Sponser', alignRight: false },
-    { id: 'agentAmount', label: 'Agent amount', alignRight: false },
-    { id: 'mol', label: 'Mol', alignRight: false },
-    { id: 'iqama', label: 'Iqama', alignRight: false },
-    { id: 'insurance', label: 'Insurance', alignRight: false },
-    { id: 'service', label: 'Service', alignRight: false },
-    { id: 'other', label: 'Other', alignRight: false },
     { id: 'total', label: 'Total Amount', alignRight: false },
-    { id: 'paid', label: 'Paid Amount', alignRight: false },
     { id: 'balance', label: 'Balance Amount ', alignRight: false },
     { id: '' },
   ];

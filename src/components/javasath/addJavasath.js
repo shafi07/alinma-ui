@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import * as Yup from "yup";
 import { Formik } from "formik";
-import {DialogActions,DialogContent,Grid,MenuItem,TextField} from "@mui/material";
+import { DialogActions, DialogContent, Grid, MenuItem, TextField } from "@mui/material";
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -23,6 +23,11 @@ const subCategories = [
   {value:'Final Exit',label:'Final Exit'},
   {value:'Sponser Change',label:'Sponser Change'},
   {value:'Profession Change',label:'Profession Change'},
+]
+
+const reEntryType = [
+  {value:'Leave',label:'Leave'},
+  {value:'Extend',label:'Extend'},
 ]
 
 const leftCss = {
@@ -68,31 +73,36 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
         sub_category: editData ? editData.sub_category : "",
         name: editData ? editData.name :"",
         sponser_name: editData ? editData.sponser_name : "",
-        mol: editData ? editData.mol : '',
-        service: editData ? editData.service : '',
-        other: editData ? editData.other : '',
-        iqama: editData ? editData.iqama : '',
+        mol: editData ? editData.mol : null,
+        service: editData ? editData.service : null,
+        other: editData ? editData.other : null,
+        iqama: editData ? editData.iqama : null,
         id_number: editData ? editData.id_number : "",
-        insurance: editData ? editData.insurance : '',
+        insurance: editData ? editData.insurance : null,
         total_amount: editData ? editData.total_amount : "",
         mobileNumber: editData ? editData.mobilenumber : "",
         paid_amount: editData ? editData.paid_amount : null,
         balance: editData ? editData.balance : '',
         remarks: editData ? editData.remarks :'',
-        agent_amount: editData ? editData.agent_amount : '',
+        agent_amount: editData ? editData.agent_amount : null,
         paid_date: editData ? editData.paid_date :'',
         agent:editData ? editData.agent :'',
         professionName: editData ? editData.professionname :'',
         newSponser: editData ? editData.newsponser :'',
         due: editData?.due ||'',
-        absheer_amount: editData?.absheer_amount || '',
-        qiwa_amount: editData?.qiwa_amount || '',
-        government_fee: editData?.government_fee || '',
+        absheer_amount: editData?.absheer_amount || null,
+        qiwa_amount: editData?.qiwa_amount || null,
+        government_fee: editData?.government_fee || null,
         new_passport_number: editData?.new_passport_number || '',
         expiry_date:editData?.expiry_date || '',
+        re_entry_type:editData?.re_entry_type || '',
+        boarder_number:editData?.boarder_number || '',
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values?.paid_amount ||0
+        // values.mol = values?.mol ||0
+        // values.other = values?.service ||0
+        // values.paid_amount = values?.paid_amount ||0
         if(editData){
           editJavazathHandler({...values,id:editData.id},actions)
         }else{
@@ -128,7 +138,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Javasath
+              {editData ? `Javasath-[${editData.createddate}]`:`Javasath`}
             </Typography>
             <Button autoFocus color="inherit" onClick={() => handleSubmit()}>
               save
@@ -288,6 +298,31 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               onChange={handleChange("newSponser")}
             />
             </Grid>}
+            {values.sub_category == "Re Entry" && <Grid item xs={4} >
+            <TextField
+              id="re_entry_type"
+              label="Re-Entry Type"
+              name="re_entry_type"
+              type="text"
+              fullWidth
+              size='small'
+              autoFocus
+              required
+              select={true}
+              variant="outlined"
+              helperText={touched.re_entry_type ? errors.re_entry_type : ""}
+              error={touched.re_entry_type && Boolean(errors.re_entry_type)}
+              value={values.re_entry_type}
+              onChange={handleChange("re_entry_type")}
+              sx = {leftCss}
+            >
+              {reEntryType.map(option => (
+             <MenuItem sx={{color:'red'}} key={option.value} value={option.label}>
+              {option.label}
+            </MenuItem>
+            ))}
+            </TextField> 
+            </Grid>}
             {!["Driving Licence","Vehicle Registration Renew"].includes(values.sub_category) &&<Grid item xs={4} >
             <TextField
               id="iqama"
@@ -300,7 +335,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               variant="outlined"
               helperText={touched.iqama ? errors.iqama : ""}
               error={touched.iqama && Boolean(errors.iqama)}
-              value={values.iqama}
+              value={values?.iqama || ''}
               onChange={handleChange("iqama")}
               sx = {leftCss}
             /> 
@@ -317,7 +352,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               variant="outlined"
               helperText={touched.insurance ? errors.insurance : ""}
               error={touched.insurance && Boolean(errors.insurance)}
-              value={values.insurance}
+              value={values?.insurance || ''}
               onChange={handleChange("insurance")}
               sx = {leftCss}
             />
@@ -334,7 +369,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               variant="outlined"
               helperText={touched.other ? errors.other : ""}
               error={touched.other && Boolean(errors.other)}
-              value={values.other}
+              value={values?.other || ''}
               onChange={handleChange("other")}
               sx = {leftCss}
               
@@ -353,7 +388,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               variant="outlined"
               helperText={touched.mol ? errors.mol : ""}
               error={touched.mol && Boolean(errors.mol)}
-              value={values.mol}
+              value={values?.mol || ''}
               onChange={handleChange("mol")}
             />
             </Grid>}
@@ -369,7 +404,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               variant="outlined" 
               helperText={touched.agent_amount ? errors.agent_amount : ""}
               error={touched.agent_amount && Boolean(errors.agent_amount)}
-              value={values.agent_amount}
+              value={values?.agent_amount || ''}
               onChange={handleChange("agent_amount")}
               sx = {leftCss}
             />
@@ -386,7 +421,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               variant="outlined" 
               helperText={touched.absheer_amount ? errors.absheer_amount : ""}
               error={touched.absheer_amount && Boolean(errors.absheer_amount)}
-              value={values.absheer_amount}
+              value={values?.absheer_amount || ''}
               onChange={handleChange("absheer_amount")}
               sx = {leftCss}
             />
@@ -403,7 +438,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               variant="outlined" 
               helperText={touched.qiwa_amount ? errors.qiwa_amount : ""}
               error={touched.qiwa_amount && Boolean(errors.qiwa_amount)}
-              value={values.qiwa_amount}
+              value={values?.qiwa_amount || ''}
               onChange={handleChange("qiwa_amount")}
               sx = {leftCss}
             />
@@ -420,7 +455,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               variant="outlined" 
               helperText={touched.government_fee ? errors.government_fee : ""}
               error={touched.government_fee && Boolean(errors.government_fee)}
-              value={values.government_fee}
+              value={values?.government_fee || ''}
               onChange={handleChange("government_fee")}
             />
             </Grid>}
@@ -440,7 +475,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               variant="outlined"
               helperText={touched.service ? errors.service : ""}
               error={touched.service && Boolean(errors.service)}
-              value={values.service}
+              value={values?.service || ''}
               onChange={handleChange("service")}
             />
             </Grid>
@@ -476,7 +511,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               variant="outlined"
               helperText={touched.paid_amount ? errors.paid_amount : ""}
               error={touched.paid_amount && Boolean(errors.paid_amount)}
-              value={values.paid_amount}
+              value={values?.paid_amount || ''}
               onChange={handleChange("paid_amount")}
               sx = {leftCss}
             /> 

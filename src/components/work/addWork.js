@@ -92,7 +92,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              WORK
+              {editData ? `WORK-[${editData.createddate}]`:`WORK`}
             </Typography>
             <Button autoFocus color="inherit" onClick={() => handleSubmit()}>
               save
@@ -219,7 +219,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               id="service"
               label="Service Charge"
               name="service"
-              type="number"
+              type="text"
               fullWidth
               autoFocus
               required
@@ -227,7 +227,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               helperText={touched.service ? errors.service : ""}
               error={touched.service && Boolean(errors.service)}
               value={values.service}
-              onChange={handleChange("service")}
+              onChange={(e)=>{setFieldValue('service',+e.target.value)}}
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
@@ -248,14 +248,14 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               }}
               label="Agent Amount"
               name="agent_amount"
-              type="number"
+              type="text"
               fullWidth
               autoFocus
               variant="outlined" 
               helperText={touched.agent_amount ? errors.agent_amount : ""}
               error={touched.agent_amount && Boolean(errors.agent_amount)}
               value={values.agent_amount}
-              onChange={handleChange("agent_amount")}
+              onChange={(e)=>{setFieldValue('agent_amount',+e.target.value)}}
             />
             </Grid>
             <Grid item xs={6} >
@@ -268,14 +268,14 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               }}
               label="Government Fee"
               name="government_fee"
-              type="number"
+              type="text"
               fullWidth
               autoFocus
               variant="outlined" 
               helperText={touched.government_fee ? errors.government_fee : ""}
               error={touched.government_fee&& Boolean(errors.government_fee)}
               value={values.government_fee}
-              onChange={handleChange("government_fee")}
+              onChange={(e)=>{setFieldValue('government_fee',+e.target.value)}}
             />
             </Grid>
             <Grid item xs={6} >
@@ -305,7 +305,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               id="paid_amount"
               label="Paid amount"
               name="paid_amount"
-              type="number"
+              type="text"
               fullWidth
               disabled = {editData}
               autoFocus
@@ -314,7 +314,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               helperText={touched.paid_amount ? errors.paid_amount : ""}
               error={touched.paid_amount && Boolean(errors.paid_amount)}
               value={values.paid_amount}
-              onChange={handleChange("paid_amount")}
+              onChange={(e)=>{setFieldValue('paid_amount',+e.target.value)}}
               sx = {{
                 marginTop: 2,
                 marginBottom: 2,
