@@ -1,15 +1,21 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
+import {
+  Slide,
+  Typography,
+  IconButton,
+  Toolbar,
+  AppBar,
+  Dialog,
+  Button,
+  DialogActions,
+  DialogContent,
+  Grid,
+  MenuItem,
+  TextField
+} from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import * as Yup from "yup";
 import { Formik } from "formik";
-import {DialogActions,DialogContent,Grid,MenuItem,TextField} from "@mui/material";
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
-import Slide from '@mui/material/Slide';
 
 const subCategories = [
   {value:'add',label:'Add'},

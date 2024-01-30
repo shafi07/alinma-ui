@@ -1,15 +1,21 @@
-import { useState,useEffect,useRef,forwardRef } from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
+import { useState, useEffect, useRef, forwardRef } from 'react';
+import {
+  Slide,
+  Typography,
+  IconButton,
+  Toolbar,
+  AppBar,
+  Dialog,
+  Button,
+  DialogActions,
+  DialogContent,
+  Grid,
+  MenuItem,
+  TextField
+} from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import * as Yup from "yup";
 import { Formik } from "formik";
-import { DialogActions, DialogContent, Grid, MenuItem, TextField } from "@mui/material";
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
-import Slide from '@mui/material/Slide';
 
 const subCategories = [
   {value:'New Iqama',label:'New Iqama'},
@@ -328,7 +334,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               id="iqama"
               label="Iqama Amount"
               name="iqama"
-              type="number"
+              type="text"
               size='small'
               fullWidth
               autoFocus
@@ -336,7 +342,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               helperText={touched.iqama ? errors.iqama : ""}
               error={touched.iqama && Boolean(errors.iqama)}
               value={values?.iqama || ''}
-              onChange={handleChange("iqama")}
+              onChange={(e)=>{setFieldValue('iqama',+e.target.value)}}
               sx = {leftCss}
             /> 
             </Grid>}
@@ -345,7 +351,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               id="insurance"
               label="Insurance"
               name="insurance"
-              type="number"
+              type="text"
               size='small'
               fullWidth
               autoFocus
@@ -353,7 +359,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               helperText={touched.insurance ? errors.insurance : ""}
               error={touched.insurance && Boolean(errors.insurance)}
               value={values?.insurance || ''}
-              onChange={handleChange("insurance")}
+              onChange={(e)=>{setFieldValue('insurance',+e.target.value)}}
               sx = {leftCss}
             />
             </Grid>}
@@ -362,7 +368,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               id="other"
               label="Other"
               name="other"
-              type="number"
+              type="text"
               fullWidth
               size='small'
               autoFocus
@@ -370,7 +376,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               helperText={touched.other ? errors.other : ""}
               error={touched.other && Boolean(errors.other)}
               value={values?.other || ''}
-              onChange={handleChange("other")}
+              onChange={(e)=>{setFieldValue('other',+e.target.value)}}
               sx = {leftCss}
               
             /> 
@@ -381,7 +387,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               sx = {leftCss}
               label="Mol Amount"
               name="mol"
-              type="number"
+              type="text"
               size='small'
               fullWidth
               autoFocus
@@ -389,7 +395,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               helperText={touched.mol ? errors.mol : ""}
               error={touched.mol && Boolean(errors.mol)}
               value={values?.mol || ''}
-              onChange={handleChange("mol")}
+              onChange={(e)=>{setFieldValue('mol',+e.target.value)}}
             />
             </Grid>}
             <Grid item xs={4} >
@@ -397,7 +403,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               id="agent_amount"
               label="Agent Amount"
               name="agent_amount"
-              type="number"
+              type="text"
               size='small'
               fullWidth
               autoFocus
@@ -405,7 +411,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               helperText={touched.agent_amount ? errors.agent_amount : ""}
               error={touched.agent_amount && Boolean(errors.agent_amount)}
               value={values?.agent_amount || ''}
-              onChange={handleChange("agent_amount")}
+              onChange={(e)=>{setFieldValue('agent_amount',+e.target.value)}}
               sx = {leftCss}
             />
             </Grid>
@@ -414,7 +420,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               id="absheer_amount"
               label="Absheer Amount"
               name="absheer_amount"
-              type="number"
+              type="text"
               size='small'
               fullWidth
               autoFocus
@@ -422,7 +428,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               helperText={touched.absheer_amount ? errors.absheer_amount : ""}
               error={touched.absheer_amount && Boolean(errors.absheer_amount)}
               value={values?.absheer_amount || ''}
-              onChange={handleChange("absheer_amount")}
+              onChange={(e)=>{setFieldValue('absheer_amount',+e.target.value)}}
               sx = {leftCss}
             />
             </Grid>}
@@ -431,7 +437,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               id="qiwa_amount"
               label="Qiwa Amount"
               name="qiwa_amount"
-              type="number"
+              type="text"
               size='small'
               fullWidth
               autoFocus
@@ -439,7 +445,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               helperText={touched.qiwa_amount ? errors.qiwa_amount : ""}
               error={touched.qiwa_amount && Boolean(errors.qiwa_amount)}
               value={values?.qiwa_amount || ''}
-              onChange={handleChange("qiwa_amount")}
+              onChange={(e)=>{setFieldValue('qiwa_amount',+e.target.value)}}
               sx = {leftCss}
             />
             </Grid>}
@@ -449,14 +455,14 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               sx = {leftCss }
               label="Government Fee"
               name="government_fee"
-              type="number"
+              type="text"
               size='small'
               fullWidth
               variant="outlined" 
               helperText={touched.government_fee ? errors.government_fee : ""}
               error={touched.government_fee && Boolean(errors.government_fee)}
               value={values?.government_fee || ''}
-              onChange={handleChange("government_fee")}
+              onChange={(e)=>{setFieldValue('government_fee',+e.target.value)}}
             />
             </Grid>}
             <Grid item xs={4} >
@@ -476,7 +482,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               helperText={touched.service ? errors.service : ""}
               error={touched.service && Boolean(errors.service)}
               value={values?.service || ''}
-              onChange={handleChange("service")}
+              onChange={(e)=>{setFieldValue('service',+e.target.value)}}
             />
             </Grid>
             <Grid item xs={4} >
@@ -502,7 +508,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               id="paid_amount"
               label={editData?`Paid amount-${editData.paid_amount}`:`Paid amount`}
               name="paid_amount"
-              type="number"
+              type="text"
               // disabled={editData}
               size='small'
               fullWidth
@@ -512,7 +518,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               helperText={touched.paid_amount ? errors.paid_amount : ""}
               error={touched.paid_amount && Boolean(errors.paid_amount)}
               value={values?.paid_amount || ''}
-              onChange={handleChange("paid_amount")}
+              onChange={(e)=>{setFieldValue('paid_amount',+e.target.value)}}
               sx = {leftCss}
             /> 
             </Grid>
@@ -530,7 +536,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
               variant="outlined"
               helperText={touched.balance ? errors.balance : ""}
               error={touched.balance && Boolean(errors.balance)}
-                  value={values.balance = editData ? (Number(editData.balance_amount) - Number(values.paid_amount)) : (Number(values.total_amount) - Number(values.paid_amount))}
+              value={values.balance = editData ? (Number(editData.balance_amount) - Number(values.paid_amount)) : (Number(values.total_amount) - Number(values.paid_amount))}
               onChange={handleChange("balance")}
               sx = {leftCss}
             />

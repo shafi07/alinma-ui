@@ -1,4 +1,4 @@
-import { filter } from 'lodash';
+// import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
@@ -20,6 +20,8 @@ import {
   Select,
   MenuItem,
 } from '@mui/material';
+import { CSVLink } from 'react-csv';
+import axios from 'axios';
 // components
 import Page from '../components/Page';
 import Label from '../components/Label';
@@ -29,42 +31,40 @@ import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
 import AddBill from '../components/other/addOther'
 import EditBill from '../components/javasath/editBill'
-import { CSVLink } from 'react-csv';
-import axios from 'axios';
 import View from 'src/components/view';
 import { URL, otherHeaders, OTHER_TABLE_HEAD } from '../_mock/constant'
 import Toast from '../components/toast';
 
 // ----------------------------------------------------------------------
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
+// function descendingComparator(a, b, orderBy) {
+//   if (b[orderBy] < a[orderBy]) {
+//     return -1;
+//   }
+//   if (b[orderBy] > a[orderBy]) {
+//     return 1;
+//   }
+//   return 0;
+// }
 
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
+// function getComparator(order, orderBy) {
+//   return order === 'desc'
+//     ? (a, b) => descendingComparator(a, b, orderBy)
+//     : (a, b) => -descendingComparator(a, b, orderBy);
+// }
 
-function applySortFilter(array, comparator, query) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  if (query) {
-    return filter(array, (_user) => ((_user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1) | (_user.sponser_name.toLowerCase().indexOf(query.toLowerCase()) !== -1)));
-  }
-  return stabilizedThis.map((el) => el[0]);
-}
+// function applySortFilter(array, comparator, query) {
+//   const stabilizedThis = array.map((el, index) => [el, index]);
+//   stabilizedThis.sort((a, b) => {
+//     const order = comparator(a[0], b[0]);
+//     if (order !== 0) return order;
+//     return a[1] - b[1];
+//   });
+//   if (query) {
+//     return filter(array, (_user) => ((_user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1) | (_user.sponser_name.toLowerCase().indexOf(query.toLowerCase()) !== -1)));
+//   }
+//   return stabilizedThis.map((el) => el[0]);
+// }
 
 export default function Other() {
   const [page, setPage] = useState(0);
@@ -181,11 +181,7 @@ export default function Other() {
     setOpen(true)
   }
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
-
-  const filteredUsers = USERLIST.length >= 0 ? applySortFilter(USERLIST, getComparator(order, orderBy), filterName) : [];
-
-  const isUserNotFound = filteredUsers.length === 0;
+  // const filteredUsers = USERLIST.length >= 0 ? applySortFilter(USERLIST, getComparator(order, orderBy), filterName) : [];
 
   const submitOther = async (data, actions) => {
     setLoading(true)
@@ -304,6 +300,9 @@ export default function Other() {
       setscrolEnd(false);
     }
   };
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const isUserNotFound = USERLIST.length === 0;
 
   return (
     <>
