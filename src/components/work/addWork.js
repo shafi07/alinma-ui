@@ -49,7 +49,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
         id_number:editData ? editData.id_number : "",
         total_amount:editData ? editData.total_amount : "",
         mobileNumber:editData ? editData.mobilenumber : "",
-        paid_amount:editData ? editData.paid_amount : null,
+        paid_amount:null,
         balance: editData ? editData.balance :'',
         remarks:editData ? editData.remarks :'',
         agent_amount:editData ? editData.agent_amount :null,
@@ -303,17 +303,17 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             <Grid item xs={6} >
             <TextField
               id="paid_amount"
-              label="Paid amount"
+              label={editData?`Paid amount-${editData.paid_amount}`:`Paid amount`}
               name="paid_amount"
               type="text"
               fullWidth
-              disabled = {editData}
+              // disabled = {editData}
               autoFocus
               required
               variant="outlined"
               helperText={touched.paid_amount ? errors.paid_amount : ""}
               error={touched.paid_amount && Boolean(errors.paid_amount)}
-              value={values.paid_amount}
+              value={values?.paid_amount || ''}
               onChange={(e)=>{setFieldValue('paid_amount',+e.target.value)}}
               sx = {{
                 marginTop: 2,
@@ -340,7 +340,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               variant="outlined"
               helperText={touched.balance ? errors.balance : ""}
               error={touched.balance && Boolean(errors.balance)}
-              value={values.balance =(Number(values.total_amount)-Number(values.paid_amount))}
+                  value={values.balance = editData ? (Number(editData.balance_amount) - Number(values.paid_amount)) : (Number(values.total_amount) - Number(values.paid_amount))}
               onChange={handleChange("balance")}
             />
             </Grid>
