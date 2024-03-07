@@ -310,7 +310,7 @@ export default function Work() {
                     />
                     <TableBody>
                       {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                        const { id, id_number, paid_date, status, agent, agent_amount, fileid, name,
+                        const { id, id_number, paid_date, status, agent, agent_amount, fileid, name,work_type,
                           sub_category, service, sponser_name, paid_amount, balance_amount, mobilenumber, total_amount, government_fee } = row;
 
                         return (
@@ -347,7 +347,7 @@ export default function Work() {
                                 </Typography>
                               </Stack>
                             </TableCell>
-                            <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(sub_category)} } align="left">{sub_category}</TableCell>
+                            <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(sub_category)} } align="left">{`${sub_category}/${work_type || ''}`}</TableCell>
                             <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(sponser_name)} } align="left">{sponser_name}</TableCell>
                             <TableCell align="left">
                               <Label variant="ghost" color={(balance_amount != 0 && 'error') || 'success'}>

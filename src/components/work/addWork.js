@@ -17,15 +17,23 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 
 const subCategories = [
-  {value:'New Sijil',label:'New Sijil'},
-  {value:'Renew Sijil',label:'Renew Sijil'},
-  {value:'Update Sijil',label:'Update Sijil'},
-  {value:'Cancel Sijil',label:'Cancel Sijil'},
-  {value:'New Ruksa',label:'New Ruksa'},
-  {value:'Renew Ruksa',label:'Renew Ruksa'},
-  {value:'Update Ruksa',label:'Update Ruksa'},
-  {value:'Cancel Ruksa',label:'Cancel Ruksa'},
-  {value:'QRCODE RUKSA',label:'QRCODE RUKSA'},
+  {value:'Sijil',label:'Sijil'},
+  {value:'Ruksa',label:'Ruksa'},
+]
+
+const leftCss = {
+  marginTop: 2,
+  marginBottom: 2,
+  marginRight:2,
+}
+
+const workType = [
+  {value:'New',label:'New'},
+  {value:'Renew',label:'Renew'},
+  {value:'Update',label:'Update'},
+  {value:'Cancel',label:'Cancel'},
+  {value:'Transfer',label:'Transfer'},
+  {value:'QR-Code',label:'QR-Code'},
 ]
 
 const validationSchema = Yup.object({
@@ -60,7 +68,8 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
         agent_amount:editData ? editData.agent_amount :null,
         government_fee:editData ? editData.government_fee :null,
         service:editData ? editData.service :null,
-        paid_date:editData ? editData.paid_date :''
+        paid_date:editData ? editData.paid_date :'',
+        work_type:editData?.work_type || '',
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
@@ -105,8 +114,8 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
           </Toolbar>
         </AppBar>
         <DialogContent >
-          <Grid container >
-            <Grid item xs={6} >
+          <Grid container rowSpacing={1} spacing={{xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} >
+            <Grid item xs={4} >
             <TextField
               id="sub_category"
               label="Sub Category"
@@ -115,18 +124,14 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               fullWidth
               autoFocus
               required
+              size='small'
               select={true}
               variant="outlined"
               helperText={touched.sub_category ? errors.sub_category : ""}
               error={touched.sub_category && Boolean(errors.sub_category)}
               value={values.sub_category}
               onChange={handleChange("sub_category")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2,
-                input: { color: 'red' }
-              }}
+              sx = {leftCss}
             >
               {subCategories.map(option => (
              <MenuItem sx={{color:'red'}} key={option.value} value={option.label}>
@@ -135,20 +140,17 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             ))}
             </TextField> 
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="name"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {leftCss}
               label="Customer name"
               name="name"
               type="text"
               fullWidth
               autoFocus
               required
+              size='small'
               variant="outlined"
               helperText={touched.name ? errors.name : ""}
               error={touched.name && Boolean(errors.name)}
@@ -156,7 +158,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("name")}
             />
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="sponser_name"
               label="Sponser Name"
@@ -165,31 +167,25 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               fullWidth
               autoFocus
               required
+              size='small'
               variant="outlined"
               helperText={touched.sponser_name ? errors.sponser_name : ""}
               error={touched.sponser_name && Boolean(errors.sponser_name)}
               value={values.sponser_name}
               onChange={handleChange("sponser_name")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {leftCss}
             /> 
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="id_number"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {leftCss}
               label="Number"
               name="id_number"
               type="text"
               fullWidth
               autoFocus
+              size='small'
               required ={values.sub_category == 'New Ruksa' ? false :true}
               variant="outlined"
               helperText={touched.id_number ? errors.id_number : ""}
@@ -198,7 +194,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("id_number")}
             />
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="mobileNumber"
               label="Mobile Number"
@@ -207,19 +203,41 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               fullWidth
               autoFocus
               required
+              size='small'
               variant="outlined"
               helperText={touched.mobileNumber ? errors.mobileNumber : ""}
               error={touched.mobileNumber && Boolean(errors.mobileNumber)}
               value={values.mobileNumber}
               onChange={handleChange("mobileNumber")}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {leftCss}
             /> 
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
+            <TextField
+              id="work_type"
+              label="Type"
+              name="work_type"
+              type="text"
+              fullWidth
+              size='small'
+              autoFocus
+              required
+              select={true}
+              variant="outlined"
+              helperText={touched.work_type ? errors.work_type : ""}
+              error={touched.work_type && Boolean(errors.work_type)}
+              value={values.work_type}
+              onChange={handleChange("work_type")}
+              sx = {leftCss}
+            >
+              {workType.map(option => (
+             <MenuItem sx={{color:'red'}} key={option.value} value={option.label}>
+              {option.label}
+            </MenuItem>
+            ))}
+            </TextField> 
+            </Grid>
+            <Grid item xs={4} >
             <TextField
               id="service"
               label="Service Charge"
@@ -228,33 +246,27 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               fullWidth
               autoFocus
               required
+              size='small'
               variant="outlined"
               helperText={touched.service ? errors.service : ""}
               error={touched.service && Boolean(errors.service)}
               value={values.service}
               onChange={(e)=>{setFieldValue('service',+e.target.value)}}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {leftCss}
               InputLabelProps={{
                 style: { color: '#BC3110' },
               }}
             /> 
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="agent_amount"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {leftCss}
               label="Agent Amount"
               name="agent_amount"
               type="text"
               fullWidth
+              size='small'
               autoFocus
               variant="outlined" 
               helperText={touched.agent_amount ? errors.agent_amount : ""}
@@ -263,19 +275,16 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={(e)=>{setFieldValue('agent_amount',+e.target.value)}}
             />
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="government_fee"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {leftCss}
               label="Government Fee"
               name="government_fee"
               type="text"
               fullWidth
               autoFocus
+              size='small'
               variant="outlined" 
               helperText={touched.government_fee ? errors.government_fee : ""}
               error={touched.government_fee&& Boolean(errors.government_fee)}
@@ -283,14 +292,10 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={(e)=>{setFieldValue('government_fee',+e.target.value)}}
             />
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="total_amount"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {leftCss}
               label="Total Amount"
               name="total_amount"
               type="number"
@@ -298,6 +303,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               autoFocus
               disabled
               required
+              size='small'
               variant="outlined" 
               helperText={touched.total_amount ? errors.total_amount : ""}
               error={touched.total_amount && Boolean(errors.total_amount)}
@@ -305,36 +311,29 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("total_amount")}
             />
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="paid_amount"
-              label={editData?`Paid amount-${editData.paid_amount}`:`Paid amount`}
+              label={editData?`Paid amount->>${editData.paid_amount}`:`Paid amount`}
               name="paid_amount"
               type="text"
               fullWidth
               // disabled = {editData}
               autoFocus
               required
+              size='small'
               variant="outlined"
               helperText={touched.paid_amount ? errors.paid_amount : ""}
               error={touched.paid_amount && Boolean(errors.paid_amount)}
               value={values?.paid_amount || ''}
               onChange={(e)=>{setFieldValue('paid_amount',+e.target.value)}}
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {leftCss}
             /> 
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="balance"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {leftCss}
               label="Balance Amount"
               name="balance"
               type="number"
@@ -342,6 +341,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               autoFocus
               disabled
               required
+              size='small'
               variant="outlined"
               helperText={touched.balance ? errors.balance : ""}
               error={touched.balance && Boolean(errors.balance)}
@@ -349,19 +349,16 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("balance")}
             />
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="agent"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {leftCss}
               label="Agent"
               name="agent"
               type="text"
               fullWidth
               autoFocus
+              size='small'
               variant="outlined"
               helperText={touched.agent ? errors.agent : ""}
               error={touched.agent && Boolean(errors.agent)}
@@ -369,19 +366,16 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("agent")}
             />
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="paid_date"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginRight:2
-              }}
+              sx = {leftCss}
               label="Agent Paid Date"
               name="paid_date"
               type="Text"
               fullWidth
               autoFocus
+              size='small'
               variant="outlined"
               helperText={touched.paid_date ? errors.paid_date : ""}
               error={touched.paid_date && Boolean(errors.paid_date)}
@@ -389,19 +383,16 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("paid_date")}
             />
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="remarks"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {leftCss}
               label="Remarks"
               name="remarks"
               type="text"
               fullWidth
               autoFocus
+              size='small'
               variant="outlined"
               helperText={touched.remarks ? errors.remarks : ""}
               error={touched.remarks && Boolean(errors.remarks)}

@@ -22,6 +22,7 @@ const subCategories = [
   {value:'Visit Visa',label:'Visit Visa'},
   {value:'Visit Chamber',label:'Visit Chamber'},
   {value:'Wakala',label:'Wakala'},
+  {value:'Visa Chamber',label:'Visa Chamber'},
 ]
 
 const cssArray=['Visa Chamber','Wakala']
@@ -39,12 +40,6 @@ const leftCss = {
   marginTop: 2,
   marginBottom: 2,
   marginRight:2,
-}
-
-const rightCss = {
-  marginTop: 2,
-  marginBottom: 2,
-  marginLeft:2,
 }
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -75,6 +70,8 @@ console.log('------',editData)
         visa_number: editData ? editData.visa_number : '',
         chamber_amount: editData ? editData.chamber_amount : null,
         government_fee: editData ? editData.government_fee : null,
+        application_number: editData?.application_number || '',
+        travels:editData?.travels || ''
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
@@ -119,8 +116,8 @@ console.log('------',editData)
           </Toolbar>
         </AppBar>
         <DialogContent >
-          <Grid container >
-            <Grid item xs={6} >
+          <Grid container rowSpacing={1} spacing={{xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} >
+            <Grid item xs={4} >
             <TextField
               id="sub_category"
               label="Sub Category"
@@ -128,6 +125,7 @@ console.log('------',editData)
               type="text"
               fullWidth
               autoFocus
+              size='small'
               required
               select={true}
               variant="outlined"
@@ -144,15 +142,16 @@ console.log('------',editData)
             ))}
             </TextField> 
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="name"
-              sx = {rightCss}
+              sx = {leftCss}
               label="Customer name"
               name="name"
               type="text"
               fullWidth
               autoFocus
+              size='small'
               required
               variant="outlined"
               helperText={touched.name ? errors.name : ""}
@@ -161,7 +160,7 @@ console.log('------',editData)
               onChange={handleChange("name")}
             />
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="sponser_name"
               label="Sponser Name"
@@ -169,6 +168,7 @@ console.log('------',editData)
               type="text"
               fullWidth
               autoFocus
+              size='small'
               variant="outlined"
               helperText={touched.sponser_name ? errors.sponser_name : ""}
               error={touched.sponser_name && Boolean(errors.sponser_name)}
@@ -176,20 +176,34 @@ console.log('------',editData)
               onChange={handleChange("sponser_name")}
               sx = {leftCss}
             /> 
-            </Grid> 
-            <Grid item xs={6} >
+            </Grid>
+            {values.sub_category == "Wakala" && <Grid item xs={4} >
+            <TextField
+              id="travels"
+              label="Travels Name"
+              name="travels"
+              type="text"
+              fullWidth
+              autoFocus
+              size='small'
+              variant="outlined"
+              helperText={touched.travels ? errors.travels : ""}
+              error={touched.travels && Boolean(errors.travels)}
+              value={values.travels}
+              onChange={handleChange("travels")}
+              sx = {leftCss}
+            /> 
+            </Grid>}  
+            <Grid item xs={4} >
             <TextField
               id="id_number"
-              sx = {{
-                marginTop: 2,
-                marginBottom: 2,
-                marginLeft:2,
-              }}
+              sx = {leftCss}
               label={['Wakala','Work Visa'].includes(values.sub_category) ?'ID Number':'Iqama Number'}
               name="id_number"
               type="text"
               fullWidth
               autoFocus
+              size='small'
               required
               variant="outlined"
               helperText={touched.id_number ? errors.id_number : ""}
@@ -198,7 +212,7 @@ console.log('------',editData)
               onChange={handleChange("id_number")}
             />
             </Grid>
-            {values.sub_category == "Wakala" && <Grid item xs={6} >
+            {values.sub_category == "Wakala" && <Grid item xs={4} >
             <TextField
               id="visa_number"
               sx = {leftCss}
@@ -207,6 +221,7 @@ console.log('------',editData)
               type="text"
               fullWidth
               autoFocus
+              size='small'
               variant="outlined"
               helperText={touched.visa_number ? errors.visa_number : ""}
               error={touched.visa_number && Boolean(errors.visa_number)}
@@ -214,7 +229,7 @@ console.log('------',editData)
               onChange={handleChange("visa_number")}
             />
             </Grid>}
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="mobileNumber"
               label="Mobile Number"
@@ -222,16 +237,17 @@ console.log('------',editData)
               type="text"
               fullWidth
               autoFocus
+              size='small'
               required
               variant="outlined"
               helperText={touched.mobileNumber ? errors.mobileNumber : ""}
               error={touched.mobileNumber && Boolean(errors.mobileNumber)}
               value={values.mobileNumber}
               onChange={handleChange("mobileNumber")}
-              sx = {values.sub_category == "Wakala" ? rightCss : leftCss}
+              sx = {leftCss}
             /> 
             </Grid>
-            {values.sub_category != "Visa Chamber" &&<Grid item xs={6} >
+            {values.sub_category != "Visa Chamber" &&<Grid item xs={4} >
             <TextField
               id="agent_amount"
               label="Agent amount"
@@ -239,23 +255,25 @@ console.log('------',editData)
               type="text"
               fullWidth
               autoFocus
+              size='small'
               variant="outlined"
               helperText={touched.agent_amount ? errors.agent_amount : ""}
               error={touched.agent_amount && Boolean(errors.agent_amount)}
               value={values?.agent_amount || ""}
               onChange={(e)=>{setFieldValue('agent_amount',+e.target.value)}}
-              sx = {values.sub_category == "Wakala" ? leftCss : rightCss}
+              sx = {leftCss}
             /> 
             </Grid>}
-            {cssArray.includes(values.sub_category) && <Grid item xs={6} >
+            {cssArray.includes(values.sub_category) && <Grid item xs={4} >
             <TextField
               id="chamber_amount"
-              sx = {rightCss}
+              sx = {leftCss}
               label="Chamber Amount"
               name="chamber_amount"
               type="text"
               fullWidth
               autoFocus
+              size='small'
               variant="outlined"
               helperText={touched.chamber_amount ? errors.chamber_amount : ""}
               error={touched.chamber_amount && Boolean(errors.chamber_amount)}
@@ -263,7 +281,7 @@ console.log('------',editData)
               onChange={(e)=>{setFieldValue('chamber_amount',+e.target.value)}}
             />
             </Grid>}
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="service"
               sx = {leftCss }
@@ -275,6 +293,7 @@ console.log('------',editData)
               type="text"
               fullWidth
               autoFocus
+              size='small'
               variant="outlined" 
               helperText={touched.service ? errors.service : ""}
               error={touched.service && Boolean(errors.service)}
@@ -282,22 +301,23 @@ console.log('------',editData)
               onChange={(e)=>{setFieldValue('service',+e.target.value)}}
             />
             </Grid>
-            <Grid item xs={6} >
+            {["Work Visa","Wakala"].includes(values.sub_category) && <Grid item xs={4} >
             <TextField
               id="government_fee"
-              sx = {rightCss }
-              label="Government Fee"
+              sx = {leftCss }
+              label={values.sub_category == "Wakala"?"Injas Fee":"Government Fee"}
               name="government_fee"
               type="text"
               fullWidth
+              size='small'
               variant="outlined" 
               helperText={touched.government_fee ? errors.government_fee : ""}
               error={touched.government_fee && Boolean(errors.government_fee)}
               value={values.government_fee}
               onChange={(e)=>{setFieldValue('government_fee',+e.target.value)}}
             />
-            </Grid>
-            <Grid item xs={6} >
+            </Grid>}
+            <Grid item xs={4} >
             <TextField
               id="total_amount"
               sx = {leftCss}
@@ -306,6 +326,7 @@ console.log('------',editData)
               type="number"
               fullWidth
               autoFocus
+              size='small'
               required
               variant="outlined" 
               helperText={touched.total_amount ? errors.total_amount : ""}
@@ -314,14 +335,15 @@ console.log('------',editData)
               onChange={handleChange("total_amount")}
             />
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="paid_amount"
-              label={editData?`Paid amount-${editData.paid_amount}`:`Paid amount`}
+              label={editData?`Paid amount->>${editData.paid_amount}`:`Paid amount`}
               name="paid_amount"
               type="text"
               fullWidth
               autoFocus
+              size='small'
               // disabled = {editData}
               required
               variant="outlined"
@@ -329,10 +351,10 @@ console.log('------',editData)
               error={touched.paid_amount && Boolean(errors.paid_amount)}
               value={values?.paid_amount || ''}
               onChange={(e)=>{setFieldValue('paid_amount',+e.target.value)}}
-              sx = {rightCss }
+              sx = {leftCss }
             /> 
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
             <TextField
               id="balance"
               sx = {leftCss}
@@ -341,6 +363,7 @@ console.log('------',editData)
               type="number"
               fullWidth
               autoFocus
+              size='small'
               disabled
               required
               variant="outlined"
@@ -350,22 +373,23 @@ console.log('------',editData)
               onChange={handleChange("balance")}
             />
             </Grid>
-            {values.sub_category != "Visa Chamber" && <><Grid item xs={6}>
+            {values.sub_category != "Visa Chamber" && <><Grid item xs={4}>
                 <TextField
                   id="agent"
-                  sx={rightCss}
+                  sx={leftCss}
                   label="Agent Name"
                   name="agent"
                   type="text"
                   fullWidth
                   autoFocus
+                  size='small'
                   variant="outlined"
                   helperText={touched.agent ? errors.agent : ""}
                   error={touched.agent && Boolean(errors.agent)}
                   value={values.agent}
                   onChange={handleChange("agent")} />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                   <TextField
                     id="paid_date"
                     sx={leftCss}
@@ -374,21 +398,40 @@ console.log('------',editData)
                     type="Text"
                     fullWidth
                     autoFocus
+                    size='small'
                     variant="outlined"
                     helperText={touched.paid_date ? errors.paid_date : ""}
                     error={touched.paid_date && Boolean(errors.paid_date)}
                     value={values.paid_date}
                     onChange={handleChange("paid_date")} />
                 </Grid></>}
-            <Grid item xs={6} >
+            {values.sub_category == "Visit Chamber" && <Grid item xs={4} >
+            <TextField
+              id="application_number"
+              sx = {leftCss }
+              label="Appplication Number"
+              name="application_number"
+              type="text"
+              fullWidth
+              autoFocus
+              size='small'
+              variant="outlined"
+              helperText={touched.application_number ? errors.application_number : ""}
+              error={touched.application_number && Boolean(errors.application_number)}
+              value={values.application_number}
+              onChange={handleChange("application_number")}
+            />
+            </Grid>}
+            <Grid item xs={4} >
             <TextField
               id="remarks"
-              sx = {rightCss }
+              sx = {leftCss }
               label="Remarks"
               name="remarks"
               type="text"
               fullWidth
               autoFocus
+              size='small'
               variant="outlined"
               helperText={touched.remarks ? errors.remarks : ""}
               error={touched.remarks && Boolean(errors.remarks)}

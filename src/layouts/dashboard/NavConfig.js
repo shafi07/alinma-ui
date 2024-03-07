@@ -37,6 +37,11 @@ const navConfig = [
     icon: getIcon('mdi:wall'),
   },
   {
+    title: 'Agent',
+    path: '/dashboard/agent',
+    icon: getIcon('mdi:face-agent'),
+  },
+  {
     title: 'Expense',
     path: '/dashboard/expense',
     icon: getIcon('game-icons:expense'),

@@ -42,16 +42,19 @@ const leftCss = {
   marginRight:2,
 }
 
-const rightCss = {
-  marginTop: 2,
-  marginBottom: 2,
-  marginLeft:2,
-}
+// const rightCss = {
+//   marginTop: 2,
+//   marginBottom: 2,
+//   marginLeft:2,
+// }
 
 const validationSchema = Yup.object({
   sub_category: Yup.string().required("Select Category "),
   name: Yup.string().required("Enter Name"),
-  id_number: Yup.string().required("Enter ID Number").length(10,'Iqama number length should be 10'),
+  id_number: Yup.string().when("sub_category", (sub_category,schema) => {
+    if(["New Iqama"].includes(sub_category) ) return schema.optional()
+    else return schema.required("Enter ID Number").length(10,'Iqama number length should be 10')
+  }),
   mobileNumber: Yup.string().required("Enter Mobile Number").matches(/^\d{10}$/,'mobile number length should be 10'),
   total_amount: Yup.number(),
   balance:Yup.number(),
@@ -75,7 +78,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
     <Formik
     innerRef={formikRef}
     validationSchema={validationSchema}
-      initialValues={{
+    initialValues={{
         sub_category: editData ? editData.sub_category : "",
         name: editData ? editData.name :"",
         sponser_name: editData ? editData.sponser_name : "",
@@ -506,7 +509,7 @@ export default function FullScreenDialog({open,handleClose,submitHandler,loading
             <Grid item xs={4} >
             <TextField
               id="paid_amount"
-              label={editData?`Paid amount-${editData.paid_amount}`:`Paid amount`}
+              label={editData?`Paid amount->>${editData.paid_amount}`:`Paid amount`}
               name="paid_amount"
               type="text"
               // disabled={editData}
