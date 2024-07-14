@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import {
   Slide,
   Typography,
@@ -16,16 +16,9 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import * as Yup from "yup";
 import { Formik } from "formik";
+import { useLocation } from "react-router-dom";
 
-const subCategories = [
-  {value:'Baladiya Card',label:'Baladiya Card'},
-  {value:'Renew Pasport',label:'Renew Pasport'},
-  {value:'Vaccine',label:'Vaccine'},
-  {value:'Salary Transfer',label:'Salary Transfer'},
-  {value:'Qiwa',label:'Qiwa'},
-  {value:'Certificate',label:'Certificate'},
-  {value:'Rent agreement',label:'Rent agreement'}
-]
+
 const leftCss = {
   marginTop: 2,
   marginBottom: 2,
@@ -50,11 +43,31 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function FullScreenDialog({open,handleClose,loading,submitHandler,editData=null,editOtherHandler}) {
 
+ const urlPath = useLocation()
+
+ const path = urlPath.pathname.includes("passport")
+
+ const subCategories = path ?
+ [
+  {value:'Renew Pasport',label:'Renew Pasport'},
+  {value:'Translation',label:'Translation'},
+]
+  :
+  [
+  {value:'Baladiya Card',label:'Baladiya Card'},
+  {value:'Vaccine',label:'Vaccine'},
+  {value:'Salary Transfer',label:'Salary Transfer'},
+  {value:'Qiwa',label:'Qiwa'},
+  {value:'Gosi',label:'Gosi'},
+  {value:'Certificate',label:'Certificate'},
+  {value:'Rent agreement',label:'Rent agreement'}
+]
+
   return (
     <Formik
     validationSchema={validationSchema}
       initialValues={{
-        sub_category:editData ? editData.sub_category : "",
+        sub_category:editData?.sub_category || "",
         name: editData ? editData.name : "",
         sponser_name:editData ? editData.sponser_name :  "",
         id_number:editData ? editData.id_number :  "",
@@ -103,7 +116,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              {editData ? `OTHER-[${editData.createddate}]`:`OTHER`}
+              {editData ? `${path?`PASSPORT`:`OTHER`}-[${editData.createddate}]`:`${path?`PASSPORT`:`OTHER`}`}
             </Typography>
             <Button autoFocus color="inherit" onClick={() => handleSubmit()}>
               save
@@ -119,7 +132,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               name="sub_category"
               type="text"
               fullWidth
-              autoFocus
               size='small'
               required
               select={true}
@@ -145,7 +157,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               name="name"
               type="text"
               fullWidth
-              autoFocus
               size='small'
               required
               variant="outlined"
@@ -162,7 +173,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               name="sponser_name"
               type="text"
               fullWidth
-              autoFocus
               size='small'
               variant="outlined"
               helperText={touched.sponser_name ? errors.sponser_name : ""}
@@ -176,11 +186,10 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             <TextField
               id="id_number"
               sx = {leftCss}
-              label={values.sub_category == `Rent agreement`?"ID Number":"Iqama Number"}
+              label={values.sub_category == `Rent agreement` || path ?"ID Number":"Iqama Number"}
               name="id_number"
               type="text"
               fullWidth
-              autoFocus
               size='small'
               required
               variant="outlined"
@@ -197,7 +206,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               name="mobileNumber"
               type="text"
               fullWidth
-              autoFocus
               size='small'
               required
               variant="outlined"
@@ -215,7 +223,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               name="agent_amount"
               type="text"
               fullWidth
-              autoFocus
               size='small'
               variant="outlined"
               helperText={touched.agent_amount ? errors.agent_amount : ""}
@@ -236,7 +243,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               name="service"
               type="text"
               fullWidth
-              autoFocus
               size='small'
               required
               variant="outlined" 
@@ -254,7 +260,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               name="total_amount"
               type="number"
               fullWidth
-              autoFocus
               size='small'
               required
               variant="outlined" 
@@ -272,7 +277,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               type="text"
               // disabled = {editData}
               fullWidth
-              autoFocus
               size='small'
               required
               variant="outlined"
@@ -291,7 +295,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               name="balance"
               type="number"
               fullWidth
-              autoFocus
               size='small'
               disabled
               required
@@ -310,7 +313,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               name="agent"
               type="text"
               fullWidth
-              autoFocus
               size='small'
               variant="outlined"
               helperText={touched.agent ? errors.agent : ""}
@@ -327,7 +329,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               name="paid_date"
               type="Text"
               fullWidth
-              autoFocus
               size='small'
               variant="outlined"
               helperText={touched.paid_date ? errors.paid_date : ""}
@@ -344,7 +345,6 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               name="remarks"
               type="text"
               fullWidth
-              autoFocus
               size='small'
               variant="outlined"
               helperText={touched.remarks ? errors.remarks : ""}

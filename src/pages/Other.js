@@ -1,7 +1,7 @@
 // import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 // material
 import {
   Card,
@@ -67,6 +67,9 @@ import Toast from '../components/toast';
 // }
 
 export default function Other() {
+
+  const routerPath = useLocation()
+
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -111,6 +114,8 @@ export default function Other() {
 
   const navigate = useNavigate();
 
+  const path = routerPath.pathname.includes("passport")
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -128,7 +133,7 @@ export default function Other() {
 
   useEffect(() => {
     fetchData(query, status);
-  }, [query, reFetch, status]);
+  }, [query, reFetch, status, path]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -153,8 +158,17 @@ export default function Other() {
     setView(!view)
   }
 
+  const getUrl = async (query,status) => {
+    let url = query || status ? `${URL}/other?query=${query}&status=${status}` : `${URL}/other`
+    const isPassport = routerPath.pathname.includes("passport")
+    if (isPassport) {
+      url = query || status ? `${URL}/other?query=${query}&status=${status}&type=passport` : `${URL}/other?type=passport`
+    }
+    return url
+  } 
+
   const fetchData = async (query, status) => {
-    const url = query || status ? `${URL}/other?query=${query}&status=${status}` : `${URL}/other`
+    const url = await getUrl(query, status)
     setLoading(true)
     axios.get(url)
       .then((res) => {
@@ -310,10 +324,10 @@ export default function Other() {
         <Container>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h4" gutterBottom>
-              OTHER
+              {path ? `PASSPORT` : `OTHER`}
             </Typography>
             <Button variant="contained" sx={{ backgroundColor: '#F51720' }} onClick={() => setOpen(true)} startIcon={<Iconify icon="eva:plus-fill" />}>
-              New Other
+              {path ?`New Passport`:`New Other`}
             </Button>
             <CSVLink headers={otherHeaders} data={USERLIST ? USERLIST : []} filename={'test'}>
               <Button variant="contained" startIcon={<Iconify icon="prime:file-excel" />}>
@@ -341,7 +355,8 @@ export default function Other() {
                     />
                     <TableBody>
                       {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                        const { id, id_number, paid_date, status, agent = 'test', agent_amount = 777, fileid, name, sub_category = 'dss', insurance, service = 100, sponser_name, paid_amount = 'test', balance_amount = 'test', iqama = 'test', mol = 'test', mobilenumber = '989898989898', other = 'test', total_amount } = row;
+                        const { id, id_number, paid_date, status, agent = 'test', agent_amount , fileid, name, sub_category = 'dss', 
+                        insurance,uniqueId, service , sponser_name, paid_amount = 'test', balance_amount = 'test', iqama = 'test', mol = 'test', mobilenumber , other = 'test', total_amount } = row;
 
                         return (
                           <TableRow
@@ -360,7 +375,7 @@ export default function Other() {
                             <TableCell sx={{cursor:"pointer"}} onClick={() => editDataOpen(row)} component="th" scope="row" >
                               <Stack direction="row" alignItems="center" spacing={4}>
                                 <Typography variant="subtitle2" noWrap>
-                                  {fileid}
+                                  {path?uniqueId:fileid}
                                 </Typography>
                               </Stack>
                             </TableCell>

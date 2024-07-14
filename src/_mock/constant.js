@@ -1,4 +1,4 @@
-// export const URL = `http://localhost:8000`
+// export const URL = `http://localhost:9000`
 export const URL = `https://alinma-api.shellfixer.com`
 
 // --------- CSV File Headers----------- //
@@ -228,4 +228,13 @@ export const AGENT_TABLE_HEAD = [
   { id: 'fileDate', label: 'File-Date', alignRight: false },
   { id: 'service', label: 'Service', alignRight: false },
   { id: 'category', label: 'Category', alignRight: false },
+];
+
+export const CUSTOMER_TABLE_HEAD = [
+  { id: 'file', label: 'File', alignRight: false },
+  { id: 'name', label: 'Name', alignRight: false },
+  { id: 'id', label: 'ID', alignRight: false },
+  { id: 'mobileNumber', label: 'Mobile', alignRight: false },
+  // { id: 'status', label: 'Status', alignRight: false },
+  { id: '' },
 ];

@@ -14,6 +14,7 @@ import Other from './pages/Other'
 import Visa from './pages/visa';
 import Expense from './pages/expense';
 import Agent from './pages/agent';
+import Customer from './pages/customerDetails';
 
 // ----------------------------------------------------------------------
 
@@ -31,9 +32,11 @@ export default function Router() {
         { path: 'insurance', element: <Insurance />},
         { path: 'work', element:<Work />},
         { path: 'visa', element:<Visa />},
+        { path: 'passport', element:<Other /> },
         { path: 'other', element:<Other /> },
-        { path: 'expense', element:<Expense /> },
         { path: 'agent', element:<Agent /> },
+        { path: 'customer', element:<Customer /> },
+        { path: 'expense', element:<Expense /> },
       ],
     },
     {

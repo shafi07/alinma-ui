@@ -32,6 +32,11 @@ const navConfig = [
     icon: getIcon('grommet-icons:visa'),
   },
   {
+    title: 'Passport',
+    path: '/dashboard/passport',
+    icon: getIcon('icon-park-outline:passport'),
+  },
+  {
     title: 'Other',
     path: '/dashboard/other',
     icon: getIcon('mdi:wall'),
@@ -40,6 +45,11 @@ const navConfig = [
     title: 'Agent',
     path: '/dashboard/agent',
     icon: getIcon('mdi:face-agent'),
+  },
+  {
+    title: 'Customer-Details',
+    path: '/dashboard/customer',
+    icon: getIcon('carbon:customer-service'),
   },
   {
     title: 'Expense',
