@@ -29,49 +29,50 @@ import axios from 'axios';
 import moment from 'moment';
 import { URL,expenseHeaders,AGENT_TABLE_HEAD } from '../_mock/constant'
 import Toast from '../components/toast';
+import NewTable from './table';
 
 // ----------------------------------------------------------------------
 
 export default function Agent() {
   const [page, setPage] = useState(0);
-
   const [order, setOrder] = useState('asc');
-
   const [selected, setSelected] = useState([]);
-
   const [orderBy, setOrderBy] = useState('name');
-
   const [filterName, setFilterName] = useState('');
-
   const [query,setQuey]= useState('');
-
   const [rowsPerPage, setRowsPerPage] = useState(100);
-
   const [open,setOpen] = useState(false)
-
   const[USERLIST,setUSERLIST]=useState([])
-
   const [editData,setEditData]=useState(null)
-
   const [editModel,setEditModel]= useState(false)
-
   const [reFetch,setReFetch]=useState(false)
-
   const [loading,setLoading]=useState(true)
-
   const[status,setStatus] = useState('')
-
   let scrl = useRef(null);
-
   const [scrollX, setscrollX] = useState(0);
-
   const [scrolEnd, setscrolEnd] = useState(false);
-
   const [toast,setToast]=useState(false)
-
   const [message,setMessage]=useState(null)
-
   const navigate = useNavigate();
+  const [colDef] = useState([
+    { headerName: 'File ID',width: 150, field: 'fileid', sortable: true, filter: true,cellStyle: { fontWeight: 'bold', color: 'blue' }  },
+    { headerName: 'Agent', field: 'agent', sortable: true, filter: true },
+    { headerName: 'Service', field: 'service', sortable: true,filter: true },
+    { headerName: 'Sub Category', field: 'sub_category', sortable: true, filter: true },
+    { headerName: 'Agent', field: 'agent_amount', sortable: true, filter: true },
+    { 
+        headerName: 'Created Time', 
+        field: 'createdtime', 
+        sortable: true, 
+        filter: true,
+        valueFormatter: (params) => {
+            const date = new Date(params.value);
+            return date.toLocaleDateString(); // Format: MM/DD/YYYY based on locale
+          }, 
+    },
+    { headerName: 'Paid Date', field: 'paid_date', sortable: true, filter: true },
+])
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -114,6 +115,7 @@ export default function Agent() {
     const url = query ? `${URL}/agent?query=${query}` : `${URL}/agent`
     const response = await fetch(url);
     const newData = await response.json()
+    console.log('>><<<<',newData)
     setUSERLIST(newData)
     setLoading(false)
   };
@@ -160,20 +162,20 @@ export default function Agent() {
       })
   }
 
-  const handleDelete = async (id) => {
-    setLoading(true)
-    axios.delete(`${URL}/expense/${id}`)
-      .then((res) => {
-        setEditModel(!editModel)
-        setReFetch(!reFetch)
-        setMessage(res.data.message)
-        setToast(true)
-      }).catch((err) => {
-        setMessage(err.response.data.message)
-        setToast(true)
-        setLoading(false)
-      })
-  }
+  // const handleDelete = async (id) => {
+  //   setLoading(true)
+  //   axios.delete(`${URL}/expense/${id}`)
+  //     .then((res) => {
+  //       setEditModel(!editModel)
+  //       setReFetch(!reFetch)
+  //       setMessage(res.data.message)
+  //       setToast(true)
+  //     }).catch((err) => {
+  //       setMessage(err.response.data.message)
+  //       setToast(true)
+  //       setLoading(false)
+  //     })
+  // }
 
   const handleStatusFilter = async(data)=>{
     setStatus(data)
@@ -225,96 +227,7 @@ export default function Agent() {
           </Button>
           </CSVLink>
         </Stack>
-
-        <Card>
-          <UserListToolbar slide={slide} expense={false} handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
-          <Scrollbar>
-          {loading ? <Box sx={{ width:'100%',display:'flex',minHeight:'50vh',alignItems:'center',justifyContent:'center' }} >
-            <CircularProgress color="inherit" />
-          </Box>:
-            <TableContainer ref={scrl} onScroll={scrollCheck}  >
-              <Table style={{width:"100%"}} >
-                <UserListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={AGENT_TABLE_HEAD}
-                  rowCount={USERLIST.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
-                />
-                <TableBody>
-                  {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { service,id,fileid,paid_date,agent,agent_amount,createddate,stationary,other,remarks,sub_category  } = row;
-
-                    return (
-                      <TableRow
-                        hover
-                        key={id}
-                        tabIndex={-1}
-                        align = 'center'
-                        // sx = {{backgroundColor: balance_amount != 0?'#F7837C':'#73D393'}}
-                        // onClick={() => editOpen(row)} 
-                      >
-                        <TableCell sx={{cursor:"pointer"}} component="th" scope="row" >
-                          <Stack direction="row" alignItems="center" spacing={4}>
-                            <Typography variant="subtitle2" color={'blue'} noWrap>
-                              {fileid}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell width={"10%"} align="left">{agent}</TableCell>
-                        <TableCell width={"10%"} align="left">{paid_date}</TableCell>
-                        <TableCell align="left">{agent_amount}</TableCell>
-                        <TableCell align="left">{createddate}</TableCell>
-                        <TableCell align="left">{service}</TableCell>
-                        <TableCell align="left">{sub_category}</TableCell>
-                        {/* <TableCell align="left">{total_amount}</TableCell>
-                        <TableCell align="left">{remarks}</TableCell> */}
-                        {/* <TableCell align="left">
-                          < PrintIcon onClick={(e) =>{e.stopPropagation()
-                        handlePrint(row)} } />
-                        </TableCell> */}
-                        {/* <TableCell align="left">
-                        <Iconify icon="eva:trash-2-outline" width={24} height={24} onClick={(e) =>{e.stopPropagation()
-                            handleDelete(row.id)} } /> 
-                        </TableCell> */}
-                        {/* <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
-                          <UserMoreMenu />
-                        </TableCell> */}
-                      </TableRow>
-                    );
-                  })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-
-                {isUserNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
-              </Table>
-            </TableContainer>}
-          </Scrollbar>
-
-          <TablePagination
-            rowsPerPageOptions={[100]}
-            component="div"
-            count={USERLIST.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Card>
+        <NewTable rowData={USERLIST} colDef={colDef} />
       </Container>
       <Toast toast={toast} setToast={setToast} message={message} />
     </Page>

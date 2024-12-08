@@ -1,5 +1,5 @@
 import { filter } from 'lodash';
-import { useState,useEffect, useRef } from 'react';
+import { useState,useEffect, useRef, useMemo, useCallback } from 'react';
 import { useNavigate} from "react-router-dom";
 // material
 import {
@@ -30,6 +30,9 @@ import axios from 'axios';
 import moment from 'moment';
 import { URL,expenseHeaders, EXPENSE_TABLE_HEAD } from '../_mock/constant'
 import Toast from '../components/toast';
+import NewTable from './table';
+import DeleteCellRenderer from '../components/Cell-renders/DeleteCell';
+
 
 // ----------------------------------------------------------------------
 
@@ -64,44 +67,64 @@ function applySortFilter(array, comparator, query) {
 
 export default function Expense() {
   const [page, setPage] = useState(0);
-
   const [order, setOrder] = useState('asc');
-
   const [selected, setSelected] = useState([]);
-
   const [orderBy, setOrderBy] = useState('name');
-
   const [filterName, setFilterName] = useState('');
-
   const [query,setQuey]= useState('');
-
   const [rowsPerPage, setRowsPerPage] = useState(100);
-
   const [open,setOpen] = useState(false)
-
   const[USERLIST,setUSERLIST]=useState([])
-
   const [editData,setEditData]=useState(null)
-
   const [editModel,setEditModel]= useState(false)
-
   const [reFetch,setReFetch]=useState(false)
-
   const [loading,setLoading]=useState(true)
-
   const[status,setStatus] = useState('')
-
   let scrl = useRef(null);
-
   const [scrollX, setscrollX] = useState(0);
-
   const [scrolEnd, setscrolEnd] = useState(false);
-
   const [toast,setToast]=useState(false)
-
   const [message,setMessage]=useState(null)
+  const [colDef] = useState([
+    { headerName: 'File ID',width: 120, field: 'fileid', sortable: true, filter: true,cellStyle: { fontWeight: 'bold' }  },
+    { headerName: 'OTHER', field: 'other', sortable: true, editable:true, filter: true },
+    { headerName: 'Salary', field: 'salary', sortable: true, filter: true },
+    { headerName: 'Stationary', field: 'stationary', sortable: true, filter: true },
+    { headerName: 'Telephone', field: 'telephone', sortable: true, filter: true },
+    { headerName: 'Total Amount', field: 'total_amount', sortable: true, filter: true},
+    { 
+        headerName: 'Created Time', 
+        field: 'createdtime', 
+        sortable: true, 
+        filter: true,
+        valueFormatter: (params) => {
+            const date = new Date(params.value);
+            return date.toLocaleDateString(); // Format: MM/DD/YYYY based on locale
+          }, 
+    },
+    { headerName: 'Remarks', field: 'remarks', editable:true, sortable: true, filter: true },
+    { 
+      field: "actions",
+      pinned: "right" ,
+      cellRenderer: (params) => (
+        <DeleteCellRenderer
+          node={params.node}
+          api={params.api}
+          onDelete={handleDeleteRow} // Pass the deletion handler
+        />
+      ), 
+      width: 150,
+      floatingFilter: false ,
+      filter: false  
+    },
+])
 
   const navigate = useNavigate();
+
+  const handleDeleteRow = useCallback((deletedRow) => {
+    console.log("Deleted row data:>", deletedRow);
+    handleDelete(deletedRow.id)
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -257,8 +280,8 @@ export default function Expense() {
           </Button>
           </CSVLink>
         </Stack>
-
-        <Card>
+        <NewTable rowData={USERLIST} colDef={colDef} />
+        {/* <Card>
           <UserListToolbar slide={slide} expense={false} handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
           <Scrollbar>
           {loading ? <Box sx={{ width:'100%',display:'flex',minHeight:'50vh',alignItems:'center',justifyContent:'center' }} >
@@ -307,24 +330,24 @@ export default function Expense() {
                           < PrintIcon onClick={(e) =>{e.stopPropagation()
                         handlePrint(row)} } />
                         </TableCell> */}
-                        <TableCell align="left">
+                        {/* <TableCell align="left">
                         <Iconify icon="eva:trash-2-outline" width={24} height={24} onClick={(e) =>{e.stopPropagation()
                             handleDelete(row.id)} } /> 
-                        </TableCell>
+                        </TableCell> */}
                         {/* <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
                           <UserMoreMenu />
                         </TableCell> */}
-                      </TableRow>
-                    );
-                  })}
-                  {emptyRows > 0 && (
+                      {/* </TableRow> */}
+                    {/* ); */}
+                  {/* })} */}
+                  {/* {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell colSpan={6} />
                     </TableRow>
                   )}
-                </TableBody>
+                </TableBody> */}
 
-                {isUserNotFound && (
+                {/* {isUserNotFound && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -335,9 +358,9 @@ export default function Expense() {
                 )}
               </Table>
             </TableContainer>}
-          </Scrollbar>
+          </Scrollbar> */}
 
-          <TablePagination
+          {/* <TablePagination
             rowsPerPageOptions={[100]}
             component="div"
             count={USERLIST.length}
@@ -346,7 +369,7 @@ export default function Expense() {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-        </Card>
+        // </Card> */} 
       </Container>
       <Toast toast={toast} setToast={setToast} message={message} />
     </Page>

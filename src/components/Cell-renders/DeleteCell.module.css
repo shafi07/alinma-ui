@@ -1,0 +1,61 @@
+.buttonCell {
+    display: flex;
+    gap: 20px;
+    flex-direction: row-reverse;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+  
+    button {
+      appearance: none;
+      padding: 0.375em 1em 0.5em;
+      white-space: nowrap;
+      border-radius: 6px;
+      box-shadow: 0 0 0 4px transparent, 0 1px 2px 0 #0c111d11;
+      outline: none;
+      background-color: var(--ag-background-color);
+      color: var(--color-fg-primary, #101828);
+      border: 1px solid var(--ag-border-color);
+      cursor: pointer;
+    }
+  }
+  
+  /* Delete button */
+.removeButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+  background-color: #ffebee !important; /* Light red */
+  border: 1px solid #f44336; /* Red border */
+  transition: all 0.2s ease-in-out;
+}
+
+.removeButton:hover {
+  background-color: #ffcdd2; /* Slightly darker red on hover */
+  border-color: #d32f2f;
+}
+
+/* Print button */
+.printButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+  background-color: #e3f2fd !important; /* Light blue */
+  border: 1px solid #2196f3; /* Blue border */
+  transition: all 0.2s ease-in-out;
+}
+
+.printButton:hover {
+  background-color: #bbdefb; /* Slightly darker blue on hover */
+  border-color: #1976d2;
+}
+
+/* Common image style */
+button img {
+  width: 20px;
+}

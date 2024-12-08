@@ -1,6 +1,6 @@
 // import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate,useLocation } from "react-router-dom";
 // material
 import {
@@ -34,6 +34,8 @@ import EditBill from '../components/javasath/editBill'
 import View from 'src/components/view';
 import { URL, otherHeaders, OTHER_TABLE_HEAD } from '../_mock/constant'
 import Toast from '../components/toast';
+import DeleteCellRenderer from 'src/components/Cell-renders/DeleteCell';
+import NewTable from './table';
 
 // ----------------------------------------------------------------------
 
@@ -67,54 +69,118 @@ import Toast from '../components/toast';
 // }
 
 export default function Other() {
-
   const routerPath = useLocation()
-
   const [page, setPage] = useState(0);
-
   const [order, setOrder] = useState('asc');
-
   const [selected, setSelected] = useState([]);
-
   const [orderBy, setOrderBy] = useState('name');
-
   const [filterName, setFilterName] = useState('');
-
   const [query, setQuey] = useState('');
-
   const [rowsPerPage, setRowsPerPage] = useState(100);
-
   const [open, setOpen] = useState(false)
-
   const [USERLIST, setUSERLIST] = useState([])
-
   const [editData, setEditData] = useState(null)
-
   const [editModel, setEditModel] = useState(false)
-
   const [reFetch, setReFetch] = useState(false)
-
   const [loading, setLoading] = useState(true)
-
   const [status, setStatus] = useState('')
-
   const [view, setView] = useState(false)
-
   const [toast, setToast] = useState(false)
-
   const [message, setMessage] = useState(null)
-
   const [viewData, setViewData] = useState(null)
-
-  let scrl = useRef(null);
-
   const [scrollX, setscrollX] = useState(0);
-
   const [scrolEnd, setscrolEnd] = useState(false);
-
+  let scrl = useRef(null);
   const navigate = useNavigate();
-
   const path = routerPath.pathname.includes("passport")
+
+  const [colDef] = useState([
+    { headerName: 'File',width: 120, field: 'fileid', sortable: true, filter: true,cellStyle: { fontWeight: 'bold' }  },
+    { headerName: 'Name', field: 'name', sortable: true, editable:true, filter: true },
+    { headerName: 'ID number', field: 'id_number', sortable: true, editable:true, filter: true },
+    { headerName: 'Sub Category', field: 'sub_category', sortable: true,filter: true },
+    { headerName: 'Sponser Name', field: 'sponser_name', sortable: true,filter: true },
+    { 
+      headerName: 'Cash', 
+      field: 'cash', 
+      sortable: true,
+      valueGetter: (params) => (params.data.balance_amount == 0 ? "Paid" : "Credit"),
+      filter: true,
+      cellStyle: (params) => {
+        if (params.value === "Paid") {
+          return { color: "#229A16",fontWeight: 'bold',textAlign:"center" }; // Green for Adult
+        }
+        return { color: "#B72136",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+      }, 
+    },
+    {
+      headerName: "Status",
+      field: "status",
+      sortable: true,
+      filter: true,
+      editable: true, // Enable editing for the dropdown
+      cellEditor: "agSelectCellEditor", // Use the built-in dropdown editor
+      cellEditorParams: {
+        values: ["pending", "completed", "returned", "collected"], // Dropdown options
+      },
+      cellStyle: (params) => {
+        if (params.value === "completed") {
+          return { color: "#229A16",fontWeight: 'bold',textAlign:"center" }; // Green for Adult
+        }else if(params.value === "returned"){
+          return { color: "#F51720",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+        }else if(params.value === "collected"){
+          return { color: "#e1c340",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+        }else{
+          return { color: "#2065D1",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+        }
+      },
+    },
+    { headerName: 'Mobile', field: 'mobilenumber', sortable: true, editable:true, filter: true },
+    { headerName: 'Agent', field: 'agent', sortable: true,filter: true },
+    { headerName: 'Agent Date', field: 'paid_date', sortable: true,filter: true },
+    { headerName: 'Service Amount', field: 'service', sortable: true,filter: true },
+    { headerName: 'Agent Amount', field: 'agent_amount', sortable: true,filter: true },
+    { headerName: 'Total Amount', field: 'total_amount', sortable: true,filter: true },
+    { headerName: 'Paid Amount', field: 'paid_amount', sortable: true,filter: true },
+    { headerName: 'Balance Amount', field: 'balance_amount', sortable: true,filter: true },
+    // { 
+    //     headerName: 'Created Time', 
+    //     field: 'createdtime', 
+    //     sortable: true, 
+    //     filter: true,
+    //     valueFormatter: (params) => {
+    //         const date = new Date(params.value);
+    //         return date.toLocaleDateString(); // Format: MM/DD/YYYY based on locale
+    //       }, 
+    // },
+    { 
+      field: "actions",
+      pinned: "right" ,
+      cellRenderer: (params) => (
+        <DeleteCellRenderer
+          node={params.node}
+          api={params.api}
+          onDelete={handleDeleteRow}
+          onPrint = {handlePrint}
+          print = {true}
+        />
+      ), 
+      // minWidth: 194,
+      width: 150,
+      floatingFilter: false ,
+      filter: false  
+    },
+])
+
+const handleDeleteRow = useCallback((deletedRow) => {
+  console.log("Deleted row data:>", deletedRow);
+  handleDelete(deletedRow.id)
+}, []);
+
+// const handlePrintRow = useCallback((printRow) => {
+//   console.log("Deleted row data:>", printRow);
+//   // handleDelete(deletedRow.id)
+// }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -174,6 +240,7 @@ export default function Other() {
       .then((res) => {
         if (res.status == 200) {
           setUSERLIST(res.data)
+          console.log('>>><<<<',res.data)
           setLoading(false)
         } else {
           setUSERLIST([])
@@ -315,6 +382,15 @@ export default function Other() {
     }
   };
 
+  const handleCellClick = (params) => {
+    if (params.colDef.field === "fileid") {
+      // const clickedFileId = params.value; 
+      const clickedRowData = params.data;
+      editDataOpen(clickedRowData)
+    }
+   
+  }
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
   const isUserNotFound = USERLIST.length === 0;
 
@@ -335,8 +411,14 @@ export default function Other() {
               </Button>
             </CSVLink>
           </Stack>
-
-          <Card>
+          <NewTable 
+        rowData={USERLIST} 
+        colDef={colDef} 
+        handleCellClick={handleCellClick} 
+        editData = {editOther}
+        onDelete = {handleDeleteRow}
+        />
+          {/* <Card>
             <UserListToolbar slide={slide} handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
             <Scrollbar>
               {loading ? <Box sx={{ width: '100%', display: 'flex', minHeight: '50vh', alignItems: 'center', justifyContent: 'center' }} >
@@ -462,7 +544,7 @@ export default function Other() {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
-          </Card>
+          </Card> */}
         </Container>
         <Toast toast={toast} setToast={setToast} message={message} />
       </Page>
