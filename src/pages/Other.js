@@ -396,7 +396,7 @@ const handleDeleteRow = useCallback((deletedRow) => {
 
   return (
     <>
-      <Page title="Other">
+      <Page title={path?`Passport`:`Other`}>
         <Container>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h4" gutterBottom>

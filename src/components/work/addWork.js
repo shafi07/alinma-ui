@@ -34,6 +34,7 @@ const workType = [
   {value:'Cancel',label:'Cancel'},
   {value:'Transfer',label:'Transfer'},
   {value:'QR-Code',label:'QR-Code'},
+  {value:'Difa Madani',label:'Difa Madani'},
 ]
 
 const validationSchema = Yup.object({
