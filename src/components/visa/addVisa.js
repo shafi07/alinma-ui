@@ -23,6 +23,7 @@ const subCategories = [
   {value:'Visit Chamber',label:'Visit Chamber'},
   {value:'Wakala',label:'Wakala'},
   {value:'Visa Chamber',label:'Visa Chamber'},
+  {value:'Mofa',label:'Mofa'},
 ]
 
 const cssArray=['Visa Chamber','Wakala']
