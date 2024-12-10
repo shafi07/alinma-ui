@@ -136,8 +136,8 @@ export default function Other() {
       },
     },
     { headerName: 'Mobile', field: 'mobilenumber', sortable: true, editable:true, filter: true },
-    { headerName: 'Agent', field: 'agent', sortable: true,filter: true },
-    { headerName: 'Agent Date', field: 'paid_date', sortable: true,filter: true },
+    { headerName: 'Agent', field: 'agent', sortable: true,filter: true,editable:true },
+    { headerName: 'Agent Date', field: 'paid_date', sortable: true,filter: true, editable:true },
     { headerName: 'Service Amount', field: 'service', sortable: true,filter: true },
     { headerName: 'Agent Amount', field: 'agent_amount', sortable: true,filter: true },
     { headerName: 'Total Amount', field: 'total_amount', sortable: true,filter: true },
@@ -181,21 +181,6 @@ const handleDeleteRow = useCallback((deletedRow) => {
 //   console.log("Deleted row data:>", printRow);
 //   // handleDelete(deletedRow.id)
 // }, []);
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
 
   useEffect(() => {
     fetchData(query, status);
@@ -370,25 +355,29 @@ const handleDeleteRow = useCallback((deletedRow) => {
     }
   };
 
-  const scrollCheck = () => {
-    setscrollX(scrl.current.scrollLeft);
-    if (
-      Math.floor(scrl.current.scrollWidth - scrl.current.scrollLeft) <=
-      scrl.current.offsetWidth
-    ) {
-      setscrolEnd(true);
-    } else {
-      setscrolEnd(false);
-    }
-  };
+  // const scrollCheck = () => {
+  //   setscrollX(scrl.current.scrollLeft);
+  //   if (
+  //     Math.floor(scrl.current.scrollWidth - scrl.current.scrollLeft) <=
+  //     scrl.current.offsetWidth
+  //   ) {
+  //     setscrolEnd(true);
+  //   } else {
+  //     setscrolEnd(false);
+  //   }
+  // };
 
   const handleCellClick = (params) => {
     if (params.colDef.field === "fileid") {
       // const clickedFileId = params.value; 
       const clickedRowData = params.data;
       editDataOpen(clickedRowData)
+    }else if (params.colDef.field === "cash") {
+      // const clickedFileId = params.value; 
+      const clickedRowData = params.data;
+      editOpen(clickedRowData)
     }
-   
+   navigator.clipboard.writeText(params.value)
   }
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
@@ -398,7 +387,7 @@ const handleDeleteRow = useCallback((deletedRow) => {
     <>
       <Page title={path?`Passport`:`Other`}>
         <Container>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={-1}>
             <Typography variant="h4" gutterBottom>
               {path ? `PASSPORT` : `OTHER`}
             </Typography>
@@ -411,6 +400,8 @@ const handleDeleteRow = useCallback((deletedRow) => {
               </Button>
             </CSVLink>
           </Stack>
+          <UserListToolbar slide={slide} handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
+          
           <NewTable 
         rowData={USERLIST} 
         colDef={colDef} 

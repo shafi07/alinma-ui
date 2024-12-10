@@ -32,6 +32,7 @@ import { URL,expenseHeaders, EXPENSE_TABLE_HEAD } from '../_mock/constant'
 import Toast from '../components/toast';
 import NewTable from './table';
 import DeleteCellRenderer from '../components/Cell-renders/DeleteCell';
+// import CustomAutoCompleteEditor from './test';
 
 
 // ----------------------------------------------------------------------
@@ -85,8 +86,21 @@ export default function Expense() {
   const [scrolEnd, setscrolEnd] = useState(false);
   const [toast,setToast]=useState(false)
   const [message,setMessage]=useState(null)
+  // const handleValueChange = (data) => {
+  //   console.log('>>>???',data)
+  // }
   const [colDef] = useState([
     { headerName: 'File ID',width: 120, field: 'fileid', sortable: true, filter: true,cellStyle: { fontWeight: 'bold' }  },
+    // {
+    //   headerName: "Agent",
+    //   field: "agent",
+    //   editable: true,
+    //   cellEditor: CustomAutoCompleteEditor, // Use custom editor for suggestions
+    //   cellEditorParams: {
+    //     agents: ["John Doe", "Jane Smith", "Alice Johnson", "Bob Brown", "Emma White"],
+    //     onValueChange: handleValueChange, // Pass function as prop
+    //   },
+    // },
     { headerName: 'OTHER', field: 'other', sortable: true, editable:true, filter: true },
     { headerName: 'Salary', field: 'salary', sortable: true, filter: true },
     { headerName: 'Stationary', field: 'stationary', sortable: true, filter: true },
@@ -118,6 +132,8 @@ export default function Expense() {
       filter: false  
     },
 ])
+
+
 
   const navigate = useNavigate();
 

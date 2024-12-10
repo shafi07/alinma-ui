@@ -15,7 +15,7 @@ const NewTable = ({rowData,colDef=[],handleCellClick,editData}) => {
       
 
   return (
-    <div className="ag-theme-alpine" style={{ height: 600, width: "100%" }}>
+    <div className="ag-theme-alpine" style={{ height: 600, width: "100%"}}>
       <AgGridReact
         columnDefs={colDef}
         rowData={rowData}
@@ -29,6 +29,7 @@ const NewTable = ({rowData,colDef=[],handleCellClick,editData}) => {
         }}
         rowHeight={60} 
         onCellClicked={handleCellClick}
+        // suppressRowTransform={true}
       />
     </div>
   );

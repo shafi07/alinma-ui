@@ -38,47 +38,26 @@ import { URL, javasathHeaders, JAVASATH_TABLE_HEAD } from '../_mock/constant'
 
 export default function User() {
   const [page, setPage] = useState(0);
-
   const [order, setOrder] = useState('asc');
-
   const [selected, setSelected] = useState([]);
-
   const [orderBy, setOrderBy] = useState('name');
-
   const [filterName, setFilterName] = useState('');
-
   const [query,setQuey]= useState('');
-
   const [rowsPerPage, setRowsPerPage] = useState(50);
-
   const [open,setOpen] = useState(false)
-
   const[USERLIST,setUSERLIST]=useState([])
-
   const [editData,setEditData]=useState(null)
-
   const [editModel,setEditModel]= useState(false)
-
   const [reFetch,setReFetch]=useState(false)
-
   const [loading,setLoading]=useState(true)
-
   const[status,setStatus] = useState('')
-
   const[view,setView]=useState(false)
-
   let scrl = useRef(null);
-
   const [scrollX, setscrollX] = useState(0);
-  
   const [scrolEnd, setscrolEnd] = useState(false);
-
   const [toast,setToast]=useState(false)
-
   const [message,setMessage]=useState(null)
-
   const[viewData,setViewData]=useState(null)
-
   const navigate = useNavigate();
 
   const handleRequestSort = (event, property) => {

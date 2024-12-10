@@ -272,7 +272,7 @@ const handleCellClick = (params) => {
     <>
     <Page title="Customer Details">
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={-1}>
           <Typography variant="h4" gutterBottom>
             CUSTOMER-DETAILS
           </Typography>
@@ -285,7 +285,7 @@ const handleCellClick = (params) => {
           </Button>
           </CSVLink>
         </Stack>
-
+        <UserListToolbar expense={false} handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
         <NewTable 
         rowData={USERLIST} 
         colDef={colDef} 

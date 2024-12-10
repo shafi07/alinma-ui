@@ -57,6 +57,7 @@ export default function UserListToolbar({handleStatusFilter, expense=true, slide
       ) : (<>
         {/* <Button onClick={() => slide(-200)} >{'<'}</Button> */}
         <SearchStyle
+        sx={{  height: 35 }}
           value={filterName}
           onChange={onFilterName}
           placeholder={expense?"Search File or Name...":"Search Date..."}
@@ -66,13 +67,13 @@ export default function UserListToolbar({handleStatusFilter, expense=true, slide
             </InputAdornment>
           }
         />
-        <Button onClick={() => slide(-200)} >{'<'}</Button>
-        <Button onClick={() => slide(+200)} >{'>'}</Button>
+        {/* <Button onClick={() => slide(-200)} >{'<'}</Button>
+        <Button onClick={() => slide(+200)} >{'>'}</Button> */}
         { expense &&  <Select
            onChange={(e) => handleStatusFilter(e.target.value)} 
           defaultValue={status == ''? 'All':status}
            name='status'
-           sx={{width: 240,width: '200px',height: 55 }} >
+           sx={{width: 240,width: '200px',height: 35 }} >
             <MenuItem value={'All'}>All</MenuItem>
             <MenuItem value={"pending"}>Pending</MenuItem>
             <MenuItem value={"completed"}>Completed</MenuItem>
@@ -81,23 +82,7 @@ export default function UserListToolbar({handleStatusFilter, expense=true, slide
             <MenuItem value={"collected"}>Collected</MenuItem>
           </Select>}
         </>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <Iconify icon="eva:trash-2-fill" />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          {/* <IconButton>
-            <Iconify icon="ic:round-filter-list" />
-          </IconButton> */}
-          <Filter/>
-        </Tooltip>
-        // <Button onClick={() => slide(+200)} >{'>'}</Button>
-      )}
+      )}   
     </RootStyle>
   );
 }
