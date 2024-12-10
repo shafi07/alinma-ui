@@ -1,47 +1,31 @@
-import { sentenceCase } from 'change-case';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from "react-router-dom";
 // material
 import {
-  Card,
-  Table,
   Stack,
   Button,
-  TableRow,
-  TableBody,
-  TableCell,
   Container,
   Typography,
-  TableContainer,
-  TablePagination,
-  CircularProgress,
-  Select,
-  MenuItem,
 } from '@mui/material';
 // components
 import Page from '../components/Page';
-import Label from '../components/Label';
-import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
-import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
+import { UserListToolbar  } from '../sections/@dashboard/user';
 import AddBill from '../components/javasath/addJavasath'
 import EditBill from '../components/javasath/editBill'
 import Toast from '../components/toast';
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
-import { Box } from '@mui/system';
 import View from 'src/components/view';
-import { URL, javasathHeaders, JAVASATH_TABLE_HEAD } from '../_mock/constant'
+import { URL, javasathHeaders } from '../_mock/constant'
+import DeleteCellRenderer from 'src/components/Cell-renders/DeleteCell';
+import NewTable from './table';
 
 // ----------------------------------------------------------------------
 
 export default function User() {
   const [page, setPage] = useState(0);
-  const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
-  const [orderBy, setOrderBy] = useState('name');
-  const [filterName, setFilterName] = useState('');
   const [query,setQuey]= useState('');
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [open,setOpen] = useState(false)
@@ -52,19 +36,93 @@ export default function User() {
   const [loading,setLoading]=useState(true)
   const[status,setStatus] = useState('')
   const[view,setView]=useState(false)
-  let scrl = useRef(null);
-  const [scrollX, setscrollX] = useState(0);
-  const [scrolEnd, setscrolEnd] = useState(false);
   const [toast,setToast]=useState(false)
   const [message,setMessage]=useState(null)
   const[viewData,setViewData]=useState(null)
   const navigate = useNavigate();
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
+  const [colDef] = useState([
+    { headerName: 'File',width: 120, field: 'fileid', sortable: true, filter: true,cellStyle: { fontWeight: 'bold' }  },
+    { headerName: 'Name', field: 'name', sortable: true, editable:true, filter: true },
+    { headerName: 'Sub Category', field: 'sub_category', sortable: true,filter: true },
+    { headerName: 'ID', field: 'id_number', sortable: true, editable:true, filter: true },
+    { headerName: 'Sponser Name', field: 'sponser_name', sortable: true,filter: true, editable:true },
+    { 
+      headerName: 'Cash', 
+      field: 'cash', 
+      // pinned: "right" ,
+      sortable: true,
+      valueGetter: (params) => (params.data.balance_amount == 0 ? "Paid" : "Credit"),
+      filter: true,
+      cellStyle: (params) => {
+        if (params.value === "Paid") {
+          return { color: "#229A16",fontWeight: 'bold',textAlign:"center" }; // Green for Adult
+        }
+        return { color: "#B72136",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+      }, 
+      width: 100,
+    },
+    {
+      headerName: "Status",
+      field: "status",
+      sortable: true,
+      filter: true,
+      editable: true, // Enable editing for the dropdown
+      cellEditor: "agSelectCellEditor", // Use the built-in dropdown editor
+      cellEditorParams: {
+        values: ["pending", "completed", "returned", "collected"], // Dropdown options
+      },
+      cellStyle: (params) => {
+        if (params.value === "completed") {
+          return { color: "#229A16",fontWeight: 'bold',textAlign:"center" }; // Green for Adult
+        }else if(params.value === "returned"){
+          return { color: "#F51720",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+        }else if(params.value === "collected"){
+          return { color: "#e1c340",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+        }else{
+          return { color: "#2065D1",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+        }
+      },
+    },
+    { headerName: 'Mobile', field: 'mobilenumber', sortable: true, editable:true, filter: true },
+    { headerName: 'Agent Amount', field: 'agent_amount', sortable: true,filter: true },
+    { headerName: 'Service', field: 'service', sortable: true,filter: true },
+    { headerName: 'Total Amount', field: 'total_amount', sortable: true,filter: true },
+    { headerName: 'Paid Amount', field: 'paid_amount', sortable: true,filter: true },
+    { headerName: 'Balance Amount', field: 'balance_amount', sortable: true,filter: true },
+    // { 
+    //     headerName: 'Created Time', 
+    //     field: 'createdtime', 
+    //     sortable: true, 
+    //     filter: true,
+    //     valueFormatter: (params) => {
+    //         const date = new Date(params.value);
+    //         return date.toLocaleDateString(); // Format: MM/DD/YYYY based on locale
+    //       }, 
+    // },
+    { 
+      field: "actions",
+      pinned: "right" ,
+      cellRenderer: (params) => (
+        <DeleteCellRenderer
+          node={params.node}
+          api={params.api}
+          onDelete={handleDeleteRow}
+          onPrint = {handlePrint}
+          print = {true}
+        />
+      ), 
+      // minWidth: 194,
+      width: 150,
+      floatingFilter: false ,
+      filter: false  
+    },
+])
+
+const handleDeleteRow = useCallback((deletedRow) => {
+  console.log("Deleted row data:>", deletedRow);
+  handleDelete(deletedRow.id)
+}, []);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -223,41 +281,26 @@ export default function User() {
     setView(true)
   }
 
-  const slide = (shift) => {
-    scrl.current.scrollLeft += shift;
-    setscrollX(scrollX + shift);
-    if (
-      Math.floor(scrl.current.scrollWidth - scrl.current.scrollLeft) <=
-      scrl.current.offsetWidth
-    ) {
-      setscrolEnd(true);
-    } else {
-      setscrolEnd(false);
+
+  const handleCellClick = (params) => {
+    if (params.colDef.field === "fileid") {
+      // const clickedFileId = params.value; 
+      const clickedRowData = params.data;
+      editDataOpen(clickedRowData)
+    }else if (params.colDef.field === "cash") {
+      // const clickedFileId = params.value; 
+      const clickedRowData = params.data;
+      editOpen(clickedRowData)
+    }else{
+      navigator.clipboard.writeText(params.value)
     }
-  };
-
-  const scrollCheck = () => {
-    setscrollX(scrl.current.scrollLeft);
-    if (
-      Math.floor(scrl.current.scrollWidth - scrl.current.scrollLeft) <=
-      scrl.current.offsetWidth
-    ) {
-      setscrolEnd(true);
-    } else {
-      setscrolEnd(false);
-    }
-  };
-
-
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
-
-  const isUserNotFound = USERLIST.length === 0;
+  }
 
   return (
     <>
     <Page title="Javasath">
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={-1}>
           <Typography variant="h4" gutterBottom>
             JAVASATH
           </Typography>
@@ -270,128 +313,13 @@ export default function User() {
           </Button>
           </CSVLink>
         </Stack>
-
-        <Card>
-          <UserListToolbar slide={slide} handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
-          <Scrollbar >
-          {loading ? <Box sx={{ width:'100%',display:'flex',minHeight:'50vh',alignItems:'center',justifyContent:'center' }} >
-            <CircularProgress color="inherit" />
-          </Box>:
-            <TableContainer ref={scrl} onScroll={scrollCheck}  >
-              <Table style={{width:"125%"}} >
-                <UserListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={JAVASATH_TABLE_HEAD}
-                  rowCount={USERLIST.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
-                />
-                <TableBody>
-                  {USERLIST.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const {id, id_number, fileid, name, sub_category,  sponser_name, balance_amount, mobilenumber,total_amount, status,re_entry_type} = row;
-                    return (
-                      <TableRow
-                        hover
-                        key={id}
-                        tabIndex={-1}
-                        align = 'center'
-                        sx={{
-                          "&:hover": {
-                            backgroundColor: balance_amount == 0 ? "#B6E2D3 !important" :"#FAE8E0 !important" 
-                          }
-                        }}
-                        onClick={() => editOpen(row)} 
-                      >
-                        <TableCell sx={{cursor:"pointer"}} onClick={() => editDataOpen(row)} component="th" scope="row" >
-                          <Stack direction="row" alignItems="center" spacing={4}>
-                            <Typography variant="subtitle2" noWrap>
-                              {fileid}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(name)} } component="th" scope="row" >
-                          <Stack direction="row" alignItems="center" spacing={4}>
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(sub_category)} } align="left">{sub_category == 'Re Entry'?`${sub_category}/${re_entry_type}`:sub_category}</TableCell>
-                        <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(id_number)} } component="th" scope="row" >
-                          <Stack direction="row" alignItems="center" spacing={4}>
-                            <Typography variant="subtitle2" noWrap>
-                              {id_number}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell onClick={(e) =>{e.stopPropagation();navigator.clipboard.writeText(sponser_name)} } align="left">{sponser_name}</TableCell>
-                        <TableCell align="left">
-                          <Label variant="ghost" color={(balance_amount != 0 && 'error') || 'success'}>
-                            {sentenceCase(balance_amount == 0 ? 'Paid':'Credit')}
-                          </Label>
-                        </TableCell>
-                        <TableCell onClick={(e) =>{e.stopPropagation()} }  align="left">
-                          <Select onChange={(e)=>handleStatusChange(e.target.value,id)} defaultValue={status} sx={{height: 30,width:'84%' }} >
-                            <MenuItem value={"pending"}>Pending</MenuItem>
-                            <MenuItem value={"completed"}>Completed</MenuItem>
-                            <MenuItem value={"returned"}>Returned</MenuItem>
-                          </Select>
-                        </TableCell>
-                        <TableCell align="left">{mobilenumber}</TableCell>
-                        <TableCell align="left">{total_amount}</TableCell>
-                        <TableCell align="left">{balance_amount}</TableCell>
-                        <TableCell align="left" >
-                            <Iconify icon="eva:trash-2-outline" width={24} height={24} onClick={(e) =>{e.stopPropagation()
-                            handleDelete(row.id)} } /> 
-                        </TableCell>
-                        <TableCell onClick={(e) =>{e.stopPropagation()} }  align="right">
-                          <UserMoreMenu 
-                          row={row} 
-                          handlePrint={handlePrint} 
-                          viewOpen={viewOpen} 
-                          editDataOpen={editDataOpen} 
-                          />
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-
-                {isUserNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={query} />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
-              </Table>
-            </TableContainer>}
-          </Scrollbar>
-          <TablePagination
-            rowsPerPageOptions={[100]} 
-            component="div"
-            count={USERLIST.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            backIconButtonProps={{
-              "aria-label": "Previous Page",
-            }}
-            nextIconButtonProps={{
-              "aria-label": "Next Page",
-            }}
-          />
-        </Card>
+        <UserListToolbar handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
+        <NewTable 
+        rowData={USERLIST} 
+        colDef={colDef} 
+        handleCellClick={handleCellClick} 
+        editData = {editJavazathHandler}
+        />
       </Container>
       {toast&&<Toast toast={toast} setToast={setToast} message={message} />}
     </Page>
