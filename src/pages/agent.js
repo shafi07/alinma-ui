@@ -1,33 +1,20 @@
-import { useState,useEffect, useRef } from 'react';
+import { useState,useEffect } from 'react';
 import { useNavigate} from "react-router-dom";
 // material
 import {
-  Card,
-  Table,
   Stack,
   Button,
-  TableRow,
-  TableBody,
-  TableCell,
   Container,
   Typography,
-  TableContainer,
-  TablePagination,
-  CircularProgress,
-  Box,
 } from '@mui/material';
 // components
 import Page from '../components/Page';
-import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
-import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 import AddBill from '../components/expense/addExpense'
 import EditBill from '../components/javasath/editBill'
 import { CSVLink } from 'react-csv';
 import axios from 'axios';
-import moment from 'moment';
-import { URL,expenseHeaders,AGENT_TABLE_HEAD } from '../_mock/constant'
+import { URL,expenseHeaders } from '../_mock/constant'
 import Toast from '../components/toast';
 import NewTable from './table';
 
@@ -38,7 +25,6 @@ export default function Agent() {
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
-  const [filterName, setFilterName] = useState('');
   const [query,setQuey]= useState('');
   const [rowsPerPage, setRowsPerPage] = useState(100);
   const [open,setOpen] = useState(false)
@@ -48,9 +34,6 @@ export default function Agent() {
   const [reFetch,setReFetch]=useState(false)
   const [loading,setLoading]=useState(true)
   const[status,setStatus] = useState('')
-  let scrl = useRef(null);
-  const [scrollX, setscrollX] = useState(0);
-  const [scrolEnd, setscrolEnd] = useState(false);
   const [toast,setToast]=useState(false)
   const [message,setMessage]=useState(null)
   const navigate = useNavigate();
@@ -115,7 +98,6 @@ export default function Agent() {
     const url = query ? `${URL}/agent?query=${query}` : `${URL}/agent`
     const response = await fetch(url);
     const newData = await response.json()
-    console.log('>><<<<',newData)
     setUSERLIST(newData)
     setLoading(false)
   };
@@ -124,10 +106,6 @@ export default function Agent() {
     setEditData(data)
     setEditModel(true)
   }
-
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
-
-  const isUserNotFound = USERLIST.length === 0;
 
   const submitExpense = async (data,actions) => {
     setLoading(true)
@@ -162,21 +140,6 @@ export default function Agent() {
       })
   }
 
-  // const handleDelete = async (id) => {
-  //   setLoading(true)
-  //   axios.delete(`${URL}/expense/${id}`)
-  //     .then((res) => {
-  //       setEditModel(!editModel)
-  //       setReFetch(!reFetch)
-  //       setMessage(res.data.message)
-  //       setToast(true)
-  //     }).catch((err) => {
-  //       setMessage(err.response.data.message)
-  //       setToast(true)
-  //       setLoading(false)
-  //     })
-  // }
-
   const handleStatusFilter = async(data)=>{
     setStatus(data)
   }
@@ -184,31 +147,6 @@ export default function Agent() {
   const handlePrint = async(data)=>{
     navigate('/print',{state:{path:"expense",...data}})
   }
-
-  const slide = (shift) => {
-    scrl.current.scrollLeft += shift;
-    setscrollX(scrollX + shift);
-    if (
-      Math.floor(scrl.current.scrollWidth - scrl.current.scrollLeft) <=
-      scrl.current.offsetWidth
-    ) {
-      setscrolEnd(true);
-    } else {
-      setscrolEnd(false);
-    }
-  };
-
-  const scrollCheck = () => {
-    setscrollX(scrl.current.scrollLeft);
-    if (
-      Math.floor(scrl.current.scrollWidth - scrl.current.scrollLeft) <=
-      scrl.current.offsetWidth
-    ) {
-      setscrolEnd(true);
-    } else {
-      setscrolEnd(false);
-    }
-  };
 
   return (
     <>
