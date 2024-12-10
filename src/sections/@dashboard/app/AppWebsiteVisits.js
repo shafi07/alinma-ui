@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import merge from 'lodash/merge';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { Card, CardHeader, Box } from '@mui/material';
@@ -16,7 +15,7 @@ AppWebsiteVisits.propTypes = {
 };
 
 export default function AppWebsiteVisits({ title, subheader, chartLabels, chartData, ...other }) {
-  const chartOptions = merge(BaseOptionChart(), {
+  const chartOptions =  {
     plotOptions: { bar: { columnWidth: '16%' } },
     fill: { type: chartData.map((i) => i.fill) },
     labels: chartLabels,
@@ -33,7 +32,7 @@ export default function AppWebsiteVisits({ title, subheader, chartLabels, chartD
         },
       },
     },
-  });
+  };
 
   return (
     <Card {...other}>

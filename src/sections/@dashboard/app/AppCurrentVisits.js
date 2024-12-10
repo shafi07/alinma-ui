@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import merge from 'lodash/merge';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
@@ -46,7 +45,7 @@ export default function AppCurrentVisits({ title, subheader, chartColors, chartD
 
   const chartSeries = chartData.map((i) => i.value);
 
-  const chartOptions = merge(BaseOptionChart(), {
+  const chartOptions =  {
     colors: chartColors,
     labels: chartLabels,
     stroke: { colors: [theme.palette.background.paper] },
@@ -64,7 +63,7 @@ export default function AppCurrentVisits({ title, subheader, chartColors, chartD
     plotOptions: {
       pie: { donut: { labels: { show: false } } },
     },
-  });
+  };
 
   return (
     <Card {...other}>

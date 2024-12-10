@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import merge from 'lodash/merge';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { Box, Card, CardHeader } from '@mui/material';
@@ -21,23 +20,7 @@ export default function AppConversionRates({ title, subheader, chartData, ...oth
 
   const chartSeries = chartData.map((i) => i.value);
 
-  const chartOptions = merge(BaseOptionChart(), {
-    tooltip: {
-      marker: { show: false },
-      y: {
-        formatter: (seriesName) => fNumber(seriesName),
-        title: {
-          formatter: () => '',
-        },
-      },
-    },
-    plotOptions: {
-      bar: { horizontal: true, barHeight: '28%', borderRadius: 2 },
-    },
-    xaxis: {
-      categories: chartLabels,
-    },
-  });
+  const chartOptions = {}
 
   return (
     <Card {...other}>

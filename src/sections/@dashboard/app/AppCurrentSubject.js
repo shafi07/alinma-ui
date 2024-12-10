@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import merge from 'lodash/merge';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -42,26 +41,14 @@ AppCurrentSubject.propTypes = {
 };
 
 export default function AppCurrentSubject({ title, subheader, chartData, chartColors, chartLabels, ...other }) {
-  const chartOptions = merge(BaseOptionChart(), {
-    stroke: { width: 2 },
-    fill: { opacity: 0.48 },
-    legend: { floating: true, horizontalAlign: 'center' },
-    xaxis: {
-      categories: chartLabels,
-      labels: {
-        style: {
-          colors: chartColors,
-        },
-      },
-    },
-  });
+  const chartOptions = {}
 
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
 
       <ChartWrapperStyle dir="ltr">
-        <ReactApexChart type="radar" series={chartData} options={chartOptions} height={340} />
+        <ReactApexChart type="radar" series={chartData}  height={340} />
       </ChartWrapperStyle>
     </Card>
   );
