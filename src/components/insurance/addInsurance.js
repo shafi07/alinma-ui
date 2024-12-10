@@ -32,7 +32,7 @@ const validationSchema = Yup.object({
   name: Yup.string().required("Enter Name)"),
   sponser_name: Yup.string().required("Enter Sponser Name"),
   id_number: Yup.string().required("Enter ID Number").length(10,'Iqama number length should be 10'),
-  mobileNumber: Yup.string().required("Enter Mobile Number").matches(/^\d{10}$/,'mobile number length should be 10'),
+  mobilenumber: Yup.string().required("Enter Mobile Number").matches(/^\d{10}$/,'mobile number length should be 10'),
   total_amount: Yup.number().required("Enter Amount"),
   balance:Yup.number(),
 });
@@ -53,7 +53,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
         sponser_name:editData ? editData.sponser_name : "",
         id_number:editData ? editData.id_number : "",
         total_amount:editData ? editData.total_amount : "",
-        mobileNumber:editData ? editData.mobilenumber : "",
+        mobilenumber:editData ? editData.mobilenumber : "",
         paid_amount:null,
         balance:editData ? editData.balance : '',
         remarks:editData ? editData.remarks :'',
@@ -68,7 +68,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
         values.paid_amount = values.paid_amount ? values.paid_amount :0
         values.agent_amount = values.agent_amount ? values.agent_amount : 0
         if(editData){
-          editInsuranceHandler({...values,id:editData.id},actions)
+          editInsuranceHandler({...values,id:editData.id,status:editData.status},actions)
         }else{
           submitHandler(values,actions)
         } 
@@ -243,18 +243,18 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
             </Grid>
             <Grid item xs={4} >
             <TextField
-              id="mobileNumber"
+              id="mobilenumber"
               label="Mobile Number"
-              name="mobileNumber"
+              name="mobilenumber"
               type="text"
               size='small'
               fullWidth
               required
               variant="outlined"
-              helperText={touched.mobileNumber ? errors.mobileNumber : ""}
-              error={touched.mobileNumber && Boolean(errors.mobileNumber)}
-              value={values.mobileNumber}
-              onChange={handleChange("mobileNumber")}
+              helperText={touched.mobilenumber ? errors.mobilenumber : ""}
+              error={touched.mobilenumber && Boolean(errors.mobilenumber)}
+              value={values.mobilenumber}
+              onChange={handleChange("mobilenumber")}
               sx = {leftCss}
             /> 
             </Grid>

@@ -326,8 +326,9 @@ const handleDeleteRow = useCallback((deletedRow) => {
       // const clickedFileId = params.value; 
       const clickedRowData = params.data;
       editOpen(clickedRowData)
+    }else{
+      navigator.clipboard.writeText(params.value)
     }
-   navigator.clipboard.writeText(params.value)
   }
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
@@ -356,7 +357,7 @@ const handleDeleteRow = useCallback((deletedRow) => {
         rowData={USERLIST} 
         colDef={colDef} 
         handleCellClick={handleCellClick} 
-        editData = {editOther}
+        editData = {editOtherHandler}
         onDelete = {handleDeleteRow}
         />
         </Container>

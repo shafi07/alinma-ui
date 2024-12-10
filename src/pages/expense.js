@@ -21,13 +21,6 @@ import DeleteCellRenderer from '../components/Cell-renders/DeleteCell';
 import { UserListToolbar } from 'src/sections/@dashboard/user';
 // import CustomAutoCompleteEditor from './test';
 
-
-// ----------------------------------------------------------------------
-
-
-
-
-
 export default function Expense() {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -42,9 +35,6 @@ export default function Expense() {
   const [reFetch,setReFetch]=useState(false)
   const [loading,setLoading]=useState(true)
   const[status,setStatus] = useState('')
-  let scrl = useRef(null);
-  const [scrollX, setscrollX] = useState(0);
-  const [scrolEnd, setscrolEnd] = useState(false);
   const [toast,setToast]=useState(false)
   const [message,setMessage]=useState(null)
   // const handleValueChange = (data) => {

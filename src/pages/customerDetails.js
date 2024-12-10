@@ -134,7 +134,6 @@ const handleCellClick = (params) => {
   }
 
   const editCustomer = async (data) => {
-    console.log('>>???',data)
     setLoading(true)
     axios.put(`${URL}/customer`, data)
       .then((res) => {

@@ -32,7 +32,7 @@ const validationSchema = Yup.object({
   sub_category: Yup.string().required("Enter Category Name"),
   name: Yup.string().required("Enter Name"),
   id_number: Yup.string().required("Enter ID Number").length(10,'Iqama number length should be 10'),
-  mobileNumber: Yup.string().required("Enter Mobile Number").matches(/^\d{10}$/,'mobile number length should be 10'),
+  mobilenumber: Yup.string().required("Enter Mobile Number").matches(/^\d{10}$/,'mobile number length should be 10'),
   visa_number: Yup.string().when("sub_category",{is:"Wakala",then:Yup.string().required("Enter Visa Number")}),
   balance:Yup.number(),
 });
@@ -60,7 +60,7 @@ console.log('------',editData)
         sponser_name: editData ? editData.sponser_name : "",
         id_number: editData ? editData.id_number : "",
         total_amount: editData ? editData.total_amount : "",
-        mobileNumber: editData ? editData.mobilenumber : "",
+        mobilenumber: editData ? editData.mobilenumber : "",
         paid_amount: null,
         balance_amount: editData ? editData.balance_amount : '',
         remarks: editData ? editData.remarks : '',
@@ -77,7 +77,7 @@ console.log('------',editData)
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
         if (editData){
-        editVisaHandler({...values,id:editData.id},actions)
+        editVisaHandler({...values,id:editData.id,status:editData.status},actions)
         }else{
           submitHandler(values,actions)
         } 
@@ -232,19 +232,19 @@ console.log('------',editData)
             </Grid>}
             <Grid item xs={4} >
             <TextField
-              id="mobileNumber"
+              id="mobilenumber"
               label="Mobile Number"
-              name="mobileNumber"
+              name="mobilenumber"
               type="text"
               fullWidth
               autoFocus
               size='small'
               required
               variant="outlined"
-              helperText={touched.mobileNumber ? errors.mobileNumber : ""}
-              error={touched.mobileNumber && Boolean(errors.mobileNumber)}
-              value={values.mobileNumber}
-              onChange={handleChange("mobileNumber")}
+              helperText={touched.mobilenumber ? errors.mobilenumber : ""}
+              error={touched.mobilenumber && Boolean(errors.mobilenumber)}
+              value={values.mobilenumber}
+              onChange={handleChange("mobilenumber")}
               sx = {leftCss}
             /> 
             </Grid>
