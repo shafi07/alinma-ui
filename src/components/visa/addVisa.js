@@ -47,7 +47,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({open,handleClose,loading,submitHandler,editData,editVisaHandler}) {
+export default function FullScreenDialog({
+  open,
+  handleClose,
+  loading = false,
+  submitHandler,
+  editData,
+  editVisaHandler
+}) {
 
 console.log('------',editData)
 

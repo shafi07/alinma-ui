@@ -21,11 +21,11 @@ export default function BulkAdd() {
   const [open,setOpen] = useState(false)
   const [editModel,setEditModel]= useState(false)
   const [reFetch,setReFetch]=useState(false)
-  const [loading,setLoading]=useState(true)
+  const [loading,setLoading]=useState(false)
   const [toast,setToast]=useState(false)
   const [message,setMessage]=useState(null)
   const [rowData, setRowData] = useState([
-    bulkEditDefault // Initial row with default type
+    bulkEditDefault 
   ]);
 
   const gridRef = useRef();
@@ -50,7 +50,6 @@ export default function BulkAdd() {
         editable: true,
         cellEditor: "agSelectCellEditor",
         cellEditorParams: (params) => {
-          // Dynamically return options based on mainCategory value
           const mainCategory = params.data.mainCategory;
           switch (mainCategory) {
             case "Javasath":
@@ -66,7 +65,7 @@ export default function BulkAdd() {
             case "Other":
                 return { values: ["Baladiya Card", "Vaccine","Salary Transfer", "Qiwa","Gosi","Certificate","Rent agreement"] };
             default:
-              return { values: [] }; // Empty if no main category selected
+              return { values: [] }; 
           }
         },
         width: 150,
@@ -97,7 +96,7 @@ export default function BulkAdd() {
         editable:true,
         cellEditor: "agSelectCellEditor",
         cellEditorParams: {
-          values: ["Leave", "Extend"], // Dropdown values
+          values: ["Leave", "Extend"],
         },
     },
     { headerName: 'Agent', field: 'agent', sortable: true,filter: true,editable:true },
@@ -157,7 +156,7 @@ export default function BulkAdd() {
         <DeleteCellRenderer
           node={params.node}
           api={params.api}
-          onDelete={handleDeleteRow} // Pass the deletion handler
+          onDelete={handleDeleteRow}
         />
       ), 
       width: 80,
@@ -301,6 +300,7 @@ export default function BulkAdd() {
   };
 
   const handleSubmit = () => {
+    setLoading(true)
     console.log('>>>>>',rowData)
     let submitUrl = ``
     rowData.forEach(async(item)=>{
@@ -325,10 +325,11 @@ export default function BulkAdd() {
                 submitUrl = `${URL}/other`
                 return await submitBulk(item,submitUrl)
             default:
-                submitUrl = `${URL}/expense`
-                await submitBulk(item,submitUrl)  // Empty if no main category selected
+                return submitUrl = ``
+                // await submitBulk(item,submitUrl)  // Empty if no main category selected
           }
     })
+    setLoading(false)
   }
 
   return (
@@ -358,19 +359,9 @@ export default function BulkAdd() {
                               rowHeight={50}
                           />
                       </div>
-                      <button
-                          onClick={handleSubmit}
-                          style={{
-                              padding: "10px 20px",
-                              backgroundColor: "#28a745",
-                              color: "white",
-                              border: "none",
-                              cursor: "pointer",
-                              marginTop: "10px",
-                          }}
-                      >
-                          Submit Data
-                      </button>
+                      <Button disabled={loading} variant="contained" sx={{ width:"150px", backgroundColor: '#21B6A8',marginTop:'10px' }} onClick={handleSubmit} startIcon={<Iconify icon="eva:plus-fill" />}>
+                          Submit
+                      </Button>
                   </div>
               </Container>
               <Toast toast={toast} setToast={setToast} message={message} />

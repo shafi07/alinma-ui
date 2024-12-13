@@ -64,7 +64,14 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({open,handleClose,submitHandler,loading,editData=null,editJavazathHandler}) {
+export default function FullScreenDialog({
+  open,
+  handleClose,
+  submitHandler,
+  loading = false,
+  editData=null,
+  editJavazathHandler
+}) {
   const [refresh,setRefresh] = useState(false);
   const formikRef = useRef();
   const resetFormik =()=>{
