@@ -56,6 +56,11 @@ const navConfig = [
     path: '/dashboard/expense',
     icon: getIcon('game-icons:expense'),
   },
+  {
+    title: 'Bulk-Add',
+    path: '/dashboard/bulkAdd',
+    icon: getIcon('eva:plus-fill'),
+  },
   // {
   //   title: 'product',
   //   path: '/dashboard/products',

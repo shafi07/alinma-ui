@@ -15,6 +15,7 @@ import Visa from './pages/visa';
 import Expense from './pages/expense';
 import Agent from './pages/agent';
 import Customer from './pages/customerDetails';
+import BulkAdd from './pages/BulkAdd';
 
 // ----------------------------------------------------------------------
 
@@ -37,6 +38,7 @@ export default function Router() {
         { path: 'agent', element:<Agent /> },
         { path: 'customer', element:<Customer /> },
         { path: 'expense', element:<Expense /> },
+        { path: 'bulkAdd', element:<BulkAdd /> },
       ],
     },
     {
