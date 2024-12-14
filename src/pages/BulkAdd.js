@@ -334,11 +334,11 @@ export default function BulkAdd() {
 
   return (
       <>
-          <Page title="Expense">
+          <Page title="BULK-ADD">
               <Container>
                   <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
                       <Typography variant="h4" gutterBottom>
-                          EXPENSE
+                          BULK-ADD
                       </Typography>
                       <Button variant="contained" sx={{ backgroundColor: '#F51720' }} onClick={addRow} startIcon={<Iconify icon="eva:plus-fill" />}>
                           Add Row
