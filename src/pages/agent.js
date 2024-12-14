@@ -56,13 +56,6 @@ export default function Agent() {
     { headerName: 'Paid Date', field: 'paid_date', sortable: true, filter: true },
 ])
 
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = USERLIST.map((n) => n.name);

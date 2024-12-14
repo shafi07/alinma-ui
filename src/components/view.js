@@ -24,9 +24,6 @@ const divStyle = {
   };
 
 export default function View({open,viewData,handleClose}) {
-//   const [open, setOpen] = React.useState(false);
-//   const handleOpen = () => setOpen(true);
-//   const handleClose = () => setOpen(false);
 
   return (
       <Modal

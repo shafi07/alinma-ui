@@ -240,8 +240,8 @@ export const CUSTOMER_TABLE_HEAD = [
 ];
 
 export const bulkEditDefault = {
-  "mainCategory":"Javasath",
-  "sub_category": "New Iqama",
+  "mainCategory":"",
+  "sub_category": "",
   "name": "",
   "sponser_name": "",
   "mol": 0,
