@@ -301,10 +301,8 @@ export default function BulkAdd() {
 
   const handleSubmit = () => {
     setLoading(true)
-    console.log('>>>>>',rowData)
     let submitUrl = ``
     rowData.forEach(async(item)=>{
-        console.log("////",item.mainCategory)
         switch (item.mainCategory) {
             case "Javasath":
                 submitUrl = `${URL}/javasath`
@@ -332,6 +330,12 @@ export default function BulkAdd() {
     setLoading(false)
   }
 
+  const handleCellClick = (params) => {
+    if (!["mainCategory","sub_category","balance","total_amount","work_type","re_entry_type"].includes(params.colDef.field)&& params.value) {
+      navigator.clipboard.writeText(params.value)
+    }
+  }
+
   return (
       <>
           <Page title="BULK-ADD">
@@ -355,8 +359,10 @@ export default function BulkAdd() {
                                   sortable: true,
                               }}
                               onCellValueChanged={onCellValueChanged}
+                              onCellClicked={handleCellClick}
                               animateRows={true}
                               rowHeight={50}
+                              singleClickEdit={true}
                           />
                       </div>
                       <Button disabled={loading} variant="contained" sx={{ width:"150px", backgroundColor: '#21B6A8',marginTop:'10px' }} onClick={handleSubmit} startIcon={<Iconify icon="eva:plus-fill" />}>

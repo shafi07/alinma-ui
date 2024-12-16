@@ -30,7 +30,7 @@ const NewTable = ({rowData,colDef=[],handleCellClick,editData}) => {
         }}
         rowHeight={60} 
         onCellClicked={handleCellClick}
-        // suppressRowTransform={true}
+        singleClickEdit={true}
       />
     </div>
   );
