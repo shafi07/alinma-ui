@@ -159,7 +159,7 @@ export default function BulkAdd() {
           onDelete={handleDeleteRow}
         />
       ), 
-      width: 80,
+      width: 75,
       floatingFilter: false ,
       filter: false  
     },
@@ -290,13 +290,21 @@ export default function BulkAdd() {
                 }
             });
 
-            setColumnDefs(updatedColumnDefs); // Apply updated column definitions
+            setColumnDefs(updatedColumnDefs);
         }
     };
 
   const addRow = () => {
-    const newRow = { type: "A", name: "", age: "" }; // Default values for a new row
+    const newRow = { type: "A", name: "", age: "" };
     setRowData((prev) => [...prev, newRow]);
+  };
+
+  const copyRow = () => {
+    setRowData((prev) => {
+      const lastRow = prev.length > 0 ? prev[prev.length - 1] : { type: "A", name: "", age: "" };
+      const newRow = { ...lastRow };
+      return [...prev, newRow];
+    });
   };
 
   const handleSubmit = () => {
@@ -331,7 +339,8 @@ export default function BulkAdd() {
   }
 
   const handleCellClick = (params) => {
-    if (!["mainCategory","sub_category","balance","total_amount","work_type","re_entry_type"].includes(params.colDef.field)&& params.value) {
+    if (!["mainCategory","sub_category","balance","total_amount","work_type","re_entry_type"].
+        includes(params.colDef.field)&& params.value) {
       navigator.clipboard.writeText(params.value)
     }
   }
@@ -346,6 +355,9 @@ export default function BulkAdd() {
                       </Typography>
                       <Button variant="contained" sx={{ backgroundColor: '#F51720' }} onClick={addRow} startIcon={<Iconify icon="eva:plus-fill" />}>
                           Add Row
+                      </Button>
+                      <Button variant="contained" sx={{ backgroundColor: '#59981A' }} onClick={copyRow} startIcon={<Iconify icon="eva:plus-fill" />}>
+                          Add Row-Copy
                       </Button>
                   </Stack>
                   <div style={{ width: "100%", height: "100%" }}>

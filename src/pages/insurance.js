@@ -48,7 +48,7 @@ export default function Insurance() {
     { headerName: 'Name', field: 'name', sortable: true, editable:true, filter: true },
     { headerName: 'ID', field: 'id_number', sortable: true, editable:true, filter: true },
     { headerName: 'Add/New', field: 'sub_category', sortable: true,filter: true },
-    { headerName: 'Sponser Name', field: 'sponser_name', sortable: true,filter: true },
+    { headerName: 'Sponser Name', field: 'sponser_name', sortable: true,filter: true, editable:true },
     { 
       headerName: 'Cash', 
       field: 'cash', 
