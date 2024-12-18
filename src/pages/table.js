@@ -8,8 +8,8 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 const NewTable = ({rowData,colDef=[],handleCellClick,editData}) => {
 
     const handleCellValueChanged = (params) => {
-        console.log('Edited Row Data:', params);
-        console.log('ID of Edited Row:', params.data.id);
+        // console.log('Edited Row Data:', params);
+        // console.log('ID of Edited Row:', params.data.id);
         params.data.paid_amount = 0
         editData(params.data)
       };

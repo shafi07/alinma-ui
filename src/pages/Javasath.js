@@ -83,6 +83,8 @@ export default function User() {
           return { color: "#2065D1",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
         }
       },
+      pinned: "right" ,
+      width: 130,
     },
     { headerName: 'Mobile', field: 'mobilenumber', sortable: true, editable:true, filter: true },
     { headerName: 'Agent Amount', field: 'agent_amount', sortable: true,filter: true },
@@ -113,7 +115,7 @@ export default function User() {
         />
       ), 
       // minWidth: 194,
-      width: 150,
+      width: 130,
       floatingFilter: false ,
       filter: false  
     },

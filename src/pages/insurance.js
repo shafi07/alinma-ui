@@ -85,6 +85,8 @@ export default function Insurance() {
           return { color: "#2065D1",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
         }
       },
+      pinned: "right" ,
+      width: 130,
     },
     { headerName: 'Mobile', field: 'mobilenumber', sortable: true, editable:true, filter: true },
     { headerName: 'Dob', field: 'dob', sortable: true, editable:true, filter: true },
@@ -119,7 +121,7 @@ export default function Insurance() {
         />
       ), 
       // minWidth: 194,
-      width: 150,
+      width: 130,
       floatingFilter: false ,
       filter: false  
     },
