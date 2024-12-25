@@ -39,7 +39,7 @@ export default function BulkAdd() {
         editable: true,
         cellEditor: "agSelectCellEditor",
         cellEditorParams: {
-          values: ["Javasath", "Insurance", "Work", "Visa", "Passport", "Other"], // Dropdown values
+          values: ["Javasath", "Insurance", "Work", "Visa", "Passport", "Other"],
         },
         width: 150,
         pinned: "left" ,
@@ -74,12 +74,12 @@ export default function BulkAdd() {
     { headerName: 'Name', field: 'name', sortable: true, editable:true, filter: true },
     { headerName: 'ID', field: 'id_number', sortable: true, editable:true, filter: true },
     { headerName: 'Sponser Name', field: 'sponser_name', sortable: true,filter: true, editable:true },
+    { headerName: 'Boarder Number', field: 'boarder_number', sortable: true,filter: true, editable:true },
     { headerName: 'CR Number', field: 'cr_number', sortable: true,filter: true, editable:true },
     { headerName: 'Visa Number', field: 'visa_number', sortable: true,filter: true, editable:true },
     { headerName: 'Travels', field: 'travels', sortable: true,filter: true, editable:true },
     { headerName: 'DOB', field: 'dob', sortable: true,filter: true, editable:true },
     { headerName: 'Company', field: 'company', sortable: true,filter: true, editable:true },
-    { headerName: 'Boarder Number', field: 'boarder_number', sortable: true,filter: true, editable:true },
     { headerName: 'Mobile', field: 'mobilenumber', sortable: true, editable:true, filter: true },
     { 
         headerName: 'Work Type', 

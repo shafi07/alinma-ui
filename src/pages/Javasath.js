@@ -49,42 +49,42 @@ export default function User() {
     { headerName: 'Sponser Name', field: 'sponser_name', sortable: true,filter: true, editable:true },
     { 
       headerName: 'Cash', 
-      field: 'cash', 
-      // pinned: "right" ,
+      field: 'cash',
       sortable: true,
       valueGetter: (params) => (params.data.balance_amount == 0 ? "Paid" : "Credit"),
       filter: true,
       cellStyle: (params) => {
         if (params.value === "Paid") {
-          return { color: "#229A16",fontWeight: 'bold',textAlign:"center" }; // Green for Adult
+          return { color: "#32CD30",fontWeight: 'bold',textAlign:"center" }; 
         }
-        return { color: "#B72136",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+        return { color: "#B72136",fontWeight: 'bold',textAlign:"center" };
       }, 
-      width: 100,
+      width: 80,
+      pinned: "right" ,
     },
     {
       headerName: "Status",
       field: "status",
       sortable: true,
       filter: true,
-      editable: true, // Enable editing for the dropdown
-      cellEditor: "agSelectCellEditor", // Use the built-in dropdown editor
+      editable: true, 
+      cellEditor: "agSelectCellEditor", 
       cellEditorParams: {
-        values: ["pending", "completed", "returned", "collected"], // Dropdown options
+        values: ["pending", "completed", "returned", "collected"], 
       },
       cellStyle: (params) => {
         if (params.value === "completed") {
-          return { color: "#229A16",fontWeight: 'bold',textAlign:"center" }; // Green for Adult
+          return { color: "#229A16",fontWeight: 'bold',textAlign:"center" }; 
         }else if(params.value === "returned"){
-          return { color: "#F51720",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+          return { color: "#F51720",fontWeight: 'bold',textAlign:"center" }; 
         }else if(params.value === "collected"){
-          return { color: "#e1c340",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+          return { color: "#e1c340",fontWeight: 'bold',textAlign:"center" }; 
         }else{
-          return { color: "#2065D1",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+          return { color: "#2065D1",fontWeight: 'bold',textAlign:"center" }; 
         }
       },
       pinned: "right" ,
-      width: 130,
+      width: 120,
     },
     { headerName: 'Mobile', field: 'mobilenumber', sortable: true, editable:true, filter: true },
     { headerName: 'Agent Amount', field: 'agent_amount', sortable: true,filter: true },
@@ -125,15 +125,6 @@ const handleDeleteRow = useCallback((deletedRow) => {
   console.log("Deleted row data:>", deletedRow);
   handleDelete(deletedRow.id)
 }, []);
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
 
   useEffect(() => {
     fetchData(query,status);

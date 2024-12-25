@@ -55,37 +55,39 @@ export default function Other() {
       field: 'cash', 
       sortable: true,
       valueGetter: (params) => (params.data.balance_amount == 0 ? "Paid" : "Credit"),
-      filter: true,
+      // filter: true,
       cellStyle: (params) => {
         if (params.value === "Paid") {
-          return { color: "#229A16",fontWeight: 'bold',textAlign:"center" }; // Green for Adult
+          return { color: "#32CD30",fontWeight: 'bold',textAlign:"center" }; 
         }
-        return { color: "#B72136",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
-      }, 
+        return { color: "#B72136",fontWeight: 'bold',textAlign:"center" }; 
+      },
+      width: 80,
+      pinned: "right" , 
     },
     {
       headerName: "Status",
       field: "status",
       sortable: true,
       filter: true,
-      editable: true, // Enable editing for the dropdown
-      cellEditor: "agSelectCellEditor", // Use the built-in dropdown editor
+      editable: true, 
+      cellEditor: "agSelectCellEditor",
       cellEditorParams: {
-        values: ["pending", "completed", "returned", "collected"], // Dropdown options
+        values: ["pending", "completed", "returned", "collected"], 
       },
       cellStyle: (params) => {
         if (params.value === "completed") {
-          return { color: "#229A16",fontWeight: 'bold',textAlign:"center" }; // Green for Adult
+          return { color: "#229A16",fontWeight: 'bold',textAlign:"center" }; 
         }else if(params.value === "returned"){
-          return { color: "#F51720",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+          return { color: "#F51720",fontWeight: 'bold',textAlign:"center" }; 
         }else if(params.value === "collected"){
-          return { color: "#e1c340",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+          return { color: "#e1c340",fontWeight: 'bold',textAlign:"center" }; 
         }else{
-          return { color: "#2065D1",fontWeight: 'bold',textAlign:"center" }; // Red for Minor
+          return { color: "#2065D1",fontWeight: 'bold',textAlign:"center" }; 
         }
       },
       pinned: "right" ,
-      width: 130,
+      width: 120,
     },
     { headerName: 'Mobile', field: 'mobilenumber', sortable: true, editable:true, filter: true },
     { headerName: 'Agent', field: 'agent', sortable: true,filter: true,editable:true },
@@ -177,7 +179,6 @@ const handleDeleteRow = useCallback((deletedRow) => {
       .then((res) => {
         if (res.status == 200) {
           setUSERLIST(res.data)
-          console.log('>>><<<<',res.data)
           setLoading(false)
         } else {
           setUSERLIST([])
