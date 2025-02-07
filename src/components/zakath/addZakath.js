@@ -1,50 +1,41 @@
 import * as React from 'react';
-import { 
-  Dialog, 
-  Button, 
-  Slide, 
-  Typography, 
-  IconButton, 
-  DialogActions, 
-  DialogContent, 
-  Grid, 
-  MenuItem, 
-  TextField, 
-  AppBar, 
-  Toolbar } from "@mui/material";
+import {
+  Slide,
+  Typography,
+  IconButton,
+  Toolbar,
+  AppBar,
+  Dialog,
+  Button,
+  DialogActions,
+  DialogContent,
+  Grid,
+  MenuItem,
+  TextField
+} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import * as Yup from "yup";
 import { Formik } from "formik";
 
 const subCategories = [
-  {value:'Sijil',label:'Sijil'},
-  {value:'Ruksa',label:'Ruksa'},
+  {value:'Zakath',label:'Zakath'},
+  {value:'Zareeba',label:'Zareeba'},
 ]
+
+const cssArray=['Visa Chamber','Wakala']
+
+const validationSchema = Yup.object({
+  sub_category: Yup.string().required("Enter Category Name"),
+  name: Yup.string().required("Enter Name"),
+  mobilenumber: Yup.string().required("Enter Mobile Number").matches(/^\d{10}$/,'mobile number length should be 10'),
+  balance:Yup.number(),
+});
 
 const leftCss = {
   marginTop: 2,
   marginBottom: 2,
   marginRight:2,
 }
-
-const workType = [
-  {value:'New',label:'New'},
-  {value:'Renew',label:'Renew'},
-  {value:'Update',label:'Update'},
-  {value:'Cancel',label:'Cancel'},
-  {value:'Transfer',label:'Transfer'},
-  {value:'QR-Code',label:'QR-Code'},
-  {value:'Difa Madani',label:'Difa Madani'},
-]
-
-const validationSchema = Yup.object({
-  sub_category: Yup.string().required("Enter Category Name"),
-  name: Yup.string().required("Enter Name"),
-  sponser_name: Yup.string().required("Enter Sponser Name"),
-  mobilenumber: Yup.string().required("Enter Mobile Number").matches(/^\d{10}$/,'mobile number length should be 10'),
-  total_amount: Yup.number().required("Enter Amount"),
-  balance:Yup.number(),
-});
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -55,37 +46,39 @@ export default function FullScreenDialog({
   handleClose,
   loading = false,
   submitHandler,
-  editData=null,
-  editWorkHandler
+  editData,
+  editVisaHandler
 }) {
+
+console.log('------111',editData)
 
   return (
     <Formik
     validationSchema={validationSchema}
       initialValues={{
-        sub_category:editData ? editData.sub_category : "",
-        name:editData ? editData.name : "",
-        agent:editData ? editData.agent : "",
-        sponser_name:editData ? editData.sponser_name : "",
-        id_number:editData ? editData.id_number : "",
-        total_amount:editData ? editData.total_amount : "",
-        mobilenumber:editData ? editData.mobilenumber : "",
-        paid_amount:null,
-        balance: editData ? editData.balance :'',
-        remarks:editData ? editData.remarks :'',
-        agent_amount:editData ? editData.agent_amount :null,
-        government_fee:editData ? editData.government_fee :null,
-        service:editData ? editData.service :null,
-        paid_date:editData ? editData.paid_date :'',
-        work_type:editData?.work_type || '',
+        sub_category: editData ? editData.sub_category : "",
+        name: editData ? editData.name : "",
+        sponser_name: editData ? editData.sponser_name : "",
+        id_number: editData ? editData.id_number : "",
+        total_amount: editData ? editData.total_amount : "",
+        mobilenumber: editData ? editData.mobilenumber : "",
+        paid_amount: null,
+        balance_amount: editData ? editData.balance_amount : '',
+        remarks: editData ? editData.remarks : '',
+        zareeba_date: editData ? editData.zareeba_date : '',
+        purchase_amount: editData ? editData.purchase_amount : null,
+        service: editData ? editData.service : null,
       }}
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
-        if(editData){
-          editWorkHandler({...values,id:editData.id,status:editData.status,payment_method:editData.payment_method},actions)
+        if (editData){
+        editVisaHandler({...values,
+          id:editData.id,
+          status:editData.status,
+          payment_method:editData.payment_method},actions)
         }else{
           submitHandler(values,actions)
-        }
+        } 
       }}
     >
     {({
@@ -95,12 +88,12 @@ export default function FullScreenDialog({
       handleChange,
       touched,
       values,
-      resetForm
+      resetForm,
       }) => (
       <Dialog
         fullScreen
         open={open}
-        onClose={()=>{handleClose();resetForm()}}
+        onClose={handleClose}
         TransitionComponent={Transition}
       >
         <AppBar sx={{ position: 'relative' }}>
@@ -108,13 +101,13 @@ export default function FullScreenDialog({
             <IconButton
               edge="start"
               color="inherit"
-              onClick={handleClose}
+              onClick={()=>{handleClose();resetForm()}}
               aria-label="close"
             >
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              {editData ? `WORK-[${editData.createddate}]`:`WORK`}
+               {editData ? `Zakath-[${editData.createddate}]`:`Zakath`}
             </Typography>
             <Button autoFocus color="inherit" onClick={() => handleSubmit()}>
               save
@@ -131,15 +124,15 @@ export default function FullScreenDialog({
               type="text"
               fullWidth
               autoFocus
-              required
               size='small'
+              required
               select={true}
               variant="outlined"
               helperText={touched.sub_category ? errors.sub_category : ""}
               error={touched.sub_category && Boolean(errors.sub_category)}
               value={values.sub_category}
-              onChange={handleChange("sub_category")}
-              sx = {leftCss}
+              onChange={(e)=>{resetForm();setFieldValue('sub_category',e.target.value)}}
+              sx = {{...leftCss,input: { color: 'red' }}}
             >
               {subCategories.map(option => (
              <MenuItem sx={{color:'red'}} key={option.value} value={option.label}>
@@ -157,8 +150,8 @@ export default function FullScreenDialog({
               type="text"
               fullWidth
               autoFocus
-              required
               size='small'
+              required
               variant="outlined"
               helperText={touched.name ? errors.name : ""}
               error={touched.name && Boolean(errors.name)}
@@ -174,7 +167,6 @@ export default function FullScreenDialog({
               type="text"
               fullWidth
               autoFocus
-              required
               size='small'
               variant="outlined"
               helperText={touched.sponser_name ? errors.sponser_name : ""}
@@ -183,25 +175,7 @@ export default function FullScreenDialog({
               onChange={handleChange("sponser_name")}
               sx = {leftCss}
             /> 
-            </Grid>
-            <Grid item xs={4} >
-            <TextField
-              id="id_number"
-              sx = {leftCss}
-              label="Number"
-              name="id_number"
-              type="text"
-              fullWidth
-              autoFocus
-              size='small'
-              required ={values.sub_category == 'New Ruksa' ? false :true}
-              variant="outlined"
-              helperText={touched.id_number ? errors.id_number : ""}
-              error={touched.id_number && Boolean(errors.id_number)}
-              value={values.id_number}
-              onChange={handleChange("id_number")}
-            />
-            </Grid>
+            </Grid>  
             <Grid item xs={4} >
             <TextField
               id="mobilenumber"
@@ -210,8 +184,8 @@ export default function FullScreenDialog({
               type="text"
               fullWidth
               autoFocus
-              required
               size='small'
+              required
               variant="outlined"
               helperText={touched.mobilenumber ? errors.mobilenumber : ""}
               error={touched.mobilenumber && Boolean(errors.mobilenumber)}
@@ -222,82 +196,56 @@ export default function FullScreenDialog({
             </Grid>
             <Grid item xs={4} >
             <TextField
-              id="work_type"
-              label="Type"
-              name="work_type"
-              type="text"
-              fullWidth
-              size='small'
-              autoFocus
-              required
-              select={true}
-              variant="outlined"
-              helperText={touched.work_type ? errors.work_type : ""}
-              error={touched.work_type && Boolean(errors.work_type)}
-              value={values.work_type}
-              onChange={handleChange("work_type")}
-              sx = {leftCss}
-            >
-              {workType.map(option => (
-             <MenuItem sx={{color:'red'}} key={option.value} value={option.label}>
-              {option.label}
-            </MenuItem>
-            ))}
-            </TextField> 
-            </Grid>
-            <Grid item xs={4} >
-            <TextField
-              id="service"
-              label="Service Charge"
-              name="service"
+              id="purchase_amount"
+              label="Purchase Amount"
+              name="purchase_amount"
               type="text"
               fullWidth
               autoFocus
-              required
               size='small'
               variant="outlined"
-              helperText={touched.service ? errors.service : ""}
-              error={touched.service && Boolean(errors.service)}
-              value={values.service}
-              onChange={(e)=>{setFieldValue('service',+e.target.value)}}
+              helperText={touched.purchase_amount ? errors.purchase_amount : ""}
+              error={touched.purchase_amount && Boolean(errors.purchase_amount)}
+              value={values?.purchase_amount || ""}
+              onChange={(e)=>{setFieldValue('purchase_amount',+e.target.value)}}
               sx = {leftCss}
-              InputLabelProps={{
-                style: { color: '#BC3110' },
-              }}
             /> 
             </Grid>
             <Grid item xs={4} >
             <TextField
-              id="agent_amount"
+              id="sales_amount"
               sx = {leftCss}
-              label="Agent Amount"
-              name="agent_amount"
+              label="Sales Amount"
+              name="sales_amount"
               type="text"
               fullWidth
-              size='small'
               autoFocus
-              variant="outlined" 
-              helperText={touched.agent_amount ? errors.agent_amount : ""}
-              error={touched.agent_amount && Boolean(errors.agent_amount)}
-              value={values.agent_amount}
-              onChange={(e)=>{setFieldValue('agent_amount',+e.target.value)}}
+              size='small'
+              variant="outlined"
+              helperText={touched.sales_amount ? errors.sales_amount : ""}
+              error={touched.sales_amount && Boolean(errors.sales_amount)}
+              value={values.sales_amount}
+              onChange={(e)=>{setFieldValue('sales_amount',+e.target.value)}}
             />
             </Grid>
             <Grid item xs={4} >
             <TextField
-              id="government_fee"
-              sx = {leftCss}
-              label="Government Fee"
-              name="government_fee"
+              id="service"
+              sx = {leftCss }
+              label="Service Charge"
+              name="service"
+              InputLabelProps={{
+                style: { color: '#BC3110' },
+              }}
               type="text"
               fullWidth
               autoFocus
               size='small'
               variant="outlined" 
-              helperText={touched.government_fee ? errors.government_fee : ""}
-              error={touched.government_fee&& Boolean(errors.government_fee)}
-              value={values.government_fee}
-              onChange={(e)=>{setFieldValue('government_fee',+e.target.value)}}
+              helperText={touched.service ? errors.service : ""}
+              error={touched.service && Boolean(errors.service)}
+              value={values.service}
+              onChange={(e)=>{setFieldValue('service',+e.target.value)}}
             />
             </Grid>
             <Grid item xs={4} >
@@ -309,13 +257,12 @@ export default function FullScreenDialog({
               type="number"
               fullWidth
               autoFocus
-              disabled
-              required
               size='small'
+              required
               variant="outlined" 
               helperText={touched.total_amount ? errors.total_amount : ""}
               error={touched.total_amount && Boolean(errors.total_amount)}
-              value={values.total_amount=(Number(values.agent_amount) + Number(values.service) + Number(values.government_fee))}
+              value={values.total_amount=(Number(values.service))}
               onChange={handleChange("total_amount")}
             />
             </Grid>
@@ -326,16 +273,16 @@ export default function FullScreenDialog({
               name="paid_amount"
               type="text"
               fullWidth
-              // disabled = {editData}
               autoFocus
-              required
               size='small'
+              // disabled = {editData}
+              required
               variant="outlined"
               helperText={touched.paid_amount ? errors.paid_amount : ""}
               error={touched.paid_amount && Boolean(errors.paid_amount)}
               value={values?.paid_amount || ''}
               onChange={(e)=>{setFieldValue('paid_amount',+e.target.value)}}
-              sx = {leftCss}
+              sx = {leftCss }
             /> 
             </Grid>
             <Grid item xs={4} >
@@ -347,54 +294,36 @@ export default function FullScreenDialog({
               type="number"
               fullWidth
               autoFocus
+              size='small'
               disabled
               required
-              size='small'
               variant="outlined"
               helperText={touched.balance ? errors.balance : ""}
               error={touched.balance && Boolean(errors.balance)}
-                  value={values.balance = editData ? (Number(editData.balance_amount) - Number(values.paid_amount)) : (Number(values.total_amount) - Number(values.paid_amount))}
+              value={values.balance = editData?(Number(editData.balance_amount)-Number(values.paid_amount)):(Number(values.total_amount)-Number(values.paid_amount))}
               onChange={handleChange("balance")}
             />
             </Grid>
-            <Grid item xs={4} >
-            <TextField
-              id="agent"
-              sx = {leftCss}
-              label="Agent"
-              name="agent"
-              type="text"
-              fullWidth
-              autoFocus
-              size='small'
-              variant="outlined"
-              helperText={touched.agent ? errors.agent : ""}
-              error={touched.agent && Boolean(errors.agent)}
-              value={values.agent}
-              onChange={handleChange("agent")}
-            />
-            </Grid>
-            <Grid item xs={4} >
-            <TextField
-              id="paid_date"
-              sx = {leftCss}
-              label="Agent Paid Date"
-              name="paid_date"
-              type="Text"
-              fullWidth
-              autoFocus
-              size='small'
-              variant="outlined"
-              helperText={touched.paid_date ? errors.paid_date : ""}
-              error={touched.paid_date && Boolean(errors.paid_date)}
-              value={values.paid_date}
-              onChange={handleChange("paid_date")}
-            />
-            </Grid>
+            <Grid item xs={4}>
+                <TextField
+                  id="zareeba_date"
+                  sx={leftCss}
+                  label="Zareeba Date"
+                  name="zareeba_date"
+                  type="text"
+                  fullWidth
+                  autoFocus
+                  size='small'
+                  variant="outlined"
+                  helperText={touched.zareeba_date ? errors.zareeba_date : ""}
+                  error={touched.zareeba_date && Boolean(errors.zareeba_date)}
+                  value={values.zareeba_date}
+                  onChange={handleChange("zareeba_date")} />
+              </Grid>
             <Grid item xs={4} >
             <TextField
               id="remarks"
-              sx = {leftCss}
+              sx = {leftCss }
               label="Remarks"
               name="remarks"
               type="text"
@@ -418,6 +347,7 @@ export default function FullScreenDialog({
             {/* )} */}
             <Button
               onClick={() => handleSubmit()}
+              // onClick={() => console.log('submit')}
               color="primary"
               disabled={loading}
             >

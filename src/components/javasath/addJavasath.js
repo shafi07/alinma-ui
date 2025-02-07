@@ -120,7 +120,7 @@ export default function FullScreenDialog({
         // values.other = values?.service ||0
         // values.paid_amount = values?.paid_amount ||0
         if(editData){
-          editJavazathHandler({...values,id:editData.id,status:editData.status},actions)
+          editJavazathHandler({...values,id:editData.id,status:editData.status,payment_method:editData.payment_method},actions)
         }else{
          submitHandler(values,actions) 
         }

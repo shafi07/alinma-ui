@@ -52,6 +52,11 @@ const navConfig = [
     icon: getIcon('carbon:customer-service'),
   },
   {
+    title: 'Zakath',
+    path: '/dashboard/zakath',
+    icon: getIcon('mdi:alphabet-z-box-outline'),
+  },
+  {
     title: 'Expense',
     path: '/dashboard/expense',
     icon: getIcon('game-icons:expense'),

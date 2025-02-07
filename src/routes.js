@@ -16,13 +16,13 @@ import Expense from './pages/expense';
 import Agent from './pages/agent';
 import Customer from './pages/customerDetails';
 import BulkAdd from './pages/BulkAdd';
+import Zakath from './pages/zakath';
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
   let isLoggedIn = false
       isLoggedIn = (localStorage.getItem("auth") === null) ? false : true
-      // console.log('>>>>>>>>llklkkk',localStorage.getItem("auth") )
   return useRoutes([
     {
       path: '/dashboard',
@@ -39,6 +39,7 @@ export default function Router() {
         { path: 'customer', element:<Customer /> },
         { path: 'expense', element:<Expense /> },
         { path: 'bulkAdd', element:<BulkAdd /> },
+        { path: 'zakath', element:<Zakath />},
       ],
     },
     {

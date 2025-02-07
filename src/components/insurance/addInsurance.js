@@ -75,7 +75,7 @@ export default function FullScreenDialog({
         values.paid_amount = values.paid_amount ? values.paid_amount :0
         values.agent_amount = values.agent_amount ? values.agent_amount : 0
         if(editData){
-          editInsuranceHandler({...values,id:editData.id,status:editData.status},actions)
+          editInsuranceHandler({...values,id:editData.id,status:editData.status,payment_method:editData.payment_method},actions)
         }else{
           submitHandler(values,actions)
         } 

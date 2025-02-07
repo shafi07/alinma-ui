@@ -84,7 +84,7 @@ console.log('------',editData)
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
         if (editData){
-        editVisaHandler({...values,id:editData.id,status:editData.status},actions)
+        editVisaHandler({...values,id:editData.id,status:editData.status,payment_method:editData.payment_method},actions)
         }else{
           submitHandler(values,actions)
         } 

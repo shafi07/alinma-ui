@@ -91,7 +91,7 @@ export default function FullScreenDialog({
       onSubmit={(values, actions) => {
         values.paid_amount = values.paid_amount ? values.paid_amount :0
         if(editData){
-          editOtherHandler({...values,id:editData.id,status:editData.status},actions)
+          editOtherHandler({...values,id:editData.id,status:editData.status,payment_method:editData.payment_method},actions)
         }else{
           submitHandler(values,actions)
         }  

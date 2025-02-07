@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useState,useEffect, useCallback } from 'react';
+import { useNavigate} from "react-router-dom";
 // material
 import {
   Stack,
@@ -7,27 +7,29 @@ import {
   Container,
   Typography,
 } from '@mui/material';
+import axios from 'axios';
+import { CSVLink } from 'react-csv';
 // components
 import Page from '../components/Page';
 import Iconify from '../components/Iconify';
-import { UserListToolbar  } from '../sections/@dashboard/user';
-import AddBill from '../components/javasath/addJavasath'
+import {  UserListToolbar } from '../sections/@dashboard/user';
+import AddBill from '../components/zakath/addZakath'
 import EditBill from '../components/javasath/editBill'
-import Toast from '../components/toast';
-import { CSVLink } from 'react-csv';
-import axios from 'axios';
 import View from 'src/components/view';
-import { URL, javasathHeaders } from '../_mock/constant'
-import DeleteCellRenderer from 'src/components/Cell-renders/DeleteCell';
+import { URL,visaHeaders, } from '../_mock/constant'
+import Toast from '../components/toast';
 import NewTable from './table';
+import DeleteCellRenderer from 'src/components/Cell-renders/DeleteCell';
 
 // ----------------------------------------------------------------------
 
-export default function User() {
+export default function Zakath() {
   const [page, setPage] = useState(0);
+  const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
+  const [orderBy, setOrderBy] = useState('name');
   const [query,setQuey]= useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
   const [open,setOpen] = useState(false)
   const[USERLIST,setUSERLIST]=useState([])
   const [editData,setEditData]=useState(null)
@@ -44,12 +46,13 @@ export default function User() {
   const [colDef] = useState([
     { headerName: 'File',width: 120, field: 'fileid', sortable: true, filter: true,cellStyle: { fontWeight: 'bold' }  },
     { headerName: 'Name', field: 'name', sortable: true, editable:true, filter: true },
+    // { headerName: 'ID', field: 'id_number', sortable: true, editable:true, filter: true },
     { headerName: 'Sub Category', field: 'sub_category', sortable: true,filter: true },
-    { headerName: 'ID', field: 'id_number', sortable: true, editable:true, filter: true },
-    { headerName: 'Sponser Name', field: 'sponser_name', sortable: true,filter: true, editable:true },
+    { headerName: 'Sponser Name', field: 'sponser_name', sortable: true,filter: true },
     { 
       headerName: 'Cash', 
-      field: 'cash',
+      field: 'cash', 
+      // pinned: "right" ,
       sortable: true,
       valueGetter: (params) => (params.data.balance_amount == 0 ? "Paid" : "Credit"),
       filter: true,
@@ -57,7 +60,7 @@ export default function User() {
         if (params.value === "Paid") {
           return { color: "#32CD30",fontWeight: 'bold',textAlign:"center" }; 
         }
-        return { color: "#B72136",fontWeight: 'bold',textAlign:"center" };
+        return { color: "#B72136",fontWeight: 'bold',textAlign:"center" }; 
       }, 
       width: 80,
       pinned: "right" ,
@@ -67,7 +70,7 @@ export default function User() {
       field: "status",
       sortable: true,
       filter: true,
-      editable: true, 
+      editable: true,
       cellEditor: "agSelectCellEditor", 
       cellEditorParams: {
         values: ["pending", "completed", "returned", "collected"], 
@@ -101,8 +104,13 @@ export default function User() {
       width: 80,
     },
     { headerName: 'Mobile', field: 'mobilenumber', sortable: true, editable:true, filter: true },
-    { headerName: 'Agent Amount', field: 'agent_amount', sortable: true,filter: true },
-    { headerName: 'Service', field: 'service', sortable: true,filter: true },
+    // { headerName: 'Agent', field: 'agent', sortable: true,filter: true,editable:true },
+    // { headerName: 'Agent Date', field: 'paid_date', sortable: true,filter: true, editable:true },
+    // { headerName: 'Visa Number', field: 'visa_number', sortable: true,filter: true, editable:true },
+    { headerName: 'Zareeba Date', field: 'zareeba_date', sortable: true,filter: true },
+    { headerName: 'Service Amount', field: 'service', sortable: true,filter: true },
+    { headerName: 'Purchase Amount', field: 'purchase_amount', sortable: true,filter: true },
+    { headerName: 'Sales Amount', field: 'sales_amount', sortable: true,filter: true },
     { headerName: 'Total Amount', field: 'total_amount', sortable: true,filter: true },
     { headerName: 'Paid Amount', field: 'paid_amount', sortable: true,filter: true },
     { headerName: 'Balance Amount', field: 'balance_amount', sortable: true,filter: true },
@@ -140,6 +148,21 @@ const handleDeleteRow = useCallback((deletedRow) => {
   handleDelete(deletedRow.id)
 }, []);
 
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = USERLIST.map((n) => n.name);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
+
   useEffect(() => {
     fetchData(query,status);
   },[query,reFetch,status]);
@@ -167,17 +190,22 @@ const handleDeleteRow = useCallback((deletedRow) => {
     setView(!view)
   }
 
-  const fetchData = async (query,status)=>{
-    const url = query || status ? `${URL}/javasath?query=${query}&status=${status}` : `${URL}/javasath`
+  const handleCloseAdd = (resetForm)=>{
+    setOpen(false)
+    resetForm()
+  }
+
+  const fetchData = async (query, status) => {
+    const url = query || status ? `${URL}/zakath?query=${query}&status=${status}` : `${URL}/zakath`
     setLoading(true)
     axios.get(url)
       .then((res) => {
-        if(res.status == 200){
-        setUSERLIST(res.data)
-        setLoading(false)
-        }else{
+        if (res.status == 200) {
+          setUSERLIST(res.data)
+          setLoading(false)
+        } else {
           setUSERLIST([])
-          setLoading(false) 
+          setLoading(false)
         }
       }).catch((err) => {
         setUSERLIST([])
@@ -195,9 +223,9 @@ const handleDeleteRow = useCallback((deletedRow) => {
     setOpen(true)
   }
 
-  const submitJavazath = async (data,actions) => {
+  const submitZakath = async (data,actions) => {
     setLoading(true)
-    axios.post(`${URL}/javasath`, data)
+    axios.post(`${URL}/zakath`, data)
       .then((res) => {
         setOpen(false)
         setReFetch(!reFetch)
@@ -211,9 +239,9 @@ const handleDeleteRow = useCallback((deletedRow) => {
       })
   }
 
-  const editJavazath = async (data) => {
+  const editZakath = async (data) => {
     setLoading(true)
-    axios.put(`${URL}/javasath`, data)
+    axios.put(`${URL}/zakath`, data)
       .then((res) => {
         setEditData(null)
         setEditModel(!editModel)
@@ -227,9 +255,9 @@ const handleDeleteRow = useCallback((deletedRow) => {
       })
   }
 
-  const editJavazathHandler = async (data,actions) => {
+  const editZakathHandler = async (data,actions) => {
     setLoading(true)
-    axios.patch(`${URL}/javasath`, data)
+    axios.patch(`${URL}/zakath`, data)
       .then((res) => {
         setOpen(false)
         setReFetch(!reFetch)
@@ -246,7 +274,7 @@ const handleDeleteRow = useCallback((deletedRow) => {
 
   const handleStatusChange = async (value,id) => {
     setLoading(true)
-    axios.put(`${URL}/javasath`, {status:value,id,updatedTime: new Date().toLocaleDateString()})
+    axios.put(`${URL}/zakath`, {status:value,id,updatedTime: new Date().toLocaleDateString()})
       .then((res) => {
         setEditModel(!editModel)
         setReFetch(!reFetch)
@@ -261,7 +289,7 @@ const handleDeleteRow = useCallback((deletedRow) => {
 
   const handleDelete = async (id) => {
     setLoading(true)
-    axios.delete(`${URL}/javasath/${id}`)
+    axios.delete(`${URL}/zakath/${id}`)
       .then((res) => {
         setEditModel(!editModel)
         setReFetch(!reFetch)
@@ -274,20 +302,19 @@ const handleDeleteRow = useCallback((deletedRow) => {
       })
   }
 
-  const handlePrint = async(data)=>{
-    navigate('/print',{state:{path:"javasath",...data}})
-  }
-
   const handleStatusFilter = async(data)=>{
     setLoading(true)
     data == 'All' ? setStatus('') : setStatus(data) 
+  }
+
+  const handlePrint = async(data)=>{
+    navigate('/print',{state:{path:"zakath",...data}})
   }
 
   const viewOpen = async(data)=>{
     setViewData(data)
     setView(true)
   }
-
 
   const handleCellClick = (params) => {
     if (params.colDef.field === "fileid") {
@@ -305,58 +332,65 @@ const handleDeleteRow = useCallback((deletedRow) => {
 
   return (
     <>
-    <Page title="Javasath">
+    <Page title="Zakath">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={-1}>
           <Typography variant="h4" gutterBottom>
-            JAVASATH
+            ZAKATH
           </Typography>
           <Button variant="contained" sx={{backgroundColor:'#F51720'}} onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Javasath
+            New Zakath
           </Button>
-          <CSVLink headers={javasathHeaders} data={USERLIST?USERLIST:[]} filename={'test'}>
+          <CSVLink headers={visaHeaders} data={USERLIST?USERLIST:[]} filename={'test'}>
           <Button variant="contained" startIcon={<Iconify icon="prime:file-excel" />}>
             Export CSV
           </Button>
           </CSVLink>
         </Stack>
         <UserListToolbar handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
+
         <NewTable 
         rowData={USERLIST} 
         colDef={colDef} 
         handleCellClick={handleCellClick} 
-        editData = {editJavazathHandler}
+        editData = {editZakathHandler}
         />
       </Container>
-      {toast&&<Toast toast={toast} setToast={setToast} message={message} />}
+      <Toast 
+      toast={toast} 
+      setToast={setToast} 
+      message={message} 
+      />
     </Page>
     <AddBill
      open = {open} 
-     handleClose = {() => setOpen(false)}
-     submitHandler={submitJavazath}
+     handleClose = {() => {setEditData(null) ;
+      setOpen(false)}}
+     submitHandler={submitZakath}
      loading={loading}
+    //  editData = {editData}
      />
     {editData ? <EditBill 
      open={editModel}
      editData={editData}
      handleClose = {handleCloseEdit}
-     editHandler={editJavazath}
+     editHandler={editZakath}
      loading={loading}
-     /> :''} 
+     /> :''}
      {editData ? <AddBill
      open = {open} 
      handleClose = {() => {setEditData(null) ;
       setOpen(false)}}
-     submitHandler={submitJavazath}
+     submitHandler={submitZakath}
      loading={loading}
-     editData={editData}
-     editJavazathHandler={editJavazathHandler}
+     editData = {editData}
+     editVisaHandler={editZakathHandler}
      /> :''}
-     {viewData ? <View
+    {viewData ? <View
     open={view}
     viewData={viewData}
     handleClose = {handleCloseView}
-    /> : '' }
+    /> : '' } 
     </>
   );
 }
