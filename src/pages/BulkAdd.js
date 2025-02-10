@@ -228,7 +228,7 @@ export default function BulkAdd() {
                     case "government_fee":
                         return {
                             ...col,
-                            hide: !(["Javasath", "Insurance", "Visa"].includes(mainCategory) && !["Driving Licence", "Vehicle Registration Renew", "Visit Visa", "Visit Chamber", "Wakala", "Visa Chamber", "Mofa"].includes(sub_category)), // Hide "Age" for Type "A" and Sub Type "X"
+                            hide: !(["Javasath", "Work", "Visa"].includes(mainCategory) && ["Driving Licence", "Vehicle Registration Renew","Work Visa","Wakala","Sijil","Ruksa"].includes(sub_category)), // Hide "Age" for Type "A" and Sub Type "X"
                         };
                     case "insurance":
                     case "mol":
