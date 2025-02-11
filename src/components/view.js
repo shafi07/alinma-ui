@@ -34,7 +34,7 @@ export default function View({open,viewData,handleClose}) {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" color='red' >
-            {viewData.remarks?viewData.remarks:'test'}
+            {viewData?.remarks || "No Remarks"}
           </Typography>
           <div style={divStyle} >
                {(viewData.amount_paid_dates).map((row)=>  

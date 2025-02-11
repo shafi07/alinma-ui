@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import styles from "./DeleteCell.module.css";
 
-const DeleteCellRenderer = ({ api, node, onDelete,onPrint,print = false }) => {
+const DeleteCellRenderer = ({ api, node, onDelete,onPrint,print = false,view=false,onView }) => {
   const onRemoveClick = useCallback(() => {
     const rowData = node.data;
     onDelete(rowData)
@@ -11,21 +11,31 @@ const DeleteCellRenderer = ({ api, node, onDelete,onPrint,print = false }) => {
     const rowData = node.data;
     onPrint(rowData)
   }, [node, api]);
+  const onViewClick = useCallback(() => {
+    const rowData = node.data;
+    onView(rowData)
+  }, [node, api]);
 
   return (
     <div className={styles.buttonCell}>
-      <button
+      {!view &&<button
         className={`button-secondary ${styles.removeButton}`}
         onClick={onRemoveClick}
       >
         <img src={`/assets/delete.svg`} alt="delete" />
-      </button>
-      {print && <button
+      </button>}
+      {<>{print && <button
         className={`button-secondary ${styles.printButton}`}
         onClick={onPrintClick}
       >
         <img src={`/assets/printer-icon.svg`} alt="delete" />
       </button>}
+      {view && <button
+        className={`button-secondary ${styles.removeButton}`}
+        onClick={onViewClick}
+      >
+        <img src={`/assets/view.svg`} alt="delete" />
+      </button>}</>}
     </div>
   );
 };

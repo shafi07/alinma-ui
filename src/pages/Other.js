@@ -130,11 +130,28 @@ export default function Other() {
           api={params.api}
           onDelete={handleDeleteRow}
           onPrint = {handlePrint}
-          print = {true}
         />
       ), 
       // minWidth: 194,
-      width: 130,
+      width: 80,
+      floatingFilter: false ,
+      filter: false  
+    },
+    { 
+      field: "View/Print",
+      cellRenderer: (params) => (
+        <DeleteCellRenderer
+          node={params.node}
+          api={params.api}
+          onDelete={handleDeleteRow}
+          onPrint = {handlePrint}
+          onView = {viewOpen}
+          print = {true}
+          view = {true}
+        />
+      ), 
+      // minWidth: 194,
+      width: 140,
       floatingFilter: false ,
       filter: false  
     },
