@@ -250,7 +250,7 @@ const handleDeleteRow = useCallback((deletedRow) => {
       .then((res) => {
         setOpen(false)
         setReFetch(!reFetch)
-        actions.resetForm()
+        actions?.resetForm()
         setMessage(res.data.message)
         setEditData(null)
         setToast(true)
@@ -322,58 +322,61 @@ const handleDeleteRow = useCallback((deletedRow) => {
 
   return (
     <>
-    <Page title="Javasath">
-      <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={-1}>
-          <Typography variant="h4" gutterBottom>
-            JAVASATH
-          </Typography>
-          <Button variant="contained" sx={{backgroundColor:'#F51720'}} onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Javasath
-          </Button>
-          <CSVLink headers={javasathHeaders} data={USERLIST?USERLIST:[]} filename={'test'}>
-          <Button variant="contained" startIcon={<Iconify icon="prime:file-excel" />}>
-            Export CSV
-          </Button>
-          </CSVLink>
-        </Stack>
-        <UserListToolbar handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
-        <NewTable 
-        rowData={USERLIST} 
-        colDef={colDef} 
-        handleCellClick={handleCellClick} 
-        editData = {editJavazathHandler}
-        />
-      </Container>
-      {toast&&<Toast toast={toast} setToast={setToast} message={message} />}
-    </Page>
-    <AddBill
-     open = {open} 
-     handleClose = {() => setOpen(false)}
-     submitHandler={submitJavazath}
-     loading={loading}
-     />
-    {editData ? <EditBill 
-     open={editModel}
-     editData={editData}
-     handleClose = {handleCloseEdit}
-     editHandler={editJavazath}
-     loading={loading}
-     /> :''} 
-     {editData ? <AddBill
-     open = {open} 
-     handleClose = {() => {setEditData(null) ;
-      setOpen(false)}}
-     submitHandler={submitJavazath}
-     loading={loading}
-     editData={editData}
-     editJavazathHandler={editJavazathHandler}
-     /> :''}
-     {viewData ? <View
-    open={view}
-    viewData={viewData}
-    handleClose = {handleCloseView}
-    /> : '' }
+      <Page title="Javasath">
+        <Container>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={-1}>
+            <Typography variant="h4" gutterBottom>
+              JAVASATH
+            </Typography>
+            <Button variant="contained" sx={{ backgroundColor: '#F51720' }} onClick={() => setOpen(true)} startIcon={<Iconify icon="eva:plus-fill" />}>
+              New Javasath
+            </Button>
+            <CSVLink headers={javasathHeaders} data={USERLIST ? USERLIST : []} filename={'test'}>
+              <Button variant="contained" startIcon={<Iconify icon="prime:file-excel" />}>
+                Export CSV
+              </Button>
+            </CSVLink>
+          </Stack>
+          <UserListToolbar handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
+          <NewTable
+            rowData={USERLIST}
+            colDef={colDef}
+            handleCellClick={handleCellClick}
+            editData={editJavazathHandler}
+            returnHandler={handleStatusChange}
+          />
+        </Container>
+        {toast && <Toast toast={toast} setToast={setToast} message={message} />}
+      </Page>
+      <AddBill
+        open={open}
+        handleClose={() => setOpen(false)}
+        submitHandler={submitJavazath}
+        loading={loading}
+      />
+      {editData ? <EditBill
+        open={editModel}
+        editData={editData}
+        handleClose={handleCloseEdit}
+        editHandler={editJavazath}
+        loading={loading}
+      /> : ''}
+      {editData ? <AddBill
+        open={open}
+        handleClose={() => {
+          setEditData(null);
+          setOpen(false)
+        }}
+        submitHandler={submitJavazath}
+        loading={loading}
+        editData={editData}
+        editJavazathHandler={editJavazathHandler}
+      /> : ''}
+      {viewData ? <View
+        open={view}
+        viewData={viewData}
+        handleClose={handleCloseView}
+      /> : ''}
     </>
   );
 }

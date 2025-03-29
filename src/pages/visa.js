@@ -279,7 +279,7 @@ const handleDeleteRow = useCallback((deletedRow) => {
       .then((res) => {
         setOpen(false)
         setReFetch(!reFetch)
-        actions.resetForm()
+        actions?.resetForm()
         setMessage(res.data.message)
         setEditData(null)
         setToast(true)
@@ -350,65 +350,70 @@ const handleDeleteRow = useCallback((deletedRow) => {
 
   return (
     <>
-    <Page title="Visa">
-      <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={-1}>
-          <Typography variant="h4" gutterBottom>
-            VISA
-          </Typography>
-          <Button variant="contained" sx={{backgroundColor:'#F51720'}} onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Visa
-          </Button>
-          <CSVLink headers={visaHeaders} data={USERLIST?USERLIST:[]} filename={'test'}>
-          <Button variant="contained" startIcon={<Iconify icon="prime:file-excel" />}>
-            Export CSV
-          </Button>
-          </CSVLink>
-        </Stack>
-        <UserListToolbar handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
+      <Page title="Visa">
+        <Container>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={-1}>
+            <Typography variant="h4" gutterBottom>
+              VISA
+            </Typography>
+            <Button variant="contained" sx={{ backgroundColor: '#F51720' }} onClick={() => setOpen(true)} startIcon={<Iconify icon="eva:plus-fill" />}>
+              New Visa
+            </Button>
+            <CSVLink headers={visaHeaders} data={USERLIST ? USERLIST : []} filename={'test'}>
+              <Button variant="contained" startIcon={<Iconify icon="prime:file-excel" />}>
+                Export CSV
+              </Button>
+            </CSVLink>
+          </Stack>
+          <UserListToolbar handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
 
-        <NewTable 
-        rowData={USERLIST} 
-        colDef={colDef} 
-        handleCellClick={handleCellClick} 
-        editData = {editVisaHandler}
+          <NewTable
+            rowData={USERLIST}
+            colDef={colDef}
+            handleCellClick={handleCellClick}
+            editData={editVisaHandler}
+            returnHandler={handleStatusChange}
+          />
+        </Container>
+        <Toast
+          toast={toast}
+          setToast={setToast}
+          message={message}
         />
-      </Container>
-      <Toast 
-      toast={toast} 
-      setToast={setToast} 
-      message={message} 
+      </Page>
+      <AddBill
+        open={open}
+        handleClose={() => {
+          setEditData(null);
+          setOpen(false)
+        }}
+        submitHandler={submitVisa}
+        loading={loading}
+      //  editData = {editData}
       />
-    </Page>
-    <AddBill
-     open = {open} 
-     handleClose = {() => {setEditData(null) ;
-      setOpen(false)}}
-     submitHandler={submitVisa}
-     loading={loading}
-    //  editData = {editData}
-     />
-    {editData ? <EditBill 
-     open={editModel}
-     editData={editData}
-     handleClose = {handleCloseEdit}
-     editHandler={editVisa}
-     loading={loading}
-     /> :''}
-     {editData ? <AddBill
-     open = {open} 
-     handleClose = {() => {setEditData(null) ;
-      setOpen(false)}}
-     submitHandler={submitVisa}
-     loading={loading}
-     editData = {editData}
-     editVisaHandler={editVisaHandler}
-     /> :''}
-    {viewData ? <View
-    open={view}
-    viewData={viewData}
-    handleClose = {handleCloseView}
-    /> : '' } 
+      {editData ? <EditBill
+        open={editModel}
+        editData={editData}
+        handleClose={handleCloseEdit}
+        editHandler={editVisa}
+        loading={loading}
+      /> : ''}
+      {editData ? <AddBill
+        open={open}
+        handleClose={() => {
+          setEditData(null);
+          setOpen(false)
+        }}
+        submitHandler={submitVisa}
+        loading={loading}
+        editData={editData}
+        editVisaHandler={editVisaHandler}
+      /> : ''}
+      {viewData ? <View
+        open={view}
+        viewData={viewData}
+        handleClose={handleCloseView}
+      /> : ''}
     </>
   );
 }

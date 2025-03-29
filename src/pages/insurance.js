@@ -258,7 +258,7 @@ const handleDeleteRow = useCallback((deletedRow) => {
       .then((res) => {
         setOpen(false)
         setReFetch(!reFetch)
-        actions.resetForm()
+        actions?.resetForm()
         setMessage(res.data.message)
         setEditData(null)
         setToast(true)
@@ -331,58 +331,61 @@ const handleDeleteRow = useCallback((deletedRow) => {
 
   return (
     <>
-    <Page title="insurance">
-      <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={-1}>
-          <Typography variant="h4" gutterBottom>
-            INSURANCE
-          </Typography>
-          <Button variant="contained" sx={{backgroundColor:'#F51720'}} onClick={() => setOpen(true)}   startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Insurance
-          </Button>
-          <CSVLink headers={insuranceHeaders} data={USERLIST?USERLIST:[]} filename={'test'}>
-          <Button variant="contained" startIcon={<Iconify icon="prime:file-excel" />}>
-            Export CSV
-          </Button>
-          </CSVLink>
-        </Stack>
-        <UserListToolbar handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
-        <NewTable 
-        rowData={USERLIST} 
-        colDef={colDef} 
-        handleCellClick={handleCellClick} 
-        editData = {editInsuranceHandler}
-        />
-      </Container>
-      <Toast toast={toast} setToast={setToast} message={message} />
-    </Page>
-    <AddBill
-     open = {open} 
-     handleClose = {() => setOpen(false)}
-     submitHandler={submitInsurance}
-     loading={loading}
-     />
-    {editData ? <EditBill 
-     open={editModel}
-     editData={editData}
-     handleClose = {handleCloseEdit}
-     editHandler={editInsurance}
-     loading={loading}
-     /> :''} 
-     {editData ? <AddBill
-     open = {open} 
-     handleClose = {() => {setEditData(null) ;
-      setOpen(false)}}
-     submitHandler={submitInsurance}
-     loading={loading}
-     editData={editData}
-     editInsuranceHandler={editInsuranceHandler}
-     /> :''}
-     {viewData ? <View
-    open={view}
-    viewData={viewData}
-    handleClose = {handleCloseView}
-    /> : '' }
+      <Page title="insurance">
+        <Container>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={-1}>
+            <Typography variant="h4" gutterBottom>
+              INSURANCE
+            </Typography>
+            <Button variant="contained" sx={{ backgroundColor: '#F51720' }} onClick={() => setOpen(true)} startIcon={<Iconify icon="eva:plus-fill" />}>
+              New Insurance
+            </Button>
+            <CSVLink headers={insuranceHeaders} data={USERLIST ? USERLIST : []} filename={'test'}>
+              <Button variant="contained" startIcon={<Iconify icon="prime:file-excel" />}>
+                Export CSV
+              </Button>
+            </CSVLink>
+          </Stack>
+          <UserListToolbar handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
+          <NewTable
+            rowData={USERLIST}
+            colDef={colDef}
+            handleCellClick={handleCellClick}
+            editData={editInsuranceHandler}
+            returnHandler={handleStatusChange}
+          />
+        </Container>
+        <Toast toast={toast} setToast={setToast} message={message} />
+      </Page>
+      <AddBill
+        open={open}
+        handleClose={() => setOpen(false)}
+        submitHandler={submitInsurance}
+        loading={loading}
+      />
+      {editData ? <EditBill
+        open={editModel}
+        editData={editData}
+        handleClose={handleCloseEdit}
+        editHandler={editInsurance}
+        loading={loading}
+      /> : ''}
+      {editData ? <AddBill
+        open={open}
+        handleClose={() => {
+          setEditData(null);
+          setOpen(false)
+        }}
+        submitHandler={submitInsurance}
+        loading={loading}
+        editData={editData}
+        editInsuranceHandler={editInsuranceHandler}
+      /> : ''}
+      {viewData ? <View
+        open={view}
+        viewData={viewData}
+        handleClose={handleCloseView}
+      /> : ''}
     </>
   );
 }

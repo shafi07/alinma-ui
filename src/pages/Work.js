@@ -254,7 +254,7 @@ const handleDeleteRow = useCallback((deletedRow) => {
       .then((res) => {
         setOpen(false)
         setReFetch(!reFetch)
-        actions.resetForm()
+        actions?.resetForm()
         setMessage(res.data.message)
         setEditData(null)
         setToast(true)
@@ -342,12 +342,13 @@ const handleDeleteRow = useCallback((deletedRow) => {
             </CSVLink>
           </Stack>
           <UserListToolbar handleStatusFilter={handleStatusFilter} status={status} numSelected={selected.length} filterName={query} onFilterName={handleFilterByName} />
-          <NewTable 
-        rowData={USERLIST} 
-        colDef={colDef} 
-        handleCellClick={handleCellClick} 
-        editData = {editWorkHandler}
-        />
+          <NewTable
+            rowData={USERLIST}
+            colDef={colDef}
+            handleCellClick={handleCellClick}
+            editData={editWorkHandler}
+            returnHandler={handleStatusChange}
+          />
 
         </Container>
         <Toast toast={toast} setToast={setToast} message={message} />
