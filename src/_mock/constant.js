@@ -55,7 +55,7 @@ export const workHeaders = [
     { label: "total_amount", key: "total_amount" },
     { label: "paid_amount", key: "paid_amount" },
     { label: "balance_amount", key: "balance_amount" },
-    { label: "sponser_name", key: "sponser_name" },
+    { label: "sponser_name", key: "sponser_name" }, 
     { label: "Remarks", key: "remarks" },
   ];
 
