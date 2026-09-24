@@ -1,50 +1,21 @@
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Link, Container, Typography} from '@mui/material';
-// hooks
-import useResponsive from '../hooks/useResponsive';
+import { Container, Typography } from '@mui/material';
 // components
 import Page from '../components/Page';
-import Logo from '../components/Logo'; 
 import Toast from 'src/components/toast';
-import { URL} from '../_mock/constant'
+import { URL } from '../_mock/constant';
 // sections
 import { LoginForm } from '../sections/auth/login';
-import AuthSocial from '../sections/auth/AuthSocial';
-import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex',
   },
-}));
-
-const HeaderStyle = styled('header')(({ theme }) => ({
-  top: 0,
-  zIndex: 9,
-  lineHeight: 0,
-  width: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  position: 'absolute',
-  padding: theme.spacing(3),
-  justifyContent: 'space-between',
-  [theme.breakpoints.up('md')]: {
-    alignItems: 'flex-start',
-    padding: theme.spacing(7, 5, 0, 7),
-  },
-}));
-
-const SectionStyle = styled(Card)(({ theme }) => ({
-  width: '100%',
-  maxWidth: 464,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  margin: theme.spacing(2, 0, 2, 2),
 }));
 
 const ContentStyle = styled('div')(({ theme }) => ({
@@ -60,36 +31,34 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Login() {
-  const smUp = useResponsive('up', 'sm');
+  const [loading, setLoading] = useState(false);
 
-  const mdUp = useResponsive('up', 'md');
+  const [toast, setToast] = useState(false);
 
-  const [loading,setLoading]=useState(false)
-
-  const [toast,setToast]=useState(false)
-
-  const [message,setMessage]=useState(null)
+  const [message, setMessage] = useState(null);
 
   const navigate = useNavigate();
 
-  const loginHandler = async(d)=>{
-    setLoading(true)
-    axios.post(`${URL}/user/auth`, d)
+  const loginHandler = async (d) => {
+    setLoading(true);
+    axios
+      .post(`${URL}/user/auth`, d)
       .then((res) => {
-          localStorage.setItem('auth', res.data.id)
-          navigate('/dashboard/app', { replace: true });
-          setToast(true)
-      }).catch((err) => {
-        setMessage(err.response.data.message)
-        setToast(true)
-        setLoading(false)
+        localStorage.setItem('auth', res.data.id);
+        navigate('/dashboard/app', { replace: true });
+        setToast(true);
       })
-    setLoading(false)
-  }
+      .catch((err) => {
+        setMessage(err.response.data.message);
+        setToast(true);
+        setLoading(false);
+      });
+    setLoading(false);
+  };
 
   return (
     <Page title="Login">
-      <RootStyle>     
+      <RootStyle>
         <Container maxWidth="sm">
           <ContentStyle>
             <Typography variant="h4" alignItems="center" gutterBottom>
@@ -97,19 +66,10 @@ export default function Login() {
             </Typography>
 
             <LoginForm loginHandler={loginHandler} loading={loading} />
-
-            {!smUp && (
-              <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                Don’t have an account?{' '}
-                <Link variant="subtitle2" component={RouterLink} to="/register">
-                  Get started
-                </Link>
-              </Typography>
-            )}
           </ContentStyle>
         </Container>
       </RootStyle>
-      <Toast toast={toast} setToast={setToast} message={message}/>
+      <Toast toast={toast} setToast={setToast} message={message} />
     </Page>
   );
 }

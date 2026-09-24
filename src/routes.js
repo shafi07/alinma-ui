@@ -1,49 +1,59 @@
+import { lazy, Suspense } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
+import { Box, CircularProgress } from '@mui/material';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
-//
-import User from './pages/Javasath';
-import Login from './pages/Login';
-import NotFound from './pages/Page404';
-import DashboardApp from './pages/DashboardApp';
-import Print from './pages/print'
-import Insurance from './pages/insurance';
-import Work from './pages/Work';
-import Other from './pages/Other'
-import Visa from './pages/visa';
-import Expense from './pages/expense';
-import Agent from './pages/agent';
-import Customer from './pages/customerDetails';
-import BulkAdd from './pages/BulkAdd';
-import Zakath from './pages/zakath';
+
+const User = lazy(() => import('./pages/Javasath'));
+const Login = lazy(() => import('./pages/Login'));
+const NotFound = lazy(() => import('./pages/Page404'));
+const DashboardApp = lazy(() => import('./pages/DashboardApp'));
+const Print = lazy(() => import('./pages/print'));
+const Insurance = lazy(() => import('./pages/insurance'));
+const Work = lazy(() => import('./pages/Work'));
+const Other = lazy(() => import('./pages/Other'));
+const Visa = lazy(() => import('./pages/visa'));
+const Expense = lazy(() => import('./pages/expense'));
+const Agent = lazy(() => import('./pages/agent'));
+const Customer = lazy(() => import('./pages/customerDetails'));
+const BulkAdd = lazy(() => import('./pages/BulkAdd'));
+const Zakath = lazy(() => import('./pages/zakath'));
+
+function PageLoader() {
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+      <CircularProgress />
+    </Box>
+  );
+}
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
-  let isLoggedIn = false
-      isLoggedIn = (localStorage.getItem("auth") === null) ? false : true
-  return useRoutes([
+  const isLoggedIn = localStorage.getItem('auth') !== null;
+
+  const routes = useRoutes([
     {
       path: '/dashboard',
-      element: isLoggedIn? <DashboardLayout /> : <Navigate to="/login" /> ,
+      element: isLoggedIn ? <DashboardLayout /> : <Navigate to="/login" />,
       children: [
         { path: 'app', element: <DashboardApp /> },
-        { path: 'javasath', element:<User /> },
-        { path: 'insurance', element: <Insurance />},
-        { path: 'work', element:<Work />},
-        { path: 'visa', element:<Visa />},
-        { path: 'passport', element:<Other /> },
-        { path: 'other', element:<Other /> },
-        { path: 'agent', element:<Agent /> },
-        { path: 'customer', element:<Customer /> },
-        { path: 'expense', element:<Expense /> },
-        { path: 'bulkAdd', element:<BulkAdd /> },
-        { path: 'zakath', element:<Zakath />},
+        { path: 'javasath', element: <User /> },
+        { path: 'insurance', element: <Insurance /> },
+        { path: 'work', element: <Work /> },
+        { path: 'visa', element: <Visa /> },
+        { path: 'passport', element: <Other /> },
+        { path: 'other', element: <Other /> },
+        { path: 'agent', element: <Agent /> },
+        { path: 'customer', element: <Customer /> },
+        { path: 'expense', element: <Expense /> },
+        { path: 'bulkAdd', element: <BulkAdd /> },
+        { path: 'zakath', element: <Zakath /> },
       ],
     },
     {
-      path:'print',
+      path: 'print',
       element: <Print />,
     },
     {
@@ -64,4 +74,6 @@ export default function Router() {
       element: <Navigate to="/404" replace />,
     },
   ]);
+
+  return <Suspense fallback={<PageLoader />}>{routes}</Suspense>;
 }

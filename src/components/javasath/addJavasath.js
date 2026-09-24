@@ -13,7 +13,7 @@ import {
   MenuItem,
   TextField
 } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
+import Iconify from '../Iconify';
 import * as Yup from "yup";
 import { Formik } from "formik";
 
@@ -151,7 +151,7 @@ export default function FullScreenDialog({
               onClick={()=>{handleClose();resetForm()}}
               aria-label="close"
             >
-              <CloseIcon />
+              <Iconify icon="eva:close-fill" />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               {editData ? `Javasath-[${editData.createddate}]`:`Javasath`}

@@ -1,21 +1,14 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-// form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { Formik, Form } from 'formik';
 // @mui
-import { Link, Stack, IconButton, InputAdornment } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { Stack, IconButton, InputAdornment, TextField, Button, Checkbox, FormControlLabel, Link } from '@mui/material';
 // components
 import Iconify from '../../../components/Iconify';
-import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
-export default function LoginForm({loginHandler,loading}) {
-  const navigate = useNavigate();
-
+export default function LoginForm({ loginHandler, loading }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -23,57 +16,62 @@ export default function LoginForm({loginHandler,loading}) {
     password: Yup.string().required('Password is required'),
   });
 
-  const defaultValues = {
-    userName: '',
-    password: '',
-    remember: true,
-  };
-
-  const methods = useForm({
-    resolver: yupResolver(LoginSchema),
-    defaultValues,
-  });
-
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
-
-  // const onSubmit = async (d) => {
-  //   navigate('/dashboard/app', { replace: true });
-  //   console.log(d)
-  // };
-
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(loginHandler)}>
-      <Stack spacing={3}>
-        <RHFTextField name="userName" label="Email address" />
-        <RHFTextField
-          name="password"
-          label="Password"
-          type={showPassword ? 'text' : 'password'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Stack>
+    <Formik
+      initialValues={{
+        userName: '',
+        password: '',
+        remember: true,
+      }}
+      validationSchema={LoginSchema}
+      onSubmit={(values) => loginHandler(values)}
+    >
+      {({ handleChange, values, errors, touched }) => (
+        <Form>
+          <Stack spacing={3}>
+            <TextField
+              name="userName"
+              label="Email address"
+              value={values.userName}
+              onChange={handleChange}
+              error={Boolean(touched.userName && errors.userName)}
+              helperText={touched.userName && errors.userName}
+            />
+            <TextField
+              name="password"
+              label="Password"
+              type={showPassword ? 'text' : 'password'}
+              value={values.password}
+              onChange={handleChange}
+              error={Boolean(touched.password && errors.password)}
+              helperText={touched.password && errors.password}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                      <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Stack>
 
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <RHFCheckbox name="remember" label="Remember me" />
-        <Link variant="subtitle2" underline="hover">
-          Forgot password?
-        </Link>
-      </Stack>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
+            <FormControlLabel
+              control={<Checkbox name="remember" checked={values.remember} onChange={handleChange} />}
+              label="Remember me"
+            />
+            <Link variant="subtitle2" underline="hover">
+              Forgot password?
+            </Link>
+          </Stack>
 
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" disabled={loading} loading={isSubmitting}>
-        Login
-      </LoadingButton>
-    </FormProvider>
+          <Button fullWidth size="large" type="submit" variant="contained" disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
+          </Button>
+        </Form>
+      )}
+    </Formik>
   );
 }

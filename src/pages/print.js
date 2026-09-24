@@ -1,89 +1,98 @@
-import { useState,useEffect,useRef } from 'react';
-import { useNavigate,useLocation} from "react-router-dom";
+import { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Box, Divider, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 
-import { Col, Divider, Row, Table } from "antd";
-import "antd/dist/antd.min.css";
+export default function Print() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const data = location.state;
 
-export default function Print (){
-
-    const navigate = useNavigate()
-    const location = useLocation();
-    const data = location.state
-
-    console.log('print>>>>>>',data)
-
-    useEffect(() => {
-        window.print();
-        navigate(`/dashboard/${data.path}`)
-      },[]);
+  useEffect(() => {
+    window.print();
+    navigate(`/dashboard/${data.path}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <div style={{ padding: 20 }}>
-      <Row >
-        <Col  style={{width:'100%'}}>
-          <Divider>Alinma-Invoice</Divider>
-        </Col>
-      </Row>
+    <Box sx={{ p: 2.5 }}>
+      <Divider>Alinma-Invoice</Divider>
 
-      <Row gutter={24} style={{ marginTop: 32}}>
-        <Col span={10} >
-          <h1>Alinma Travles</h1>
-          <div>Near Gold Market(Sulaimaniya),</div>
-          <div>Al kharj</div>
-          <div>Riyadh, Saudi Arabia</div>
-        </Col>
-        <Col span={10} offset={16}>
-          <table>
-            <tr>
-              <th>File No :</th>
-              <td>{`${data.fileid}`}</td>
-            </tr>
-            <tr>
-              <th>Invoice Date :</th>
-              <td>{new Date().toLocaleString().split(',')[0].replaceAll('/','-')}</td>
-            </tr>
-          </table>
-        </Col>
-      </Row>
+      <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
+        <Box>
+          <Typography variant="h4" component="h1">
+            Alinma Travles
+          </Typography>
+          <Box>Near Gold Market(Sulaimaniya),</Box>
+          <Box>Al kharj</Box>
+          <Box>Riyadh, Saudi Arabia</Box>
+        </Box>
+        <Box component="table">
+          <Box component="tbody">
+            <Box component="tr">
+              <Box component="th" sx={{ textAlign: 'left', pr: 1 }}>
+                File No :
+              </Box>
+              <Box component="td">{`${data.fileid}`}</Box>
+            </Box>
+            <Box component="tr">
+              <Box component="th" sx={{ textAlign: 'left', pr: 1 }}>
+                Invoice Date :
+              </Box>
+              <Box component="td">{new Date().toLocaleString().split(',')[0].replaceAll('/', '-')}</Box>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
 
-      <Row style={{ marginTop: 48 }}>
-        <div>
-          Bill To: <strong>Alinma-Travels Ltd</strong>
-        </div>
-      </Row>
-      <Row style={{ marginTop: 10 }}>
-        <Table
-          dataSource={[data]}
-          pagination={false}
-          style={{width:'100%'}}
-        >
-          <Table.Column title="Name" dataIndex="name" />
-          <Table.Column title="Service" dataIndex="sub_category" />
-          <Table.Column title="ID number" dataIndex="id_number" />
-          <Table.Column title="Total" dataIndex="total_amount" />
-          <Table.Column title="Balance" dataIndex="balance_amount" />
-        </Table>
-      </Row>
+      <Box sx={{ mt: 6 }}>
+        Bill To: <strong>Alinma-Travels Ltd</strong>
+      </Box>
 
-      <Row style={{ marginTop: 48 }}>
-        <Col span={8} offset={16}>
-          <table>
-            <tr>
-              <th>Gross Total :</th>
-              <td>{` SR. ${data.total_amount}`}</td>
-            </tr>
-            <tr>
-              <th>Paid Amount :</th>
-              <td>{` SR. ${data.paid_amount}`}</td>
-            </tr>
-            <tr>
-              <th>Balance:</th>
-              <td>{` SR. ${data.balance_amount}`}</td>
-            </tr>
-          </table>
-        </Col>
-      </Row>
-    </div>
+      <Table sx={{ mt: 1.25, width: '100%' }}>
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>Service</TableCell>
+            <TableCell>ID number</TableCell>
+            <TableCell>Total</TableCell>
+            <TableCell>Balance</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>{data.name}</TableCell>
+            <TableCell>{data.sub_category}</TableCell>
+            <TableCell>{data.id_number}</TableCell>
+            <TableCell>{data.total_amount}</TableCell>
+            <TableCell>{data.balance_amount}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+
+      <Box sx={{ mt: 6, display: 'flex', justifyContent: 'flex-end' }}>
+        <Box component="table">
+          <Box component="tbody">
+            <Box component="tr">
+              <Box component="th" sx={{ textAlign: 'left', pr: 1 }}>
+                Gross Total :
+              </Box>
+              <Box component="td">{` SR. ${data.total_amount}`}</Box>
+            </Box>
+            <Box component="tr">
+              <Box component="th" sx={{ textAlign: 'left', pr: 1 }}>
+                Paid Amount :
+              </Box>
+              <Box component="td">{` SR. ${data.paid_amount}`}</Box>
+            </Box>
+            <Box component="tr">
+              <Box component="th" sx={{ textAlign: 'left', pr: 1 }}>
+                Balance:
+              </Box>
+              <Box component="td">{` SR. ${data.balance_amount}`}</Box>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
-};
-
+}

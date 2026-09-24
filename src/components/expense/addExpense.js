@@ -9,7 +9,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
+import Iconify from '../Iconify';
 import Slide from '@mui/material/Slide';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -55,7 +55,7 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onClick={handleClose}
               aria-label="close"
             >
-              <CloseIcon />
+              <Iconify icon="eva:close-fill" />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               EXPENSE
