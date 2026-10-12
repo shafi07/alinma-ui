@@ -5,6 +5,9 @@ export default function Button(theme) {
     MuiButton: {
       styleOverrides: {
         root: {
+          borderRadius: 10,
+          textTransform: 'none',
+          fontWeight: 600,
           '&:hover': {
             boxShadow: 'none',
           },

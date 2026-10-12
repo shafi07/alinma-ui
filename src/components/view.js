@@ -8,10 +8,14 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 420,
+  maxWidth: 'calc(100% - 32px)',
   bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4,
+  borderRadius: 3,
+  border: '1px solid',
+  borderColor: 'divider',
+  boxShadow: '0 24px 48px rgba(14, 18, 24, 0.16)',
+  p: 3,
 };
 
 const divStyle = {
@@ -33,12 +37,12 @@ export default function View({open,viewData,handleClose}) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" color='red' >
-            {viewData?.remarks || "No Remarks"}
+          <Typography id="modal-modal-title" variant="h6" sx={{ mb: 1 }}>
+            {viewData?.remarks || "No remarks"}
           </Typography>
           <div style={divStyle} >
                {(viewData.amount_paid_dates).map((row)=>  
-                   <Typography id={row.date} sx={{ mt: 2,color:'blue' }}>
+                   <Typography id={row.date} sx={{ mt: 1.5, color: 'primary.dark', fontWeight: 600 }}>
                        {`${row.date}---------SR.${row.amount}`}
                    </Typography>
                ) }  

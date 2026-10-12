@@ -1,23 +1,14 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
-// material
+import { useLocation } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { Box, Link, Drawer, Typography, Avatar } from '@mui/material';
-// mock
-import account from '../../_mock/account';
-// hooks
+import { Box, Drawer, Typography } from '@mui/material';
 import useResponsive from '../../hooks/useResponsive';
-// components
 import Logo from '../../components/Logo';
 import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
-//
 import navConfig from './NavConfig';
-
-// ----------------------------------------------------------------------
-
-const DRAWER_WIDTH = 250;
+const DRAWER_WIDTH = 268;
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
@@ -26,16 +17,6 @@ const RootStyle = styled('div')(({ theme }) => ({
   },
 }));
 
-const AccountStyle = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(2, 2.5),
-  borderRadius: Number(theme.shape.borderRadius) * 1.5,
-  backgroundColor: theme.palette.grey[500_12],
-}));
-
-// ----------------------------------------------------------------------
-
 DashboardSidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
   onCloseSidebar: PropTypes.func,
@@ -43,7 +24,6 @@ DashboardSidebar.propTypes = {
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
-
   const isDesktop = useResponsive('up', 'lg');
 
   useEffect(() => {
@@ -60,58 +40,49 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
       }}
     >
-      <Box sx={{ px: 2.5, py: 3, display: 'inline-flex' }}>
-        <Logo />
+      <Box sx={{ px: 2.5, pt: 2.5, pb: 2 }}>
+        <Logo light />
       </Box>
 
-      <Box sx={{ mb: 5, mx: 2.5 }}>
-        <Link underline="none" component={RouterLink} to="#">
-          <AccountStyle>
-            <Avatar src={account.photoURL} alt="photoURL" />
-            <Box sx={{ ml: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
-              </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
-              </Typography>
-            </Box>
-          </AccountStyle>
-        </Link>
-      </Box>
+      <Typography
+        variant="overline"
+        sx={{ px: 3, pt: 1, pb: 0.5, color: 'rgba(247,245,241,0.38)', letterSpacing: '0.16em' }}
+      >
+        Menu
+      </Typography>
 
       <NavSection navConfig={navConfig} />
 
       <Box sx={{ flexGrow: 1 }} />
+
+      <Box sx={{ mx: 2, mb: 2.5, p: 2, borderRadius: 2, bgcolor: 'rgba(255,255,255,0.05)' }}>
+        <Typography variant="subtitle2" sx={{ color: '#F7F5F1' }}>
+          Al Kharj office
+        </Typography>
+        <Typography variant="caption" sx={{ color: 'rgba(247,245,241,0.55)' }}>
+          Near Gold Market, Sulaimaniya
+        </Typography>
+      </Box>
     </Scrollbar>
   );
+
+  const paperSx = {
+    width: DRAWER_WIDTH,
+    bgcolor: '#0E1218',
+    color: '#F7F5F1',
+    borderRight: 'none',
+  };
 
   return (
     <RootStyle>
       {!isDesktop && (
-        <Drawer
-          open={isOpenSidebar}
-          onClose={onCloseSidebar}
-          PaperProps={{
-            sx: { width: DRAWER_WIDTH },
-          }}
-        >
+        <Drawer open={isOpenSidebar} onClose={onCloseSidebar} PaperProps={{ sx: paperSx }}>
           {renderContent}
         </Drawer>
       )}
 
       {isDesktop && (
-        <Drawer
-          open
-          variant="persistent"
-          PaperProps={{
-            sx: {
-              width: DRAWER_WIDTH,
-              bgcolor: 'background.default',
-              borderRightStyle: 'dashed',
-            },
-          }}
-        >
+        <Drawer open variant="persistent" PaperProps={{ sx: paperSx }}>
           {renderContent}
         </Drawer>
       )}

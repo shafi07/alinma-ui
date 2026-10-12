@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import { useState } from 'react';
 import { Formik, Form } from 'formik';
 // @mui
-import { Stack, IconButton, InputAdornment, TextField, Button, Checkbox, FormControlLabel, Link } from '@mui/material';
+import { Stack, IconButton, InputAdornment, TextField, Button } from '@mui/material';
 // components
 import Iconify from '../../../components/Iconify';
 
@@ -21,7 +21,6 @@ export default function LoginForm({ loginHandler, loading }) {
       initialValues={{
         userName: '',
         password: '',
-        remember: true,
       }}
       validationSchema={LoginSchema}
       onSubmit={(values) => loginHandler(values)}
@@ -57,17 +56,7 @@ export default function LoginForm({ loginHandler, loading }) {
             />
           </Stack>
 
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-            <FormControlLabel
-              control={<Checkbox name="remember" checked={values.remember} onChange={handleChange} />}
-              label="Remember me"
-            />
-            <Link variant="subtitle2" underline="hover">
-              Forgot password?
-            </Link>
-          </Stack>
-
-          <Button fullWidth size="large" type="submit" variant="contained" disabled={loading}>
+          <Button fullWidth size="large" type="submit" variant="contained" disabled={loading} sx={{ mt: 3, py: 1.4 }}>
             {loading ? 'Logging in...' : 'Login'}
           </Button>
         </Form>

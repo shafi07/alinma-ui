@@ -5,10 +5,14 @@ export default function Card(theme) {
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: theme.shadows[2],
-          borderRadius: Number(theme.shape.borderRadius) * 2,
+          boxShadow:
+            theme.palette.mode === 'dark'
+              ? 'inset 0 0 0 1px rgba(238, 243, 241, 0.08)'
+              : '0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.05)',
+          borderRadius: 16,
+          border: 'none',
           position: 'relative',
-          zIndex: 0, // Fix Safari overflow: hidden with border radius
+          zIndex: 0,
         },
       },
     },

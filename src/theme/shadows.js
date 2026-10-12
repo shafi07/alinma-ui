@@ -39,7 +39,7 @@ const createShadow = (color) => {
   ];
 };
 
-const createCustomShadow = (color) => {
+const createCustomShadow = (color, palette) => {
   const transparent = alpha(color, 0.24);
 
   return {
@@ -58,7 +58,15 @@ const createCustomShadow = (color) => {
   };
 };
 
-export const customShadows = createCustomShadow(LIGHT_MODE);
+export function buildShadows(palette) {
+  const color = palette.mode === 'dark' ? '#000000' : palette.grey[500];
+  return {
+    shadows: createShadow(color),
+    customShadows: createCustomShadow(color, palette),
+  };
+}
+
+export const customShadows = createCustomShadow(LIGHT_MODE, palette);
 
 const shadows = createShadow(LIGHT_MODE);
 

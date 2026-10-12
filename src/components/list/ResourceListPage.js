@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { CSVLink } from 'react-csv';
-import { Button, Container, Stack, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import Page from '../Page';
+import PageHeader from '../PageHeader';
 import Iconify from '../Iconify';
 import Toast from '../toast';
 import View from '../view';
@@ -9,6 +11,8 @@ import EditBill from '../javasath/editBill';
 import { UserListToolbar } from '../../sections/@dashboard/user';
 import NewTable from '../../pages/table';
 import useResourceList from '../../hooks/useResourceList';
+import { pageMeta } from '../../layouts/dashboard/NavConfig';
+import { panelSx } from '../../theme/panel';
 
 export default function ResourceListPage({
   title,
@@ -33,6 +37,8 @@ export default function ResourceListPage({
   inlineEdit = 'patch',
   formEdit = 'patch',
 }) {
+  const { pathname } = useLocation();
+  const meta = pageMeta[pathname] || {};
   const list = useResourceList({ resource, printPath, buildUrl, filterByStatus });
 
   const colDef = useMemo(
@@ -62,37 +68,46 @@ export default function ResourceListPage({
   return (
     <>
       <Page title={pageTitle || title}>
-        <Container>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={-1}>
-            <Typography variant="h4" gutterBottom>
-              {title}
-            </Typography>
-            {showAddForm && (
-              <Button
-                variant="contained"
-                disabled={addDisabled}
-                sx={{ backgroundColor: '#F51720' }}
-                onClick={() => list.setOpen(true)}
-                startIcon={<Iconify icon="eva:plus-fill" />}
+        <PageHeader
+          group={meta.group}
+          title={pageTitle || meta.title || title}
+          actions={
+            <>
+              <CSVLink
+                headers={csvHeaders}
+                data={list.rows ? list.rows : []}
+                filename={`${title || 'export'}.csv`}
+                style={{ textDecoration: 'none' }}
               >
-                {addLabel}
-              </Button>
-            )}
-            <CSVLink headers={csvHeaders} data={list.rows ? list.rows : []} filename="test">
-              <Button variant="contained" startIcon={<Iconify icon="prime:file-excel" />}>
-                Export CSV
-              </Button>
-            </CSVLink>
-          </Stack>
+                <Button variant="text" color="inherit" startIcon={<Iconify icon="prime:file-excel" />}>
+                  Export
+                </Button>
+              </CSVLink>
+              {showAddForm && (
+                <Button
+                  variant="contained"
+                  disabled={addDisabled}
+                  onClick={() => list.setOpen(true)}
+                  startIcon={<Iconify icon="eva:plus-fill" />}
+                >
+                  {addLabel}
+                </Button>
+              )}
+            </>
+          }
+        />
+        <Box sx={panelSx}>
           {showToolbar && (
-            <UserListToolbar
-              expense={showStatusFilter}
-              handleStatusFilter={list.handleStatusFilter}
-              status={list.status}
-              numSelected={0}
-              filterName={list.query}
-              onFilterName={list.handleFilterByName}
-            />
+            <Box sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+              <UserListToolbar
+                expense={showStatusFilter}
+                handleStatusFilter={list.handleStatusFilter}
+                status={list.status}
+                numSelected={0}
+                filterName={list.query}
+                onFilterName={list.handleFilterByName}
+              />
+            </Box>
           )}
           <NewTable
             rowData={list.rows}
@@ -101,7 +116,7 @@ export default function ResourceListPage({
             editData={gridEditHandler}
             returnHandler={inlineEdit ? list.changeStatus : undefined}
           />
-        </Container>
+        </Box>
         <Toast toast={list.toast} setToast={list.setToast} message={list.message} />
       </Page>
       {showAddForm && AddForm && <AddForm {...addFormProps} />}

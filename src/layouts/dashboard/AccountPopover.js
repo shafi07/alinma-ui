@@ -1,92 +1,54 @@
 import { useRef, useState } from 'react';
-import { Link as RouterLink,useNavigate } from 'react-router-dom';
-// @mui
-import { alpha } from '@mui/material/styles';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton } from '@mui/material';
-// components
 import MenuPopover from '../../components/MenuPopover';
-// mocks_
 import account from '../../_mock/account';
-
-// ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
   {
     label: 'Home',
-    icon: 'eva:home-fill',
     linkTo: '/dashboard/app',
   },
-  // {
-  //   label: 'Profile',
-  //   icon: 'eva:person-fill',
-  //   linkTo: '#',
-  // },
-  // {
-  //   label: 'Settings',
-  //   icon: 'eva:settings-2-fill',
-  //   linkTo: '#',
-  // },
 ];
-
-// ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const anchorRef = useRef(null);
-
   const [open, setOpen] = useState(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const handleOpen = (event) => {
-    setOpen(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setOpen(null);
-  };
-
-  const handleLogout = () =>{
-    localStorage.removeItem('auth')
+  const handleLogout = () => {
+    localStorage.removeItem('auth');
     navigate('/login', { replace: true });
-  }
+  };
 
   return (
     <>
       <IconButton
         ref={anchorRef}
-        onClick={handleOpen}
-        sx={{
-          p: 0,
-          ...(open && {
-            '&:before': {
-              zIndex: 1,
-              content: "''",
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              position: 'absolute',
-              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
-            },
-          }),
-        }}
+        onClick={(event) => setOpen(event.currentTarget)}
+        sx={{ p: 0.25 }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        <Avatar sx={{ width: 34, height: 34, bgcolor: 'primary.main', fontSize: 14, fontWeight: 700 }}>
+          {account.displayName?.slice(0, 1)}
+        </Avatar>
       </IconButton>
 
       <MenuPopover
         open={Boolean(open)}
         anchorEl={open}
-        onClose={handleClose}
+        onClose={() => setOpen(null)}
         sx={{
           p: 0,
           mt: 1.5,
           ml: 0.75,
+          width: 220,
           '& .MuiMenuItem-root': {
             typography: 'body2',
-            borderRadius: 0.75,
+            borderRadius: 1,
           },
         }}
       >
-        <Box sx={{ my: 1.5, px: 2.5 }}>
+        <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
             {account.displayName}
           </Typography>
@@ -95,19 +57,19 @@ export default function AccountPopover() {
           </Typography>
         </Box>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider />
 
         <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
-            <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
+            <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={() => setOpen(null)}>
               {option.label}
             </MenuItem>
           ))}
         </Stack>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider />
 
-        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
+        <MenuItem onClick={handleLogout} sx={{ m: 1, color: 'error.main' }}>
           Logout
         </MenuItem>
       </MenuPopover>

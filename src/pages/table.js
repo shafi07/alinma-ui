@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import "../styles/grid.css";
 
 const NewTable = ({ rowData, colDef = [], handleCellClick, editData,returnHandler }) => {
   const gridRef = useRef(null);

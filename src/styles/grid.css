@@ -1,0 +1,20 @@
+.ag-theme-alpine.ag-theme-alpine {
+  --ag-font-family: 'Plus Jakarta Sans', sans-serif;
+  --ag-font-size: 13px;
+  --ag-header-height: 44px;
+  --ag-wrapper-border-radius: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.ag-theme-alpine.ag-theme-alpine .ag-header-cell-text,
+.ag-theme-alpine.ag-theme-alpine .ag-header-cell-label {
+  font-weight: 600;
+}
+
+.ag-theme-alpine.ag-theme-alpine .ag-root-wrapper,
+.ag-theme-alpine.ag-theme-alpine .ag-root-wrapper-body {
+  border: none;
+  border-radius: 0;
+}

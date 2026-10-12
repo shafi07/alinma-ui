@@ -50,6 +50,8 @@ export default function Input(theme) {
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
+          borderRadius: 10,
+          backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.default : theme.palette.background.paper,
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: theme.palette.grey[500_32],
           },

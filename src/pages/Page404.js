@@ -1,48 +1,36 @@
 import { Link as RouterLink } from 'react-router-dom';
-// @mui
-import { styled } from '@mui/material/styles';
 import { Button, Typography, Container, Box } from '@mui/material';
-// components
 import Page from '../components/Page';
-
-// ----------------------------------------------------------------------
-
-const ContentStyle = styled('div')(({ theme }) => ({
-  maxWidth: 480,
-  margin: 'auto',
-  minHeight: '100vh',
-  display: 'flex',
-  justifyContent: 'center',
-  flexDirection: 'column',
-  padding: theme.spacing(12, 0)
-}));
-
-// ----------------------------------------------------------------------
 
 export default function Page404() {
   return (
     <Page title="404 Page Not Found">
       <Container>
-        <ContentStyle sx={{ textAlign: 'center', alignItems: 'center' }}>
-          <Typography variant="h3" paragraph>
-            Sorry, page not found!
+        <Box
+          sx={{
+            maxWidth: 480,
+            margin: 'auto',
+            minHeight: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            textAlign: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Typography sx={{ fontSize: 72, fontWeight: 800, letterSpacing: '-0.06em', color: 'primary.main' }}>
+            404
           </Typography>
-
-          <Typography sx={{ color: 'text.secondary' }}>
-            Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve mistyped the URL? Be
-            sure to check your spelling.
+          <Typography variant="h4" sx={{ mb: 1 }}>
+            This page is not on the desk
           </Typography>
-
-          <Box
-            component="img"
-            src="/static/illustrations/illustration_404.svg"
-            sx={{ height: 260, mx: 'auto', my: { xs: 5, sm: 10 } }}
-          />
-
+          <Typography sx={{ color: 'text.secondary', mb: 4 }}>
+            The address does not match a screen in Alinma Travels. Head back to the dashboard.
+          </Typography>
           <Button to="/dashboard/app" size="large" variant="contained" component={RouterLink}>
-            Go to Home
+            Go to dashboard
           </Button>
-        </ContentStyle>
+        </Box>
       </Container>
     </Page>
   );

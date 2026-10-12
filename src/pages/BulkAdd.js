@@ -2,15 +2,13 @@ import { useState,useEffect,useRef, useCallback } from 'react';
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import "../styles/grid.css";
 // material
-import {
-  Stack,
-  Button,
-  Container,
-  Typography,
-} from '@mui/material';
+import { Box, Button } from '@mui/material';
 // components
 import Page from '../components/Page';
+import PageHeader from '../components/PageHeader';
+import { panelSx } from '../theme/panel';
 import Iconify from '../components/Iconify';
 import axios from 'axios';
 import { bulkEditDefault, URL } from '../_mock/constant'
@@ -347,41 +345,43 @@ export default function BulkAdd() {
 
   return (
       <>
-          <Page title="BULK-ADD">
-              <Container>
-                  <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
-                      <Typography variant="h4" gutterBottom>
-                          BULK-ADD
-                      </Typography>
-                      <Button variant="contained" sx={{ backgroundColor: '#F51720' }} onClick={addRow} startIcon={<Iconify icon="eva:plus-fill" />}>
-                          Add Row
-                      </Button>
-                      <Button variant="contained" sx={{ backgroundColor: '#59981A' }} onClick={copyRow} startIcon={<Iconify icon="eva:plus-fill" />}>
-                          Add Row-Copy
-                      </Button>
-                  </Stack>
-                  <div style={{ width: "100%", height: "100%" }}>
-                      <div className="ag-theme-alpine" style={{ height: 500, width: "100%" }}>
-                          <AgGridReact
-                              ref={gridRef}
-                              rowData={rowData}
-                              columnDefs={columnDefs}
-                              defaultColDef={{
-                                  resizable: true,
-                                  sortable: true,
-                              }}
-                              onCellValueChanged={onCellValueChanged}
-                              onCellClicked={handleCellClick}
-                              animateRows={true}
-                              rowHeight={50}
-                              singleClickEdit={true}
-                          />
-                      </div>
-                      <Button disabled={loading} variant="contained" sx={{ width:"150px", backgroundColor: '#21B6A8',marginTop:'10px' }} onClick={handleSubmit} startIcon={<Iconify icon="eva:plus-fill" />}>
-                          Submit
-                      </Button>
-                  </div>
-              </Container>
+          <Page title="Bulk add">
+              <PageHeader
+                group="Tools"
+                title="Bulk add"
+                description="Add several service records in one pass."
+                actions={
+                  <>
+                    <Button variant="text" color="inherit" onClick={copyRow} startIcon={<Iconify icon="eva:copy-fill" />}>
+                      Copy last row
+                    </Button>
+                    <Button variant="outlined" color="inherit" onClick={addRow} startIcon={<Iconify icon="eva:plus-fill" />}>
+                      Add row
+                    </Button>
+                    <Button disabled={loading} variant="contained" onClick={handleSubmit} startIcon={<Iconify icon="eva:checkmark-circle-2-fill" />}>
+                      Submit
+                    </Button>
+                  </>
+                }
+              />
+              <Box sx={panelSx}>
+                <div className="ag-theme-alpine" style={{ height: 560, width: '100%' }}>
+                  <AgGridReact
+                    ref={gridRef}
+                    rowData={rowData}
+                    columnDefs={columnDefs}
+                    defaultColDef={{
+                      resizable: true,
+                      sortable: true,
+                    }}
+                    onCellValueChanged={onCellValueChanged}
+                    onCellClicked={handleCellClick}
+                    animateRows={true}
+                    rowHeight={50}
+                    singleClickEdit={true}
+                  />
+                </div>
+              </Box>
               <Toast toast={toast} setToast={setToast} message={message} />
           </Page>
       </>
