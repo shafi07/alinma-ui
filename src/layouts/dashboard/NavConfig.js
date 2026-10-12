@@ -1,6 +1,6 @@
 import Iconify from '../../components/Iconify';
 
-const icon = (name) => <Iconify icon={name} width={20} height={20} />;
+const icon = (name) => <Iconify icon={name} width={18} height={18} />;
 
 export const pageMeta = {
   '/dashboard/app': { title: 'Dashboard', group: 'Overview' },

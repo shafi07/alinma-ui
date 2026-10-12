@@ -1,14 +1,19 @@
 import { useContext, useState } from 'react';
 import { NavLink as RouterLink, matchPath, useLocation } from 'react-router-dom';
 import { alpha, styled } from '@mui/material/styles';
-import { AppBar, Box, Button, Collapse, IconButton, Stack, Toolbar } from '@mui/material';
+import { AppBar, Box, Button, Collapse, IconButton, MenuItem, Stack, Toolbar } from '@mui/material';
 import Iconify from '../../components/Iconify';
 import Logo from '../../components/Logo';
+import MenuPopover from '../../components/MenuPopover';
 import useResponsive from '../../hooks/useResponsive';
 import { ColorModeContext } from '../../theme';
 import AccountPopover from './AccountPopover';
 import navConfig from './NavConfig';
 import { APP_BAR_HEIGHT } from './constants';
+
+const morePaths = ['/dashboard/customer', '/dashboard/expense', '/dashboard/bulkAdd'];
+const primaryNav = navConfig.filter((item) => !morePaths.includes(item.path));
+const moreNav = navConfig.filter((item) => morePaths.includes(item.path));
 
 const RootStyle = styled(AppBar)(({ theme }) => ({
   boxShadow: 'none',
@@ -42,11 +47,11 @@ function isActive(path, pathname) {
 const linkSx = (active) => (theme) => ({
   color: active ? theme.palette.primary.contrastText : theme.palette.text.secondary,
   fontWeight: active ? 700 : 600,
-  fontSize: 15,
-  [theme.breakpoints.up('xl')]: { fontSize: 16, px: 1.5 },
+  fontSize: 14,
+  [theme.breakpoints.up('xl')]: { fontSize: 16, px: 1.75 },
   lineHeight: 1.2,
   px: 1.25,
-  py: 0.9,
+  py: 0.7,
   minWidth: 0,
   flexShrink: 0,
   borderRadius: '8px',
@@ -64,6 +69,8 @@ export default function DashboardNavbar() {
   const isDesktop = useResponsive('up', 'lg');
   const [menuOpen, setMenuOpen] = useState(false);
   const { mode, toggleColorMode } = useContext(ColorModeContext);
+  const [moreOpen, setMoreOpen] = useState(null);
+  const moreActive = moreNav.some((item) => isActive(item.path, pathname));
 
   return (
     <RootStyle>
@@ -77,14 +84,14 @@ export default function DashboardNavbar() {
             <Stack
               direction="row"
               alignItems="center"
-              spacing={{ lg: 1, xl: 1.25, xxl: 1.75 }}
+              spacing={{ lg: 1.25, xl: 2.25, xxl: 3 }}
               sx={{
                 overflowX: 'auto',
                 scrollbarWidth: 'none',
                 '&::-webkit-scrollbar': { display: 'none' },
               }}
             >
-              {navConfig.map((item) => (
+              {primaryNav.map((item) => (
                 <Button
                   key={item.path}
                   component={RouterLink}
@@ -95,6 +102,37 @@ export default function DashboardNavbar() {
                   {item.title}
                 </Button>
               ))}
+              <Button
+                onClick={(event) => setMoreOpen(event.currentTarget)}
+                endIcon={<Iconify icon="eva:chevron-down-fill" width={16} height={16} />}
+                sx={linkSx(moreActive)}
+              >
+                More
+              </Button>
+              <MenuPopover
+                open={Boolean(moreOpen)}
+                anchorEl={moreOpen}
+                onClose={() => setMoreOpen(null)}
+                sx={{ width: 180, p: 0.5 }}
+              >
+                {moreNav.map((item) => (
+                  <MenuItem
+                    key={item.path}
+                    component={RouterLink}
+                    to={item.path}
+                    onClick={() => setMoreOpen(null)}
+                    sx={{
+                      borderRadius: 1,
+                      fontWeight: isActive(item.path, pathname) ? 700 : 600,
+                      color: isActive(item.path, pathname) ? 'primary.main' : 'text.primary',
+                      gap: 1,
+                    }}
+                  >
+                    {item.icon}
+                    {item.title}
+                  </MenuItem>
+                ))}
+              </MenuPopover>
             </Stack>
           </Box>
         )}
