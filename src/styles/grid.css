@@ -18,3 +18,36 @@
   border: none;
   border-radius: 0;
 }
+
+.ag-theme-alpine .ag-body-horizontal-scroll.ag-scrollbar-invisible {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.alinma-hscroll {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 2px;
+  height: 14px;
+  z-index: 4;
+  border-radius: 999px;
+  background: rgba(20, 150, 142, 0.16);
+  cursor: pointer;
+}
+
+.alinma-hscroll-thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(20, 150, 142, 0.45);
+  cursor: grab;
+}
+
+.alinma-hscroll-thumb:active {
+  cursor: grabbing;
+  background: rgba(20, 150, 142, 0.7);
+}

@@ -14,6 +14,7 @@ import axios from 'axios';
 import { bulkEditDefault, URL } from '../_mock/constant'
 import Toast from '../components/toast';
 import DeleteCellRenderer from '../components/Cell-renders/DeleteCell';
+import GridFrame from '../components/list/GridFrame';
 
 export default function BulkAdd() {
   const [open,setOpen] = useState(false)
@@ -365,7 +366,7 @@ export default function BulkAdd() {
                 }
               />
               <Box sx={panelSx}>
-                <div className="ag-theme-alpine" style={{ height: 560, width: '100%' }}>
+                <GridFrame height={560}>
                   <AgGridReact
                     ref={gridRef}
                     rowData={rowData}
@@ -380,7 +381,7 @@ export default function BulkAdd() {
                     rowHeight={50}
                     singleClickEdit={true}
                   />
-                </div>
+                </GridFrame>
               </Box>
               <Toast toast={toast} setToast={setToast} message={message} />
           </Page>

@@ -31,7 +31,7 @@ function isActive(path, pathname) {
 }
 
 const linkSx = (active) => (theme) => ({
-  color: active ? theme.palette.primary.main : theme.palette.text.secondary,
+  color: active ? theme.palette.primary.contrastText : theme.palette.text.secondary,
   fontWeight: active ? 700 : 600,
   fontSize: 15,
   lineHeight: 1.2,
@@ -41,10 +41,11 @@ const linkSx = (active) => (theme) => ({
   flexShrink: 0,
   borderRadius: '8px',
   textTransform: 'none',
-  bgcolor: active ? alpha(theme.palette.primary.main, 0.14) : 'transparent',
+  bgcolor: active ? theme.palette.primary.main : 'transparent',
+  boxShadow: active ? `0 6px 16px ${alpha(theme.palette.primary.main, 0.35)}` : 'none',
   '& .MuiButton-startIcon': { marginLeft: 0, marginRight: '4px' },
   '&:hover': {
-    bgcolor: active ? alpha(theme.palette.primary.main, 0.2) : theme.palette.action.hover,
+    bgcolor: active ? theme.palette.primary.dark : theme.palette.action.hover,
   },
 });
 

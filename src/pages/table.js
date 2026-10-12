@@ -3,6 +3,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "../styles/grid.css";
+import GridFrame from "../components/list/GridFrame";
 
 const NewTable = ({ rowData, colDef = [], handleCellClick, editData,returnHandler }) => {
   const gridRef = useRef(null);
@@ -32,7 +33,7 @@ const NewTable = ({ rowData, colDef = [], handleCellClick, editData,returnHandle
   }, [rowData]); // Runs only when rowData updates
 
   return (
-    <div className="ag-theme-alpine" style={{ height: 600, width: "100%" }}>
+    <GridFrame height={600}>
       <AgGridReact
         ref={gridRef}
         columnDefs={colDef}
@@ -50,7 +51,7 @@ const NewTable = ({ rowData, colDef = [], handleCellClick, editData,returnHandle
         onGridReady={(params) => (gridRef.current = params)} // Set gridRef properly
         suppressScrollOnNewData={true} // Prevent automatic scrolling
       />
-    </div>
+    </GridFrame>
   );
 };
 
