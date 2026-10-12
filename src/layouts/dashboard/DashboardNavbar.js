@@ -18,13 +18,22 @@ const RootStyle = styled(AppBar)(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-const ToolbarStyle = styled(Toolbar)({
+const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
   minHeight: APP_BAR_HEIGHT,
   height: APP_BAR_HEIGHT,
   paddingLeft: 16,
   paddingRight: 12,
-  gap: 4,
-});
+  gap: 8,
+  [theme.breakpoints.up('xl')]: {
+    paddingLeft: 28,
+    paddingRight: 20,
+    gap: 12,
+  },
+  [theme.breakpoints.up('xxl')]: {
+    paddingLeft: 36,
+    paddingRight: 28,
+  },
+}));
 
 function isActive(path, pathname) {
   return path ? !!matchPath({ path, end: false }, pathname) : false;
@@ -34,6 +43,7 @@ const linkSx = (active) => (theme) => ({
   color: active ? theme.palette.primary.contrastText : theme.palette.text.secondary,
   fontWeight: active ? 700 : 600,
   fontSize: 15,
+  [theme.breakpoints.up('xl')]: { fontSize: 16, px: 1.5 },
   lineHeight: 1.2,
   px: 1.25,
   py: 0.9,
@@ -67,7 +77,7 @@ export default function DashboardNavbar() {
             <Stack
               direction="row"
               alignItems="center"
-              spacing={1}
+              spacing={{ lg: 1, xl: 1.25, xxl: 1.75 }}
               sx={{
                 overflowX: 'auto',
                 scrollbarWidth: 'none',

@@ -1,20 +1,7 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
 import * as Yup from "yup";
 import { Formik } from "formik";
-import {DialogActions,DialogContent,Grid,InputLabel,MenuItem,Select,TextField} from "@mui/material";
-// import {makeStyles} from "@mui/styles";
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Iconify from '../Iconify';
-import Slide from '@mui/material/Slide';
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import {Grid,InputLabel,MenuItem,Select,TextField} from "@mui/material";
+import RecordForm, { FormSection } from '../form/RecordForm';
 
 export default function FullScreenDialog({open,handleClose,loading,submitHandler}) {
 
@@ -41,32 +28,14 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
       touched,
       values,
       }) => (
-      <Dialog
-        fullScreen
+      <RecordForm
         open={open}
+        title="Expense"
         onClose={handleClose}
-        TransitionComponent={Transition}
+        onSubmit={() => handleSubmit()}
+        loading={loading}
       >
-        <AppBar sx={{ position: 'relative' }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
-              <Iconify icon="eva:close-fill" />
-            </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              EXPENSE
-            </Typography>
-            <Button autoFocus color="inherit" onClick={() => handleSubmit()}>
-              save
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <DialogContent >
-          <Grid container >
+          <FormSection title="Expenses">
           <Grid item xs={6} >
             <TextField
               id="electricity"
@@ -207,23 +176,8 @@ export default function FullScreenDialog({open,handleClose,loading,submitHandler
               onChange={handleChange("total_amount")}
             />
             </Grid> */}
-          </Grid>
-          </DialogContent>
-          <DialogActions>
-            {/* {!loading && ( */}
-              <Button onClick={handleClose} color="primary">
-                Cancel
-              </Button>
-            {/* )} */}
-            <Button
-              onClick={() => handleSubmit()}
-              color="primary"
-              disabled={loading}
-            >
-              {/* {loading || editLoading ? "Saving ..." : "Submit"} */} Submit
-            </Button>
-          </DialogActions>
-      </Dialog>
+          </FormSection>
+      </RecordForm>
       )}
     </Formik>
   );

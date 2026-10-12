@@ -1,19 +1,10 @@
 import * as React from 'react';
 import {
-  Slide,
-  Typography,
-  IconButton,
-  Toolbar,
-  AppBar,
-  Dialog,
-  Button,
-  DialogActions,
-  DialogContent,
   Grid,
   MenuItem,
   TextField
 } from "@mui/material";
-import Iconify from '../Iconify';
+import RecordForm, { FormSection } from '../form/RecordForm';
 import * as Yup from "yup";
 import { Formik } from "formik";
 
@@ -22,11 +13,7 @@ const subCategories = [
   {value:'new',label:'New'}
 ]
 
-const leftCss = {
-  marginTop: 2,
-  marginBottom: 2,
-  marginRight:2,
-}
+const leftCss = {};
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Enter Name)"),
@@ -35,10 +22,6 @@ const validationSchema = Yup.object({
   mobilenumber: Yup.string().required("Enter Mobile Number").matches(/^\d{10}$/,'mobile number length should be 10'),
   total_amount: Yup.number().required("Enter Amount"),
   balance:Yup.number(),
-});
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function FullScreenDialog({
@@ -90,32 +73,14 @@ export default function FullScreenDialog({
       values,
       resetForm
       }) => (
-      <Dialog
-        fullScreen
+      <RecordForm
         open={open}
-        onClose={handleClose}
-        TransitionComponent={Transition}
+        title={editData ? `INSURANCE-[${editData.createddate}]` : 'INSURANCE'}
+        onClose={() => { handleClose(); resetForm(); }}
+        onSubmit={() => handleSubmit()}
+        loading={loading}
       >
-        <AppBar sx={{ position: 'relative' }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={()=>{handleClose();resetForm()}}
-              aria-label="close"
-            >
-              <Iconify icon="eva:close-fill" />
-            </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              {editData ? `INSURANCE-[${editData.createddate}]`:`INSURANCE`}
-            </Typography>
-            <Button autoFocus color="inherit" onClick={() => handleSubmit()}>
-              save
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <DialogContent >
-        <Grid container rowSpacing={1} spacing={{xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} >
+          <FormSection title="Record">
             <Grid item xs={4} >
             <TextField
               id="name"
@@ -242,7 +207,7 @@ export default function FullScreenDialog({
               }}
             >
               {subCategories.map(option => (
-             <MenuItem sx={{color:'red'}} key={option.value} value={option.label}>
+             <MenuItem key={option.value} value={option.label}>
               {option.label}
             </MenuItem>
             ))}
@@ -265,6 +230,8 @@ export default function FullScreenDialog({
               sx = {leftCss}
             /> 
             </Grid>
+          </FormSection>
+          <FormSection title="Charges">
             <Grid item xs={4} >
             <TextField
               id="agent_amount"
@@ -285,9 +252,6 @@ export default function FullScreenDialog({
             <TextField
               id="service"
               sx = {leftCss}
-              InputLabelProps={{
-                style: { color: '#BC3110' },
-              }}
               label="Service Charge"
               name="service"
               type="text"
@@ -300,6 +264,8 @@ export default function FullScreenDialog({
               onChange={(e)=>{setFieldValue('service',+e.target.value)}}
             />
             </Grid>
+          </FormSection>
+          <FormSection title="Payment">
             <Grid item xs={4} >
             <TextField
               id="total_amount"
@@ -402,23 +368,8 @@ export default function FullScreenDialog({
               onChange={handleChange("remarks")}
             />
             </Grid>
-          </Grid>
-          </DialogContent>
-          <DialogActions>
-            {/* {!loading && ( */}
-              <Button onClick={handleClose} color="primary">
-                Cancel
-              </Button>
-            {/* )} */}
-            <Button
-              onClick={() => handleSubmit()}
-              color="primary"
-              disabled={loading}
-            >
-              {/* {loading || editLoading ? "Saving ..." : "Submit"} */} Submit
-            </Button>
-          </DialogActions>
-      </Dialog>
+          </FormSection>
+      </RecordForm>
       )}
     </Formik>
   );

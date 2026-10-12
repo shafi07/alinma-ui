@@ -1,19 +1,10 @@
-import { useState, useEffect, useRef, forwardRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
-  Slide,
-  Typography,
-  IconButton,
-  Toolbar,
-  AppBar,
-  Dialog,
-  Button,
-  DialogActions,
-  DialogContent,
   Grid,
   MenuItem,
   TextField
 } from "@mui/material";
-import Iconify from '../Iconify';
+import RecordForm, { FormSection } from '../form/RecordForm';
 import * as Yup from "yup";
 import { Formik } from "formik";
 
@@ -36,11 +27,7 @@ const reEntryType = [
   {value:'Extend',label:'Extend'},
 ]
 
-const leftCss = {
-  marginTop: 2,
-  marginBottom: 2,
-  marginRight:2,
-}
+const leftCss = {};
 
 // const rightCss = {
 //   marginTop: 2,
@@ -58,10 +45,6 @@ const validationSchema = Yup.object({
   mobilenumber: Yup.string().required("Enter Mobile Number").matches(/^\d{10}$/,'mobile number length should be 10'),
   total_amount: Yup.number(),
   balance:Yup.number(),
-});
-
-const Transition = forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function FullScreenDialog({
@@ -137,32 +120,14 @@ export default function FullScreenDialog({
       values,
       initialValues
       }) => (
-      <Dialog
-        fullScreen
+      <RecordForm
         open={open}
-        onClose={()=>{handleClose();resetForm()}}
-        TransitionComponent={Transition}
+        title={editData ? `Javasath-[${editData.createddate}]` : 'Javasath'}
+        onClose={() => { handleClose(); resetForm(); }}
+        onSubmit={() => handleSubmit()}
+        loading={loading}
       >
-        <AppBar sx={{ position: 'relative' }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={()=>{handleClose();resetForm()}}
-              aria-label="close"
-            >
-              <Iconify icon="eva:close-fill" />
-            </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              {editData ? `Javasath-[${editData.createddate}]`:`Javasath`}
-            </Typography>
-            <Button autoFocus color="inherit" onClick={() => handleSubmit()}>
-              save
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <DialogContent >
-          <Grid container rowSpacing={1} spacing={{xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} >
+          <FormSection title="Record">
             <Grid item xs={4} >
             <TextField
               id="sub_category"
@@ -182,7 +147,7 @@ export default function FullScreenDialog({
               sx = {leftCss}
             >
               {subCategories.map(option => (
-             <MenuItem sx={{color:'red'}} key={option.value} value={option.label}>
+             <MenuItem key={option.value} value={option.label}>
               {option.label}
             </MenuItem>
             ))}
@@ -333,12 +298,14 @@ export default function FullScreenDialog({
               sx = {leftCss}
             >
               {reEntryType.map(option => (
-             <MenuItem sx={{color:'red'}} key={option.value} value={option.label}>
+             <MenuItem key={option.value} value={option.label}>
               {option.label}
             </MenuItem>
             ))}
             </TextField> 
             </Grid>}
+          </FormSection>
+          <FormSection title="Charges">
             {!["Driving Licence","Vehicle Registration Renew"].includes(values.sub_category) &&<Grid item xs={4} >
             <TextField
               id="iqama"
@@ -480,9 +447,6 @@ export default function FullScreenDialog({
               id="service"
               // sx = {cssArray.includes(values.sub_category) ? rightCss : leftCss }
               sx = {leftCss}
-              InputLabelProps={{
-                style: { color: '#BC3110' },
-              }}
               label="Service Charge"
               name="service"
               type="text"
@@ -495,6 +459,8 @@ export default function FullScreenDialog({
               onChange={(e)=>{setFieldValue('service',+e.target.value)}}
             />
             </Grid>
+          </FormSection>
+          <FormSection title="Payment">
             <Grid item xs={4} >
             <TextField
               id="total_amount"
@@ -620,7 +586,8 @@ export default function FullScreenDialog({
               sx = {leftCss}
             />
             </Grid>}
-            { values.sub_category == 'Visa Change' && <><Grid item xs={4}>
+          </FormSection>
+            { values.sub_category == 'Visa Change' && <FormSection title="Passport"><Grid item xs={4}>
                 <TextField
                   id="expiry_date"
                   // sx = {cssArray.includes(values.sub_category) ? leftCss : rightCss }
@@ -652,25 +619,8 @@ export default function FullScreenDialog({
                     value={values.new_passport_number}
                     onChange={handleChange("new_passport_number")}
                     sx={leftCss} />
-                </Grid></>}
-          </Grid>
-          </DialogContent>
-          <DialogActions>
-            {/* {!loading && ( */}
-              <Button onClick={()=>{resetForm();handleClose()}} color="primary">
-                Cancel
-              </Button>
-            {/* )} */}
-            <Button
-              onClick={() => handleSubmit()}
-              color="primary"
-              disabled={loading}
-              variant='outlined'
-            >
-              {/* {loading || editLoading ? "Saving ..." : "Submit"} */} Submit
-            </Button>
-          </DialogActions>
-      </Dialog>
+                </Grid></FormSection>}
+      </RecordForm>
       )}
     </Formik>
   );

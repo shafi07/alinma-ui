@@ -4,9 +4,7 @@ export default function Dialog(theme) {
       styleOverrides: {
         paper: {
           borderRadius: 16,
-        },
-        paperFullScreen: {
-          borderRadius: 0,
+          backgroundImage: 'none',
         },
       },
     },

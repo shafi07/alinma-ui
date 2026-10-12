@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import { Box, CircularProgress } from '@mui/material';
 import DashboardNavbar from './DashboardNavbar';
 import { APP_BAR_HEIGHT } from './constants';
+import { pageGutter } from '../../theme/layout';
 
 const RootStyle = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -16,13 +17,12 @@ const MainStyle = styled('main')(({ theme }) => ({
   flexGrow: 1,
   width: '100%',
   paddingTop: APP_BAR_HEIGHT + 28,
-  paddingBottom: theme.spacing(6),
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
-  [theme.breakpoints.up('md')]: {
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4),
+  paddingBottom: theme.spacing(4),
+  [theme.breakpoints.up('xl')]: {
+    paddingTop: APP_BAR_HEIGHT + 36,
+    paddingBottom: theme.spacing(5),
   },
+  ...pageGutter(theme),
 }));
 
 function PageLoader() {

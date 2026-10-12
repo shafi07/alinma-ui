@@ -1,19 +1,10 @@
 import * as React from 'react';
 import {
-  Slide,
-  Typography,
-  IconButton,
-  Toolbar,
-  AppBar,
-  Dialog,
-  Button,
-  DialogActions,
-  DialogContent,
   Grid,
   MenuItem,
   TextField
 } from "@mui/material";
-import Iconify from '../Iconify';
+import RecordForm, { FormSection } from '../form/RecordForm';
 import * as Yup from "yup";
 import { Formik } from "formik";
 
@@ -31,15 +22,7 @@ const validationSchema = Yup.object({
   balance:Yup.number(),
 });
 
-const leftCss = {
-  marginTop: 2,
-  marginBottom: 2,
-  marginRight:2,
-}
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const leftCss = {};
 
 export default function FullScreenDialog({
   open,
@@ -90,32 +73,14 @@ console.log('------111',editData)
       values,
       resetForm,
       }) => (
-      <Dialog
-        fullScreen
+      <RecordForm
         open={open}
-        onClose={handleClose}
-        TransitionComponent={Transition}
+        title={editData ? `Zakath-[${editData.createddate}]` : 'Zakath'}
+        onClose={() => { handleClose(); resetForm(); }}
+        onSubmit={() => handleSubmit()}
+        loading={loading}
       >
-        <AppBar sx={{ position: 'relative' }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={()=>{handleClose();resetForm()}}
-              aria-label="close"
-            >
-              <Iconify icon="eva:close-fill" />
-            </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-               {editData ? `Zakath-[${editData.createddate}]`:`Zakath`}
-            </Typography>
-            <Button autoFocus color="inherit" onClick={() => handleSubmit()}>
-              save
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <DialogContent >
-          <Grid container rowSpacing={1} spacing={{xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} >
+          <FormSection title="Record">
             <Grid item xs={4} >
             <TextField
               id="sub_category"
@@ -135,7 +100,7 @@ console.log('------111',editData)
               sx = {{...leftCss,input: { color: 'red' }}}
             >
               {subCategories.map(option => (
-             <MenuItem sx={{color:'red'}} key={option.value} value={option.label}>
+             <MenuItem key={option.value} value={option.label}>
               {option.label}
             </MenuItem>
             ))}
@@ -194,6 +159,8 @@ console.log('------111',editData)
               sx = {leftCss}
             /> 
             </Grid>
+          </FormSection>
+          <FormSection title="Amounts">
             <Grid item xs={4} >
             <TextField
               id="purchase_amount"
@@ -234,9 +201,6 @@ console.log('------111',editData)
               sx = {leftCss }
               label="Service Charge"
               name="service"
-              InputLabelProps={{
-                style: { color: '#BC3110' },
-              }}
               type="text"
               fullWidth
               autoFocus
@@ -248,6 +212,8 @@ console.log('------111',editData)
               onChange={(e)=>{setFieldValue('service',+e.target.value)}}
             />
             </Grid>
+          </FormSection>
+          <FormSection title="Payment">
             <Grid item xs={4} >
             <TextField
               id="total_amount"
@@ -337,24 +303,8 @@ console.log('------111',editData)
               onChange={handleChange("remarks")}
             />
             </Grid>
-          </Grid>
-          </DialogContent>
-          <DialogActions>
-            {/* {!loading && ( */}
-              <Button onClick={handleClose} color="primary">
-                Cancel
-              </Button>
-            {/* )} */}
-            <Button
-              onClick={() => handleSubmit()}
-              // onClick={() => console.log('submit')}
-              color="primary"
-              disabled={loading}
-            >
-              {/* {loading || editLoading ? "Saving ..." : "Submit"} */} Submit
-            </Button>
-          </DialogActions>
-      </Dialog>
+          </FormSection>
+      </RecordForm>
       )}
     </Formik>
   );

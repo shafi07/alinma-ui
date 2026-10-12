@@ -16,7 +16,7 @@ export default function PageHeader({ group, title, description, actions }) {
       spacing={2}
       alignItems={{ md: 'flex-end' }}
       justifyContent="space-between"
-      sx={{ mb: 2.5 }}
+      sx={{ mb: { xs: 2, xl: 3 } }}
     >
       <Box sx={{ minWidth: 0 }}>
         <Breadcrumbs
@@ -35,7 +35,15 @@ export default function PageHeader({ group, title, description, actions }) {
             {title}
           </Typography>
         </Breadcrumbs>
-        <Typography variant="h4" sx={{ letterSpacing: '-0.03em', fontWeight: 700, lineHeight: 1.2 }}>
+        <Typography
+          variant="h4"
+          sx={{
+            letterSpacing: '-0.03em',
+            fontWeight: 700,
+            lineHeight: 1.2,
+            fontSize: 'clamp(1.35rem, 1.1rem + 0.5vw, 1.85rem)',
+          }}
+        >
           {title}
         </Typography>
         {description && (

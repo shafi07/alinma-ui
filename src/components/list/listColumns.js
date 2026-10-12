@@ -2,7 +2,9 @@ import DeleteCellRenderer from '../Cell-renders/DeleteCell';
 
 export const fileColumn = (extra = {}) => ({
   headerName: 'File',
-  width: 120,
+  width: 130,
+  minWidth: 110,
+  flex: 0,
   field: 'fileid',
   sortable: true,
   filter: true,
@@ -15,6 +17,8 @@ export const textColumn = (headerName, field, extra = {}) => ({
   field,
   sortable: true,
   filter: true,
+  flex: 1,
+  minWidth: 150,
   ...extra,
 });
 
@@ -23,6 +27,8 @@ export const dateColumn = (headerName = 'Created Time', field = 'createdtime') =
   field,
   sortable: true,
   filter: true,
+  flex: 1,
+  minWidth: 150,
   valueFormatter: (params) => {
     const date = new Date(params.value);
     return date.toLocaleDateString();
@@ -41,7 +47,9 @@ export const cashColumn = () => ({
     }
     return { color: '#B72136', fontWeight: 'bold', textAlign: 'center' };
   },
-  width: 80,
+  width: 96,
+  minWidth: 88,
+  flex: 0,
   pinned: 'right',
 });
 
@@ -68,7 +76,9 @@ export const statusColumn = () => ({
     return { color: '#2065D1', fontWeight: 'bold', textAlign: 'center' };
   },
   pinned: 'right',
-  width: 120,
+  width: 130,
+  minWidth: 120,
+  flex: 0,
 });
 
 export const paymentColumn = () => ({
@@ -83,7 +93,9 @@ export const paymentColumn = () => ({
   },
   cellStyle: { fontWeight: 'bold' },
   pinned: 'right',
-  width: 80,
+  width: 110,
+  minWidth: 100,
+  flex: 0,
 });
 
 export const deleteColumn = ({ onDelete, onPrint, field = 'actions', width = 80 }) => ({
@@ -93,6 +105,8 @@ export const deleteColumn = ({ onDelete, onPrint, field = 'actions', width = 80 
     <DeleteCellRenderer node={params.node} api={params.api} onDelete={onDelete} onPrint={onPrint} />
   ),
   width,
+  minWidth: width,
+  flex: 0,
   floatingFilter: false,
   filter: false,
 });
@@ -110,7 +124,9 @@ export const viewPrintColumn = ({ onDelete, onPrint, onView }) => ({
       view
     />
   ),
-  width: 140,
+  width: 150,
+  minWidth: 140,
+  flex: 0,
   floatingFilter: false,
   filter: false,
 });

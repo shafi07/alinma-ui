@@ -15,6 +15,7 @@ import { bulkEditDefault, URL } from '../_mock/constant'
 import Toast from '../components/toast';
 import DeleteCellRenderer from '../components/Cell-renders/DeleteCell';
 import GridFrame from '../components/list/GridFrame';
+import { BULK_TABLE_HEIGHT } from '../theme/layout';
 
 export default function BulkAdd() {
   const [open,setOpen] = useState(false)
@@ -366,7 +367,7 @@ export default function BulkAdd() {
                 }
               />
               <Box sx={panelSx}>
-                <GridFrame height={560}>
+                <GridFrame height={BULK_TABLE_HEIGHT}>
                   <AgGridReact
                     ref={gridRef}
                     rowData={rowData}

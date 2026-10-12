@@ -4,6 +4,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "../styles/grid.css";
 import GridFrame from "../components/list/GridFrame";
+import { TABLE_HEIGHT } from "../theme/layout";
 
 const NewTable = ({ rowData, colDef = [], handleCellClick, editData,returnHandler }) => {
   const gridRef = useRef(null);
@@ -33,13 +34,15 @@ const NewTable = ({ rowData, colDef = [], handleCellClick, editData,returnHandle
   }, [rowData]); // Runs only when rowData updates
 
   return (
-    <GridFrame height={600}>
+    <GridFrame height={TABLE_HEIGHT}>
       <AgGridReact
         ref={gridRef}
         columnDefs={colDef}
         rowData={rowData} // AG Grid automatically updates when this prop changes
         onCellValueChanged={handleCellValueChanged}
         defaultColDef={{
+          flex: 1,
+          minWidth: 140,
           resizable: true,
           sortable: true,
           filter: true,

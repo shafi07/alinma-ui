@@ -59,7 +59,12 @@ export default function UserListToolbar({
             <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 18, height: 18 }} />
           </InputAdornment>
         }
-        sx={(theme) => ({ ...fieldSx(theme), flex: '1 1 220px', maxWidth: { sm: 320 } })}
+        sx={(theme) => ({
+          ...fieldSx(theme),
+          flex: '1 1 240px',
+          maxWidth: { sm: 360, lg: 440, xl: 560 },
+          [theme.breakpoints.up('xl')]: { height: 40 },
+        })}
       />
 
       {expense && (
