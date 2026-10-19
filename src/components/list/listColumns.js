@@ -1,4 +1,5 @@
 import DeleteCellRenderer from '../Cell-renders/DeleteCell';
+import { isPaidRecord, outstandingBalance } from './cashStatus';
 
 export const fileColumn = (extra = {}) => ({
   headerName: 'File',
@@ -39,7 +40,7 @@ export const cashColumn = () => ({
   headerName: 'Cash',
   field: 'cash',
   sortable: true,
-  valueGetter: (params) => (params.data.balance_amount == 0 ? 'Paid' : 'Credit'),
+  valueGetter: (params) => (isPaidRecord(params.data) ? 'Paid' : 'Credit'),
   filter: true,
   cellStyle: (params) => {
     if (params.value === 'Paid') {
@@ -52,6 +53,11 @@ export const cashColumn = () => ({
   flex: 0,
   pinned: 'right',
 });
+
+export const balanceColumn = () =>
+  textColumn('Balance Amount', 'balance_amount', {
+    valueGetter: (params) => outstandingBalance(params.data),
+  });
 
 export const statusColumn = () => ({
   headerName: 'Status',
@@ -86,7 +92,7 @@ export const paymentColumn = () => ({
   field: 'payment_method',
   sortable: true,
   filter: true,
-  editable: (params) => params.data.balance_amount == 0,
+  editable: (params) => isPaidRecord(params.data),
   cellEditor: 'agSelectCellEditor',
   cellEditorParams: {
     values: ['cash', 'sbk', 'bank', 'Account'],

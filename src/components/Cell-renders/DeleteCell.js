@@ -1,12 +1,14 @@
 import React, { useCallback } from "react";
 import styles from "./DeleteCell.module.css";
 
-const DeleteCellRenderer = ({ api, node, onDelete,onPrint,print = false,view=false,onView }) => {
+const DeleteCellRenderer = ({ api, node, onDelete,onPrint,print = false,view=false,onView, externalState = false }) => {
   const onRemoveClick = useCallback(() => {
     const rowData = node.data;
     onDelete(rowData)
-    api.applyTransaction({ remove: [rowData] });
-  }, [node, api]);
+    if (!externalState) {
+      api.applyTransaction({ remove: [rowData] });
+    }
+  }, [api, externalState, node, onDelete]);
   const onPrintClick = useCallback(() => {
     const rowData = node.data;
     onPrint(rowData)

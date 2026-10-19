@@ -2,6 +2,7 @@ import ResourceListPage from '../components/list/ResourceListPage';
 import AddBill from '../components/visa/addVisa';
 import { visaHeaders } from '../_mock/constant';
 import {
+  balanceColumn,
   cashColumn,
   deleteColumn,
   fileColumn,
@@ -30,7 +31,7 @@ const columns = ({ onDelete, onPrint, onView }) => [
   textColumn('Chamber Amount', 'chamber_amount'),
   textColumn('Total Amount', 'total_amount'),
   textColumn('Paid Amount', 'paid_amount'),
-  textColumn('Balance Amount', 'balance_amount'),
+  balanceColumn(),
   deleteColumn({ onDelete, onPrint }),
   viewPrintColumn({ onDelete, onPrint, onView }),
 ];

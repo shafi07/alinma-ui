@@ -19,6 +19,11 @@
   border-radius: 0;
 }
 
+.ag-theme-alpine .bulk-cell-na {
+  background-color: rgba(148, 163, 184, 0.16);
+  color: transparent;
+}
+
 .ag-theme-alpine .ag-body-horizontal-scroll.ag-scrollbar-invisible {
   opacity: 0 !important;
   visibility: hidden !important;
