@@ -33,6 +33,43 @@ export const ENDPOINTS = {
 export const WORK_TYPES = ['New', 'Renew', 'Update', 'Cancel', 'Transfer', 'QR-Code', 'Difa Madani'];
 export const RE_ENTRY_TYPES = ['Leave', 'Extend'];
 
+const PERSON_FIELDS = [
+  { field: 'name', label: 'Name' },
+  { field: 'id_number', label: 'ID number' },
+  { field: 'sponser_name', label: 'Sponser name' },
+  { field: 'mobilenumber', label: 'Mobile' },
+  { field: 'boarder_number', label: 'Border number' },
+  { field: 'professionName', label: 'Profession' },
+  { field: 'newSponser', label: 'New sponser' },
+  { field: 're_entry_type', label: 'Re-entry', options: RE_ENTRY_TYPES },
+  { field: 'work_type', label: 'Work type', options: WORK_TYPES },
+  { field: 'dob', label: 'Date of birth' },
+  { field: 'company', label: 'Company' },
+  { field: 'cr_number', label: 'CR number' },
+  { field: 'visa_number', label: 'Visa number' },
+  { field: 'travels', label: 'Travels' },
+  { field: 'application_number', label: 'Application number' },
+  { field: 'new_passport_number', label: 'New passport number' },
+  { field: 'expiry_date', label: 'Passport expiry' },
+  { field: 'due', label: 'Due in months' },
+  { field: 'agent', label: 'Agent' },
+  { field: 'paid_date', label: 'Agent date' },
+  { field: 'remarks', label: 'Remarks' },
+];
+
+const FEE_FIELDS = [
+  { field: 'agent_amount', label: 'Agent' },
+  { field: 'service', label: 'Service' },
+  { field: 'iqama', label: 'Iqama' },
+  { field: 'insurance', label: 'Insurance' },
+  { field: 'other', label: 'Other' },
+  { field: 'mol', label: 'Mol' },
+  { field: 'absheer_amount', label: 'Absheer' },
+  { field: 'qiwa_amount', label: 'Qiwa' },
+  { field: 'government_fee', label: 'Government' },
+  { field: 'chamber_amount', label: 'Chamber' },
+];
+
 const CONDITIONAL_FIELDS = [
   'other',
   'boarder_number',
@@ -145,6 +182,33 @@ export function fieldApplies(row, field) {
     default:
       return true;
   }
+}
+
+const COPY_FIELDS = [...PERSON_FIELDS, ...FEE_FIELDS, { field: 'paid_amount', label: 'Paid' }];
+
+export function entryFields(mainCategory, subCategory) {
+  const sample = { mainCategory, sub_category: subCategory };
+  const visible = (fields) => fields.filter((item) => fieldApplies(sample, item.field));
+  return {
+    person: visible(PERSON_FIELDS),
+    fees: visible(FEE_FIELDS),
+  };
+}
+
+export function carryToCategory(source, mainCategory, subCategory, rowId) {
+  const next = createRow();
+  const sample = { mainCategory, sub_category: subCategory };
+  COPY_FIELDS.forEach(({ field }) => {
+    const value = source?.[field];
+    if (!fieldApplies(sample, field) || value == null || value === '') return;
+    next[field] = value;
+  });
+  next.mainCategory = mainCategory || '';
+  next.sub_category = subCategory || '';
+  if (rowId) next.rowId = rowId;
+  clearInapplicable(next);
+  writeTotals(next);
+  return next;
 }
 
 export function columnVisibilityState(rows) {

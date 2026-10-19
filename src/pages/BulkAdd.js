@@ -1,9 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AgGridReact } from 'ag-grid-react';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
-import '../styles/grid.css';
-import { Box, Button } from '@mui/material';
+import { useState } from 'react';
+import {
+  Box,
+  Button,
+  Grid,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import axios from 'axios';
 import Page from '../components/Page';
 import PageHeader from '../components/PageHeader';
@@ -11,243 +16,241 @@ import { panelSx } from '../theme/panel';
 import Iconify from '../components/Iconify';
 import { URL } from '../_mock/constant';
 import Toast from '../components/toast';
-import DeleteCellRenderer from '../components/Cell-renders/DeleteCell';
-import GridFrame from '../components/list/GridFrame';
-import { BULK_TABLE_HEIGHT } from '../theme/layout';
 import {
   ENDPOINTS,
-  RE_ENTRY_TYPES,
   SUB_CATEGORIES,
-  WORK_TYPES,
   buildPayload,
-  columnVisibilityState,
-  computeTotal,
+  carryToCategory,
   createRow,
-  fieldApplies,
-  num,
-  prepareCategoryChange,
+  entryFields,
   validateRows,
   writeTotals,
 } from './bulkAddModel';
 
-const initiallyHidden = new Set(
-  columnVisibilityState([createRow()])
-    .filter((column) => column.hide)
-    .map((column) => column.colId)
-);
+const services = Object.keys(ENDPOINTS);
 
-const dataColumn = (headerName, field, extra = {}) => ({
-  headerName,
-  field,
-  sortable: true,
-  filter: true,
-  editable: (params) => fieldApplies(params.data, field),
-  cellClass: (params) => (fieldApplies(params.data, field) ? undefined : 'bulk-cell-na'),
-  valueFormatter: (params) => (fieldApplies(params.data, field) ? params.value : ''),
-  hide: initiallyHidden.has(field),
-  ...extra,
-});
-
-const selectColumn = (headerName, field, values, extra = {}) =>
-  dataColumn(headerName, field, {
-    filter: false,
-    cellEditor: 'agSelectCellEditor',
-    cellEditorParams: { values },
-    ...extra,
-  });
-
-const amountColumn = (headerName, field) =>
-  dataColumn(headerName, field, {
-    filter: false,
-    width: 130,
-  });
-
-const AMOUNT_FIELDS = new Set([
-  'agent_amount',
-  'iqama',
-  'insurance',
-  'other',
-  'mol',
-  'absheer_amount',
-  'qiwa_amount',
-  'government_fee',
-  'chamber_amount',
-  'service',
-  'paid_amount',
-]);
-
-const refreshTotals = (api, node) => {
-  writeTotals(node.data);
-  api.refreshCells({
-    rowNodes: [node],
-    columns: ['total_amount', 'balance'],
-    force: true,
-  });
+const fieldSx = {
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '6px',
+  },
+  '& .MuiInputBase-input, & .MuiSelect-select': {
+    paddingTop: '7px',
+    paddingBottom: '7px',
+    fontSize: 13,
+    lineHeight: '18px',
+    height: 'auto',
+  },
+  '& .MuiSelect-select': {
+    minHeight: '18px !important',
+  },
+  '& .MuiInputLabel-root': {
+    fontSize: 13,
+    lineHeight: '18px',
+  },
+  '& .MuiInputLabel-outlined.MuiInputLabel-sizeSmall:not(.MuiInputLabel-shrink)': {
+    transform: 'translate(12px, 6px) scale(1)',
+  },
+  '& .MuiInputLabel-root.MuiInputLabel-shrink': {
+    fontSize: 13,
+  },
 };
 
+const moneyValue = (value) => (value === 0 || value === '0' || value == null ? '' : value);
+
+const summaryValue = (value) => (Number.isFinite(Number(value)) ? Number(value) : 0);
+
+function FieldInput({ field, row, onChange }) {
+  const isMoney = ['agent_amount', 'service', 'iqama', 'insurance', 'other', 'mol', 'absheer_amount', 'qiwa_amount', 'government_fee', 'chamber_amount', 'paid_amount'].includes(field.field);
+  const common = {
+    label: field.label,
+    size: 'small',
+    fullWidth: true,
+    sx: fieldSx,
+    value: isMoney ? moneyValue(row[field.field]) : row[field.field] ?? '',
+    onChange: (event) => onChange(field.field, event.target.value),
+  };
+
+  if (field.options) {
+    return (
+      <TextField {...common} select>
+        <MenuItem value="">Select</MenuItem>
+        {field.options.map((option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+      </TextField>
+    );
+  }
+
+  return <TextField {...common} type={isMoney ? 'number' : 'text'} />;
+}
+
+function RecordCard({ index, row, fields, canRemove, onChange, onService, onType, onCopy, onRemove }) {
+  return (
+    <Box
+      sx={(theme) => ({
+        p: 1.25,
+        borderRadius: '12px',
+        bgcolor: theme.palette.mode === 'dark' ? alpha('#fff', 0.03) : alpha('#0F6E6A', 0.03),
+        boxShadow: `inset 0 0 0 1px ${alpha(theme.palette.divider, 0.9)}`,
+      })}
+    >
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems={{ sm: 'center' }} justifyContent="space-between" sx={{ mb: 1 }}>
+        <Typography variant="subtitle2" sx={{ whiteSpace: 'nowrap' }}>
+          Record {index + 1}
+        </Typography>
+        <Grid container spacing={1} sx={{ flex: 1 }}>
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              select
+              fullWidth
+              size="small"
+              sx={fieldSx}
+              label="Service"
+              value={row.mainCategory || ''}
+              onChange={(event) => onService(event.target.value)}
+            >
+              {services.map((service) => (
+                <MenuItem key={service} value={service}>
+                  {service}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              select
+              fullWidth
+              size="small"
+              sx={fieldSx}
+              label="Type"
+              value={row.sub_category || ''}
+              disabled={!row.mainCategory}
+              onChange={(event) => onType(event.target.value)}
+            >
+              {(SUB_CATEGORIES[row.mainCategory] || []).map((type) => (
+                <MenuItem key={type} value={type}>
+                  {type}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+        </Grid>
+        <Stack direction="row" spacing={0.5} sx={{ flexShrink: 0 }}>
+          <Button size="small" color="inherit" onClick={onCopy} startIcon={<Iconify icon="eva:copy-fill" />} sx={{ whiteSpace: 'nowrap' }}>
+            Copy
+          </Button>
+          <Button
+            size="small"
+            color="inherit"
+            disabled={!canRemove}
+            onClick={onRemove}
+            startIcon={<Iconify icon="eva:trash-2-outline" />}
+          >
+            Remove
+          </Button>
+        </Stack>
+      </Stack>
+
+      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontWeight: 700, lineHeight: 1.2 }}>
+        Person
+      </Typography>
+      <Grid container spacing={1}>
+        {fields.person.map((field) => (
+          <Grid item xs={12} sm={6} md={3} key={field.field}>
+            <FieldInput field={field} row={row} onChange={onChange} />
+          </Grid>
+        ))}
+      </Grid>
+
+      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1, mb: 0.5, fontWeight: 700, lineHeight: 1.2 }}>
+        Amounts
+      </Typography>
+      <Grid container spacing={1} alignItems="center">
+        {fields.fees.map((field) => (
+          <Grid item xs={6} sm={4} md={2} key={field.field}>
+            <FieldInput field={field} row={row} onChange={onChange} />
+          </Grid>
+        ))}
+        <Grid item xs={6} sm={4} md={2}>
+          <FieldInput field={{ field: 'paid_amount', label: 'Paid' }} row={row} onChange={onChange} />
+        </Grid>
+        <Grid item xs={12} sm={8} md={4}>
+          <Stack direction="row" spacing={3} sx={{ pl: { md: 1 } }}>
+            <Box>
+              <Typography variant="caption" color="text.secondary">
+                Total
+              </Typography>
+              <Typography variant="subtitle2" sx={{ lineHeight: 1.2 }}>
+                {summaryValue(row.total_amount)}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="caption" color="text.secondary">
+                Balance
+              </Typography>
+              <Typography variant="subtitle2" sx={{ lineHeight: 1.2 }}>
+                {summaryValue(row.balance)}
+              </Typography>
+            </Box>
+          </Stack>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+}
+
 export default function BulkAdd() {
+  const [rows, setRows] = useState(() => [createRow()]);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(false);
   const [message, setMessage] = useState(null);
-  const [rowData, setRowData] = useState(() => [createRow()]);
-  const gridRef = useRef();
-  const rowDataRef = useRef(rowData);
-  rowDataRef.current = rowData;
 
   const showMessage = (text) => {
     setMessage(text);
     setToast(true);
   };
 
-  const syncColumnVisibility = useCallback((api, rows) => {
-    api.applyColumnState({ state: columnVisibilityState(rows) });
-  }, []);
+  const retarget = (rowId, mainCategory, subCategory) => {
+    setRows((current) =>
+      current.map((row) => (row.rowId === rowId ? carryToCategory(row, mainCategory, subCategory, row.rowId) : row))
+    );
+  };
 
-  useEffect(() => {
-    if (gridRef.current?.api) syncColumnVisibility(gridRef.current.api, rowData);
-  }, [rowData, syncColumnVisibility]);
+  const updateRow = (rowId, field, value) => {
+    setRows((current) =>
+      current.map((row) => {
+        if (row.rowId !== rowId) return row;
+        const next = { ...row, [field]: value };
+        writeTotals(next);
+        return next;
+      })
+    );
+  };
 
-  const handleDeleteRow = useCallback((deletedRow) => {
-    setRowData((prev) => {
-      const next = prev.filter((row) => row.rowId !== deletedRow.rowId);
-      return next.length ? next : [createRow()];
+  const addRow = () => setRows((current) => [...current, createRow()]);
+
+  const copyRow = (rowId) => {
+    setRows((current) => {
+      const index = current.findIndex((row) => row.rowId === rowId);
+      const source = current[index];
+      if (!source) return current;
+      const copy = carryToCategory(source, source.mainCategory, source.sub_category);
+      const next = [...current];
+      next.splice(index + 1, 0, copy);
+      return next;
     });
-  }, []);
-
-  const columnDefs = useMemo(
-    () => [
-      selectColumn('Main Category', 'mainCategory', Object.keys(ENDPOINTS), {
-        width: 150,
-        pinned: 'left',
-      }),
-      dataColumn('Sub Category', 'sub_category', {
-        width: 180,
-        pinned: 'left',
-        editable: (params) => Boolean(SUB_CATEGORIES[params.data.mainCategory]),
-        cellEditor: 'agSelectCellEditor',
-        cellEditorParams: (params) => ({
-          values: SUB_CATEGORIES[params.data.mainCategory] || [],
-        }),
-      }),
-      dataColumn('Name', 'name'),
-      dataColumn('ID', 'id_number'),
-      dataColumn('Sponser Name', 'sponser_name'),
-      dataColumn('Boarder Number', 'boarder_number'),
-      dataColumn('CR Number', 'cr_number'),
-      dataColumn('Visa Number', 'visa_number'),
-      dataColumn('Travels', 'travels'),
-      dataColumn('DOB', 'dob'),
-      dataColumn('Company', 'company'),
-      dataColumn('Mobile', 'mobilenumber'),
-      selectColumn('Work Type', 'work_type', WORK_TYPES),
-      selectColumn('Re Entry Type', 're_entry_type', RE_ENTRY_TYPES),
-      dataColumn('Agent', 'agent'),
-      dataColumn('Profession Name', 'professionName'),
-      dataColumn('New Sponser', 'newSponser'),
-      amountColumn('Agent Amount', 'agent_amount'),
-      amountColumn('Iqama Amount', 'iqama'),
-      amountColumn('Insurance', 'insurance'),
-      amountColumn('Other Amount', 'other'),
-      amountColumn('Mol', 'mol'),
-      amountColumn('Absheer Amount', 'absheer_amount'),
-      amountColumn('Qiwa Amount', 'qiwa_amount'),
-      amountColumn('Government fee', 'government_fee'),
-      amountColumn('Chamber Amount', 'chamber_amount'),
-      amountColumn('Service', 'service'),
-      {
-        headerName: 'Total Amount',
-        field: 'total_amount',
-        sortable: true,
-        width: 130,
-        valueGetter: (params) => computeTotal(params.data),
-      },
-      amountColumn('Paid Amount', 'paid_amount'),
-      {
-        headerName: 'Balance Amount',
-        field: 'balance',
-        sortable: true,
-        width: 140,
-        valueGetter: (params) => computeTotal(params.data) - num(params.data.paid_amount),
-      },
-      dataColumn('Agent Date', 'paid_date', { filter: false }),
-      dataColumn('Application Number', 'application_number'),
-      dataColumn('Remarks', 'remarks'),
-      dataColumn('New Passport Number', 'new_passport_number'),
-      dataColumn('Passport Expiry Date', 'expiry_date'),
-      dataColumn('Due in months', 'due'),
-      {
-        field: '',
-        pinned: 'right',
-        width: 75,
-        floatingFilter: false,
-        filter: false,
-        cellRenderer: (params) => (
-          <DeleteCellRenderer
-            node={params.node}
-            api={params.api}
-            onDelete={handleDeleteRow}
-            externalState
-          />
-        ),
-      },
-    ],
-    [handleDeleteRow]
-  );
-
-  const onCellEditingStarted = (params) => {
-    const field = params.colDef.field;
-    if (!AMOUNT_FIELDS.has(field)) return;
-
-    const bind = () => {
-      const input = document.querySelector('.ag-cell-inline-editing input');
-      if (!input || input.dataset.liveTotal === '1') return;
-      input.dataset.liveTotal = '1';
-      const onInput = () => {
-        params.data[field] = input.value;
-        refreshTotals(params.api, params.node);
-      };
-      input.addEventListener('input', onInput);
-      params.node.__stopLiveTotal = () => {
-        input.removeEventListener('input', onInput);
-        delete input.dataset.liveTotal;
-      };
-    };
-
-    bind();
-    requestAnimationFrame(bind);
   };
 
-  const onCellEditingStopped = (params) => {
-    params.node.__stopLiveTotal?.();
-    delete params.node.__stopLiveTotal;
-  };
-
-  const onCellValueChanged = (params) => {
-    const field = params.colDef.field;
-    prepareCategoryChange(params.data, field);
-    if (field === 'mainCategory' || field === 'sub_category') {
-      params.api.refreshCells({ rowNodes: [params.node], force: true });
-      const rows = [];
-      params.api.forEachNode((node) => rows.push(node.data));
-      syncColumnVisibility(params.api, rows);
-      return;
-    }
-    if (AMOUNT_FIELDS.has(field)) refreshTotals(params.api, params.node);
-  };
-
-  const addRow = () => {
-    setRowData((prev) => [...prev, createRow()]);
-  };
-
-  const copyRow = () => {
-    setRowData((prev) => {
-      const lastRow = prev[prev.length - 1];
-      return [...prev, createRow(lastRow)];
+  const removeRow = (rowId) => {
+    setRows((current) => {
+      const next = current.filter((row) => row.rowId !== rowId);
+      return next.length ? next : [createRow()];
     });
   };
 
   const handleSubmit = async () => {
-    const rows = rowDataRef.current.map((row) => writeTotals(row));
     const problems = validateRows(rows);
     if (problems.length) {
       showMessage(problems.join(' '));
@@ -276,27 +279,16 @@ export default function BulkAdd() {
       const saved = outcomes.length - failed.length;
 
       if (!failed.length) {
-        setRowData([createRow()]);
+        setRows([createRow()]);
         showMessage(saved === 1 ? outcomes[0].message : `Saved ${saved} records.`);
         return;
       }
 
-      setRowData(failed.map((item) => item.row));
-      const details = failed.map((item) => `Row ${item.index + 1}: ${item.message}`).join(' ');
+      setRows(failed.map((item) => item.row));
+      const details = failed.map((item) => `Record ${item.index + 1}: ${item.message}`).join(' ');
       showMessage(saved ? `Saved ${saved}. ${details}` : details);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleCellClick = (params) => {
-    if (
-      !['mainCategory', 'sub_category', 'balance', 'total_amount', 'work_type', 're_entry_type'].includes(
-        params.colDef.field
-      ) &&
-      params.value
-    ) {
-      navigator.clipboard.writeText(params.value);
     }
   };
 
@@ -305,60 +297,46 @@ export default function BulkAdd() {
       <PageHeader
         group="Tools"
         title="Bulk add"
-        description="Add several service records in one pass."
+        description="Each record can be a different service. Copy a record to carry over the details the next service uses."
         actions={
-          <>
-            <Button
-              variant="text"
-              color="inherit"
-              disabled={loading}
-              onClick={copyRow}
-              startIcon={<Iconify icon="eva:copy-fill" />}
-            >
-              Copy last row
-            </Button>
-            <Button
-              variant="outlined"
-              color="inherit"
-              disabled={loading}
-              onClick={addRow}
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              Add row
-            </Button>
-            <Button
-              disabled={loading}
-              variant="contained"
-              onClick={handleSubmit}
-              startIcon={<Iconify icon="eva:checkmark-circle-2-fill" />}
-            >
-              Submit
-            </Button>
-          </>
+          <Button
+            variant="contained"
+            disabled={loading || !rows.length}
+            onClick={handleSubmit}
+            startIcon={<Iconify icon="eva:checkmark-circle-2-fill" />}
+          >
+            {rows.length ? `Save ${rows.length} ${rows.length === 1 ? 'record' : 'records'}` : 'Save records'}
+          </Button>
         }
       />
-      <Box sx={panelSx}>
-        <GridFrame height={BULK_TABLE_HEIGHT}>
-          <AgGridReact
-            ref={gridRef}
-            rowData={rowData}
-            columnDefs={columnDefs}
-            getRowId={(params) => params.data.rowId}
-            onGridReady={(params) => syncColumnVisibility(params.api, rowDataRef.current)}
-            defaultColDef={{
-              resizable: true,
-              sortable: true,
-            }}
-            onCellEditingStarted={onCellEditingStarted}
-            onCellEditingStopped={onCellEditingStopped}
-            onCellValueChanged={onCellValueChanged}
-            onCellClicked={handleCellClick}
-            animateRows
-            rowHeight={50}
-            singleClickEdit
-          />
-        </GridFrame>
+
+      <Box sx={(theme) => ({ ...panelSx(theme), p: 1.5 })}>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems={{ sm: 'center' }} justifyContent="space-between" sx={{ mb: 1.25 }}>
+          <Typography variant="body2" color="text.secondary">
+            Set the service on each record. Copy keeps the name, ID, mobile, agent, and any amount the new service also uses.
+          </Typography>
+          <Button variant="outlined" color="inherit" disabled={loading} onClick={addRow} startIcon={<Iconify icon="eva:plus-fill" />} sx={{ whiteSpace: 'nowrap' }}>
+            Add record
+          </Button>
+        </Stack>
+        <Stack spacing={1}>
+          {rows.map((row, index) => (
+            <RecordCard
+              key={row.rowId}
+              index={index}
+              row={row}
+              fields={entryFields(row.mainCategory, row.sub_category)}
+              canRemove={rows.length > 1}
+              onChange={(field, value) => updateRow(row.rowId, field, value)}
+              onService={(value) => retarget(row.rowId, value, '')}
+              onType={(value) => retarget(row.rowId, row.mainCategory, value)}
+              onCopy={() => copyRow(row.rowId)}
+              onRemove={() => removeRow(row.rowId)}
+            />
+          ))}
+        </Stack>
       </Box>
+
       <Toast toast={toast} setToast={setToast} message={message} />
     </Page>
   );

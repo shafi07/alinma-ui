@@ -3,6 +3,8 @@ import {
   columnVisibilityState,
   computeTotal,
   createRow,
+  carryToCategory,
+  entryFields,
   prepareCategoryChange,
   validateRows,
 } from './bulkAddModel';
@@ -79,6 +81,50 @@ test('submit validation rejects a missing category and keeps a valid pair', () =
   expect(validateRows([blank])).toEqual(['Row 1 needs a main category.']);
   expect(validateRows([valid])).toEqual([]);
   expect(buildPayload(valid).total_amount).toBe(0);
+});
+
+test('copying a javasath row into insurance keeps only the shared details', () => {
+  const javasath = fill(createRow(), {
+    mainCategory: 'Javasath',
+    sub_category: 'Renew',
+    name: 'Noura',
+    id_number: '1234567890',
+    sponser_name: 'Ali',
+    mobilenumber: '0550000000',
+    agent: 'Hassan',
+    agent_amount: 10,
+    service: 25,
+    iqama: 40,
+    insurance: 7,
+    paid_amount: 5,
+  });
+  const insurance = carryToCategory(javasath, 'Insurance', 'Add');
+
+  expect(insurance.rowId).not.toBe(javasath.rowId);
+  expect(insurance.mainCategory).toBe('Insurance');
+  expect(insurance.sub_category).toBe('Add');
+  expect(insurance.name).toBe('Noura');
+  expect(insurance.id_number).toBe('1234567890');
+  expect(insurance.agent_amount).toBe(10);
+  expect(insurance.service).toBe(25);
+  expect(insurance.paid_amount).toBe(5);
+  expect(insurance.iqama).toBe(0);
+  expect(insurance.insurance).toBe(0);
+  expect(computeTotal(insurance)).toBe(35);
+});
+
+test('a batch only lists fields for the selected service', () => {
+  const insurance = entryFields('Insurance', 'Add');
+  expect(insurance.person.map((field) => field.field)).toEqual(
+    expect.arrayContaining(['name', 'dob', 'company', 'cr_number'])
+  );
+  expect(insurance.person.map((field) => field.field)).not.toContain('boarder_number');
+  expect(insurance.fees.map((field) => field.field)).toEqual(['agent_amount', 'service']);
+
+  const renew = entryFields('Javasath', 'Renew');
+  expect(renew.fees.map((field) => field.field)).toContain('iqama');
+  expect(renew.fees.map((field) => field.field)).not.toContain('government_fee');
+  expect(renew.person.map((field) => field.field)).not.toContain('boarder_number');
 });
 
 test('columns hide until a row category needs them', () => {
