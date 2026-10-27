@@ -6,8 +6,30 @@ import "../styles/grid.css";
 import GridFrame from "../components/list/GridFrame";
 import { TABLE_HEIGHT } from "../theme/layout";
 
+const isDropdown = (colDef) => colDef.cellEditor === "agSelectCellEditor";
+
 const NewTable = ({ rowData, colDef = [], handleCellClick, editData,returnHandler }) => {
   const gridRef = useRef(null);
+  const commitOnEnter = useRef(false);
+
+  const suppressKeyboardEvent = (params) => {
+    if (params.editing && params.event.key === "Enter" && !isDropdown(params.colDef)) {
+      commitOnEnter.current = true;
+    }
+    return false;
+  };
+
+  const valueSetter = (params) => {
+    if (!isDropdown(params.colDef) && !commitOnEnter.current) {
+      return false;
+    }
+    params.data[params.colDef.field] = params.newValue;
+    return true;
+  };
+
+  const handleCellEditingStopped = () => {
+    commitOnEnter.current = false;
+  };
 
   const handleCellValueChanged = (params) => {
     // console.log("Cell value changed", params);
@@ -40,6 +62,7 @@ const NewTable = ({ rowData, colDef = [], handleCellClick, editData,returnHandle
         columnDefs={colDef}
         rowData={rowData} // AG Grid automatically updates when this prop changes
         onCellValueChanged={handleCellValueChanged}
+        onCellEditingStopped={handleCellEditingStopped}
         defaultColDef={{
           flex: 1,
           minWidth: 140,
@@ -47,6 +70,8 @@ const NewTable = ({ rowData, colDef = [], handleCellClick, editData,returnHandle
           sortable: true,
           filter: true,
           floatingFilter: true,
+          suppressKeyboardEvent,
+          valueSetter,
         }}
         rowHeight={60}
         onCellClicked={handleCellClick}
